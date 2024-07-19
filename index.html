@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed Ultimate Scorekeeper</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <!-- <button id="hamburgerButton">☰</button> -->
+        <button id="newGameButton">Start New Game</button>
+    </header>
+    <div id="settings" class="hidden visible">
+        <h3>Settings</h3>
+        <div>
+            <label>Starting Ratio:</label>
+            <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
+            <label for="ratioM">M</label>
+            <input type="radio" id="ratioW" name="startingRatio" value="W">
+            <label for="ratioW">W</label>
+        </div>
+        <div>
+            <label for="opponentName">Opponent Name:</label>
+            <input type="text" id="opponentName">
+        </div>
+        <!-- <div>
+            <label for="gameTo">Game To:</label>
+            <input type="number" id="gameTo" value="13">
+        </div>
+        <div>
+            <label>We Start On:</label>
+            <input type="radio" id="startO" name="startOn" value="O" checked>
+            <label for="startO">O</label>
+            <input type="radio" id="startD" name="startOn" value="D">
+            <label for="startD">D</label>
+        </div> -->
+    </div>
+    <main>
+        <div class="team">
+            <h2>Starfire</h2>
+            <p id="homeScore">0</p>
+            <button class="scoreButton" id="homePlus">+</button>
+            <button class="scoreButton" id="homeMinus">-</button>
+        </div>
+        <div class="team">
+            <h2 id="awayTeamName">Away</h2>
+            <p id="awayScore">0</p>
+            <button class="scoreButton" id="awayPlus">+</button>
+            <button class="scoreButton" id="awayMinus">-</button>
+        </div>
+    </main>
+    <footer>
+        <h2 id="currentRatio">Current Ratio: W</h2>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

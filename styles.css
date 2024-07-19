@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+#hamburgerButton {
+    font-size: 20px;
+}
+
+#settings {
+    display: none;
+    margin: 20px 0;
+    text-align: left;
+}
+
+#settings.visible {
+    display: block;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+}
+
+.team {
+    text-align: center;
+}
+
+.scoreButton {
+    font-size: 20px;
+    padding: 10px 15px;
+    margin: 5px;
+}
+
+footer {
+    margin-top: 20px;
+}
