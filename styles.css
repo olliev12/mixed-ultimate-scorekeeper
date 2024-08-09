@@ -1,50 +1,192 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
     text-align: center;
 }
 
+h1, h2 {
+    margin: 0;
+    padding: 10px;
+}
+
+p {
+    margin: 5px 0;
+}
+
+/* Header and Footer */
+header, footer {
+    width: 100%;
+    padding: 10px;
+    background-color: #111;
+    border-bottom: 2px solid #f4a7a7;
+    border-top: 2px solid #f4a7a7;
+}
+
+main {
+    margin-bottom: 15px;
+}
+
+#settings {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #222;
+    text-align: left; /* Left-align contents */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#settings label {
+    /* display: block; Ensure labels are block-level for proper left alignment */
+    margin-bottom: 5px;
+}
+
+#settings input[type="radio"],
+#settings input[type="number"],
+#settings input[type="text"] {
+    margin-left: 20px;
+    padding: 5px;
+    background-color: #111;
+    color: #fff;
+    border-radius: 5px;
+    /* border: none; Removed border */
+}
+
+button {
+    background-color: #f4a7a7;
+    color: #000;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff9c9c;
+}
+
+button:active {
+    background-color: #ff7b7b;
+}
+
+input[type="radio"] {
+    margin: 0 5px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+#undoLast {
+    align-self: flex-end; /* Right-align the "Undo Last" button */
+    /* background-color: #ff7b7b; */
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Score Buttons */
+.scoreButton {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Scoreboard Layout */
+.main-content {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px 0;
+}
+
+.team {
+    background-color: #111;
+    border: 1px solid #f4a7a7;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 250px;
+}
+
+.team h2 {
+    margin-bottom: 15px;
+}
+
+/* Line Counters */
+#lineCounters {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+#lineCounters p {
+    background-color: #111;
+    border: 1px solid #f4a7a7;
+    padding: 10px;
+    border-radius: 5px;
+    width: 60px;
+}
+
+/* Hamburger Menu */
+#hamburgerMenu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #111;
+    border: 1px solid #f4a7a7;
+    border-radius: 5px;
+}
+
+#hamburgerMenu:hover {
+    background-color: #ff9c9c;
+}
+
+#settings {
+    /*display: none; /* Initially hide settings */
+}
+
+/* Settings Section */
+#currentLineContainer {
+    margin-top: 15px;
+}
+
+input[type="number"] {
+    padding: 5px;
+    border: 1px solid #f4a7a7;
+    border-radius: 5px;
+    background-color: #111;
+    color: #fff;
+}
+
+input[type="text"] {
+    padding: 5px;
+    border: 1px solid #f4a7a7;
+    border-radius: 5px;
+    background-color: #111;
+    color: #fff;
+}
+
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-button {
     padding: 10px 20px;
-    font-size: 16px;
-    margin: 5px;
-}
-
-#hamburgerButton {
-    font-size: 20px;
-}
-
-#settings {
-    display: none;
-    margin: 20px 0;
-    text-align: left;
-}
-
-#settings.visible {
-    display: block;
-}
-
-main {
-    display: flex;
-    justify-content: space-around;
-}
-
-.team {
-    text-align: center;
-}
-
-.scoreButton {
-    font-size: 20px;
-    padding: 10px 15px;
-    margin: 5px;
-}
-
-footer {
-    margin-top: 20px;
 }

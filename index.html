@@ -11,8 +11,8 @@
         <!-- <button id="hamburgerButton">☰</button> -->
         <button id="newGameButton">Start New Game</button>
     </header>
-    <div id="settings" class="hidden visible">
-        <h3>Settings</h3>
+    <div id="settings" class="visible">
+        <!-- <h3>Settings</h3> -->
         <div>
             <label>Starting Ratio:</label>
             <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
@@ -35,6 +35,7 @@
             <input type="radio" id="startD" name="startOn" value="D">
             <label for="startD">D</label>
         </div> -->
+        <button id="undoLast">Undo Last</button>
     </div>
     <main>
         <div class="team">
@@ -52,6 +53,23 @@
     </main>
     <footer>
         <h2 id="currentRatio">Current Ratio: W</h2>
+        <div id="currentLineContainer">
+            <label>Current Line:</label>
+            <input type="radio" id="lineO" name="currentLine" value="O">
+            <label for="lineO">O</label>
+            <input type="radio" id="lineD" name="currentLine" value="D">
+            <label for="lineD">D</label>
+            <input type="radio" id="lineX" name="currentLine" value="X">
+            <label for="lineX">X</label>
+            <input type="radio" id="lineK" name="currentLine" value="K">
+            <label for="lineK">K</label>
+        </div>
+        <div id="lineCounters">
+            <p>O: <span id="lineOCount">0</span></p>
+            <p>D: <span id="lineDCount">0</span></p>
+            <p>X: <span id="lineXCount">0</span></p>
+            <p>K: <span id="lineKCount">0</span></p>
+        </div>
     </footer>
     <script src="script.js"></script>
 </body>
