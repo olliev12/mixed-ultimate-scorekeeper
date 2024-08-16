@@ -5,12 +5,15 @@ body {
     color: #fff;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
     text-align: center;
+}
+
+/* Header */
+header {
+    padding: 5px 15px; /* Adjusted padding for mobile */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1, h2 {
@@ -36,10 +39,9 @@ main {
 }
 
 #settings {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #222;
-    text-align: left; /* Left-align contents */
+    margin-top: 5px; /* Reduce top margin for mobile */
+    padding: 10px 5px; /* Adjust padding for smaller screens */
+    text-align: left;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -61,14 +63,15 @@ main {
     /* border: none; Removed border */
 }
 
+/* Buttons */
 button {
+    padding: 8px 10px; /* Adjust button padding for better mobile fit */
+    font-size: 14px; /* Slightly reduce font size for mobile */
     background-color: #f4a7a7;
     color: #000;
     border: none;
-    padding: 10px;
     margin: 5px;
     cursor: pointer;
-    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
@@ -158,9 +161,6 @@ label {
     background-color: #ff9c9c;
 }
 
-#settings {
-    /*display: none; /* Initially hide settings */
-}
 
 /* Settings Section */
 #currentLineContainer {
@@ -183,11 +183,29 @@ input[type="text"] {
     color: #fff;
 }
 
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    margin-top: 25px;
+/* Responsive Styles for Mobile */
+@media (max-width: 600px) {
+    /* Adjustments for smaller screens */
+    header {
+        padding: 10px 10px;
+    }
+
+    #hamburgerMenu {
+        padding: 8px;
+    }
+
+    #undoLast {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    .main-content {
+        flex-direction: column; /* Stack team sections vertically on mobile */
+        gap: 15px;
+    }
+
+    .team {
+        width: 100%; /* Make team sections full-width */
+        max-width: 100%; /* Remove max-width to fill screen */
+    }
 }
