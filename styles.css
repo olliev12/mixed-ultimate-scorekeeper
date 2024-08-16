@@ -27,7 +27,7 @@ p {
 
 /* Header and Footer */
 header, footer {
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     background-color: #111;
     border-bottom: 2px solid #f4a7a7;
@@ -131,13 +131,13 @@ label {
 }
 
 /* Line Counters */
-#lineCounters {
+.lineCounters {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
 }
 
-#lineCounters p {
+.lineCounters p {
     background-color: #111;
     border: 1px solid #f4a7a7;
     padding: 10px;
@@ -181,6 +181,42 @@ input[type="text"] {
     border-radius: 5px;
     background-color: #111;
     color: #fff;
+}
+
+#gamesSection {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #222;
+    color: #fff;
+    border-radius: 5px;
+    text-align: left;
+}
+
+#gamesList {
+    margin-top: 15px;
+}
+
+.gameItem {
+    background-color: #111;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #f4a7a7;
+    cursor: pointer;
+}
+.gameItemSelected {
+    background-color:#f4a7a7;
+}
+
+#saveGame {
+    /* background-color: #ff7b7b; */
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#loadGame {
+    /* background-color: #ff7b7b; */
+    cursor: pointer;
 }
 
 /* Responsive Styles for Mobile */

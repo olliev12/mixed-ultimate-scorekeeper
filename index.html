@@ -10,6 +10,7 @@
     <header>
         <!-- <button id="hamburgerButton">☰</button> -->
         <button id="newGameButton">Start New Game</button>
+        <button id="loadGame">Load Game</button>
     </header>
     <div id="settings" class="visible">
         <!-- <h3>Settings</h3> -->
@@ -24,17 +25,6 @@
             <label for="opponentName">Opponent Name:</label>
             <input type="text" id="opponentName">
         </div>
-        <!-- <div>
-            <label for="gameTo">Game To:</label>
-            <input type="number" id="gameTo" value="13">
-        </div>
-        <div>
-            <label>We Start On:</label>
-            <input type="radio" id="startO" name="startOn" value="O" checked>
-            <label for="startO">O</label>
-            <input type="radio" id="startD" name="startOn" value="D">
-            <label for="startD">D</label>
-        </div> -->
         <button id="undoLast">Undo Last</button>
     </div>
     <main>
@@ -64,13 +54,18 @@
             <input type="radio" id="lineK" name="currentLine" value="K">
             <label for="lineK">K</label>
         </div>
-        <div id="lineCounters">
+        <div class="lineCounters">
             <p>O: <span id="lineOCount">0</span></p>
             <p>D: <span id="lineDCount">0</span></p>
             <p>X: <span id="lineXCount">0</span></p>
             <p>K: <span id="lineKCount">0</span></p>
         </div>
     </footer>
+    <section id="gamesSection">
+        <button id="saveGame" style="float: right;">Save Game</button>
+        <h2>Games</h2>
+        <div id="gamesList"></div>
+    </section>
     <script src="script.js"></script>
 </body>
 </html>
