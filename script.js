@@ -348,11 +348,9 @@ function saveGame() {
 function calculateRatioHistory() {
     let ratioHistory = [];
     const ratioPattern = startingRatio === 'M' ? ['M', 'W', 'W', 'M'] : ['W', 'M', 'M', 'W'];
-    console.log(scoreEvents)
     for (let i = 0; i < (homeScore+awayScore); i++) {
         // Determine the ratio for the current point based on the ratioPattern and index
         ratioHistory.push(ratioPattern[i % 4]);
-        console.log(ratioHistory)
     }
     // ratioHistory.push(startingRatio)
     return ratioHistory;
@@ -383,11 +381,15 @@ function renderGamesList() {
         const lineCounts = document.createElement('div');
         
         lineCounts.className = 'lineCounters';
+
+        let stats = getMatches(game.scoreLines, game.scoreEvents, game.ratioHistory)
+
         const lineCountItems = `
-            <p>O: <span>${game.lineOCount}</span></p>
-            <p>D: <span>${game.lineDCount}</span></p>
-            <p>X: <span>${game.lineXCount}</span></p>
-            <p>K: <span>${game.lineKCount}</span></p>
+            <p>Line <br> Points <br> Scored <br> W <br> M </p>
+            <p>O <br> ${stats.O.points} <br> ${stats.O.scores} <br> ${stats.O.W} <br> ${stats.O.M}</p>
+            <p>D <br> ${stats.D.points} <br> ${stats.D.scores} <br> ${stats.D.W} <br> ${stats.D.M}</p>
+            <p>X <br> ${stats.X.points} <br> ${stats.X.scores} <br> ${stats.X.W} <br> ${stats.X.M}</p>
+            <p>K <br> ${stats.K.points} <br> ${stats.K.scores} <br> ${stats.K.W} <br> ${stats.K.M}</p>
         `;
         lineCounts.innerHTML = lineCountItems;
         gameItem.appendChild(lineCounts)
@@ -397,7 +399,7 @@ function renderGamesList() {
         const eventStuff = `
             <p>Lines: <span>${game.scoreLines.toString()}</span></p>
             <br>
-            <p>Scores: <span>${game.scoreEvents.toString()}</span></p>
+            <p>Scores: <span>${(game.scoreEvents.map((event) => event === 'home' ? 'W' : 'L')).toString()}</span></p>
             <br>
             <p>Ratio: <span>${game.ratioHistory.toString()}</span></p>`;
         events.innerHTML = eventStuff;
@@ -420,4 +422,46 @@ function updateUI() {
     awayTeamNameElement.textContent = opponentName;
 
     document.querySelector(`input[name="startingRatio"][value="${startingRatio}"]`).checked = true;
+}
+
+function getMatches(lines, events, history) {
+    const matches = {
+        O: {
+            points: 0,
+            scores: 0,
+            W: 0,
+            M: 0
+        },
+        D: {
+            points: 0,
+            scores: 0,
+            W: 0,
+            M: 0
+        },
+        X: {
+            points: 0,
+            scores: 0,
+            W: 0,
+            M: 0
+        },
+        K: {
+            points: 0,
+            scores: 0,
+            W: 0,
+            M: 0
+        }
+    }
+
+    for (let x=0; x < lines.length; x++) {
+        let line = lines[x];
+        let score = events[x] === 'home' ? 1 : 0;
+        let W = history[x] === 'W' ? 1 : 0;
+        let M = history[x] === 'M' ? 1 : 0;
+        matches[line].points ++;
+        matches[line].scores += score;
+        matches[line].W += W;
+        matches[line].M += M;
+    }
+
+    return matches;
 }
