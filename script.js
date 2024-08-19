@@ -359,6 +359,12 @@ function calculateRatioHistory() {
 function renderGamesList() {
     const gamesList = document.getElementById('gamesList');
     gamesList.innerHTML = ''; // Clear existing list
+    const totals = makeStatsObj();
+
+    const gamesSummary = document.createElement('div');
+    gamesSummary.className = 'gameItem';
+    gamesSummary.textContent = 'Totals';
+    gamesList.appendChild(gamesSummary);
 
     games.forEach((game, index) => {
         const gameItem = document.createElement('div');
@@ -383,6 +389,12 @@ function renderGamesList() {
         lineCounts.className = 'lineCounters';
 
         let stats = getMatches(game.scoreLines, game.scoreEvents, game.ratioHistory)
+        // game['stats'] = stats;
+        Object.keys(totals).forEach((key) => {
+            Object.keys(totals[key]).forEach((stat) => {
+                totals[key][stat] += stats[key][stat];
+            });
+        });
 
         const lineCountItems = `
             <p>Line <br> Points <br> Scored <br> W <br> M </p>
@@ -406,6 +418,22 @@ function renderGamesList() {
         gameItem.appendChild(events)
         gamesList.appendChild(gameItem);
     });
+    
+    const lineCounts = document.createElement('div');
+    lineCounts.className = 'lineCounters';
+    const lineCountItems = `
+        <p>Line <br> Points <br> Scored <br> W <br> M </p>
+        <p>O <br> ${totals.O.points} <br> ${totals.O.scores} <br> ${totals.O.W} <br> ${totals.O.M}</p>
+        <p>D <br> ${totals.D.points} <br> ${totals.D.scores} <br> ${totals.D.W} <br> ${totals.D.M}</p>
+        <p>X <br> ${totals.X.points} <br> ${totals.X.scores} <br> ${totals.X.W} <br> ${totals.X.M}</p>
+        <p>K <br> ${totals.K.points} <br> ${totals.K.scores} <br> ${totals.K.W} <br> ${totals.K.M}</p>
+    `;
+    lineCounts.innerHTML = lineCountItems;
+
+    gamesList.childNodes[0].appendChild(lineCounts);
+
+    const gamesJson = document.getElementById('gamesJson');
+    gamesJson.innerHTML = JSON.stringify(games) + '<br><br>' + JSON.stringify(totals);
 }
 
 function updateUI() {
@@ -425,7 +453,24 @@ function updateUI() {
 }
 
 function getMatches(lines, events, history) {
-    const matches = {
+    const matches = makeStatsObj();
+
+    for (let x=0; x < lines.length; x++) {
+        let line = lines[x];
+        let score = events[x] === 'home' ? 1 : 0;
+        let W = history[x] === 'W' ? 1 : 0;
+        let M = history[x] === 'M' ? 1 : 0;
+        matches[line].points ++;
+        matches[line].scores += score;
+        matches[line].W += W;
+        matches[line].M += M;
+    }
+
+    return matches;
+}
+
+function makeStatsObj() {
+    return  {
         O: {
             points: 0,
             scores: 0,
@@ -450,18 +495,5 @@ function getMatches(lines, events, history) {
             W: 0,
             M: 0
         }
-    }
-
-    for (let x=0; x < lines.length; x++) {
-        let line = lines[x];
-        let score = events[x] === 'home' ? 1 : 0;
-        let W = history[x] === 'W' ? 1 : 0;
-        let M = history[x] === 'M' ? 1 : 0;
-        matches[line].points ++;
-        matches[line].scores += score;
-        matches[line].W += W;
-        matches[line].M += M;
-    }
-
-    return matches;
+    };
 }
