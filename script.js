@@ -9,12 +9,16 @@ const newGameButton = document.getElementById('newGameButton');
 const hamburgerButton = document.getElementById('hamburgerButton');
 const settingsDiv = document.getElementById('settings');
 const currentRatioElement = document.getElementById('currentRatio');
+const nextRatioElement = document.getElementById('nextRatio');
+const currentPossessionElement = document.getElementById('currentPossession');
 
 const opponentNameInput = document.getElementById('opponentName');
 const awayTeamNameElement = document.getElementById('awayTeamName');
 
 
 const startingRatioInputs = document.querySelectorAll('input[name="startingRatio"]');
+const gameToInput = document.getElementById('gameTo');
+const startOnInputs = document.querySelectorAll('input[name="startOn"]');
 
 const undoLastButton = document.getElementById('undoLast');
 
@@ -24,6 +28,7 @@ const lineDCountElement = document.getElementById('lineDCount');
 const lineXCountElement = document.getElementById('lineXCount');
 const lineKCountElement = document.getElementById('lineKCount');
 
+const currentPossessionInputs = document.querySelectorAll('input[name="currentPossession"]');
 
 // Initialize scores from local storage or set to 0 if not present
 let homeScore = localStorage.getItem('homeScore') ? parseInt(localStorage.getItem('homeScore')) : 0;
@@ -32,10 +37,14 @@ let awayScore = localStorage.getItem('awayScore') ? parseInt(localStorage.getIte
 // Initialize settings from local storage or set default values
 let startingRatio = localStorage.getItem('startingRatio') || 'M';
 let opponentName = localStorage.getItem('opponentName') || 'Away Team';
+let gameTo = localStorage.getItem('gameTo') || 13;
+let startOn = localStorage.getItem('startOn') || 'O';
 
 
 // Set initial values for settings inputs
 document.querySelector(`input[name="startingRatio"][value="${startingRatio}"]`).checked = true;
+gameToInput.value = gameTo;
+document.querySelector(`input[name="startOn"][value="${startOn}"]`).checked = true;
 
 // Update score elements with initial values
 homeScoreElement.textContent = homeScore;
@@ -58,8 +67,7 @@ let scoreEvents = JSON.parse(localStorage.getItem('scoreEvents')) || [];
 let games = JSON.parse(localStorage.getItem('games')) || [];
 let gameIndex;
 
-updateCurrentRatio();
-renderGamesList();
+updateCurrentStatus();
 
 // Event listener for new game button
 newGameButton.addEventListener('click', () => {
@@ -72,26 +80,53 @@ newGameButton.addEventListener('click', () => {
     startNewGame();
 });
 
-document.getElementById('loadGame').addEventListener('click', () => {
-    if (games.length === 0) {
-        alert("No saved games to load.");
-        return;
-    }
-    if (!gameIndex) {
-        alert("Select a game to load.");
-    }
-    else {
-        // const gameIndex = prompt("Enter the index of the game to load (starting from 1):");
-        const selectedGame = games[gameIndex - 1];
+// document.getElementById('loadGame').addEventListener('click', () => {
+//     if (games.length === 0) {
+//         alert("No saved games to load.");
+//         return;
+//     }
+//     if (!gameIndex) {
+//         alert("Select a game to load.");
+//     }
+//     else {
+//         // const gameIndex = prompt("Enter the index of the game to load (starting from 1):");
+//         const selectedGame = games[gameIndex - 1];
 
-        if (selectedGame) {
-            // Load the game state
-            loadGame(selectedGame)
-        } else {
-            alert("Invalid game selection.");
-        }
+//         if (selectedGame) {
+//             // Load the game state
+//             loadGame(selectedGame)
+//         } else {
+//             alert("Invalid game selection.");
+//         }
+//     }
+// });
+
+document.getElementById('importGames').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    console.log(file.type)
+    if (file && file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedGames = JSON.parse(e.target.result);
+                if (Array.isArray(importedGames)) {
+                    games = importedGames; // Update the games array
+                    localStorage.setItem('games', JSON.stringify(games)); // Sync with localStorage
+                    renderGamesList(); // Update the UI with the imported games
+                    alert('Games imported successfully!');
+                } else {
+                    alert('Invalid file format.');
+                }
+            } catch (error) {
+                alert('Error parsing the file.');
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        alert('Please upload a valid JSON file.');
     }
 });
+
 
 // Event listener for hamburger button
 // hamburgerButton.addEventListener('click', () => {
@@ -107,6 +142,18 @@ startingRatioInputs.forEach(input => {
     });
 });
 
+gameToInput.addEventListener('input', () => {
+    gameTo = gameToInput.value;
+    updateLocalStorage();
+});
+
+startOnInputs.forEach(input => {
+    input.addEventListener('change', () => {
+        startOn = document.querySelector('input[name="startOn"]:checked').value;
+        updateLocalStorage();
+    });
+});
+
 opponentNameInput.addEventListener('input', () => {
     opponentName = opponentNameInput.value;
     awayTeamNameElement.textContent = opponentName;
@@ -118,12 +165,12 @@ undoLastButton.addEventListener('click', () => {
     if (!lastEvent) return;
 
     // localStorage.setItem('scoreEvents', JSON.stringify(scoreEvents));
-
-    if (lastEvent === 'home') {
-        homeMinusButton.click();
-    } else if (lastEvent === 'away') {
-        awayMinusButton.click();
-    }
+    minusScore(lastEvent);
+    // if (lastEvent === 'home') {
+    //     homeMinusButton.click();
+    // } else if (lastEvent === 'away') {
+    //     awayMinusButton.click();
+    // }
 });
 
 // Event listeners for score buttons
@@ -133,22 +180,22 @@ homePlusButton.addEventListener('click', () => {
 
     homeScore++;
     homeScoreElement.textContent = homeScore;
+    scoreEvents.push('home');
     updateCurrentRatio();
     incrementLineCounter(selectedLine);
-    scoreEvents.push('home');
     updateLocalStorage();
     clearLineSelection();
 });
 
-homeMinusButton.addEventListener('click', () => {
-    if (homeScore > 0) {
-        homeScore--;
-        homeScoreElement.textContent = homeScore;
-        updateCurrentRatio();
-        decrementLastLineCounter();
-        updateLocalStorage();
-    }
-});
+// homeMinusButton.addEventListener('click', () => {
+//     if (homeScore > 0) {
+//         homeScore--;
+//         homeScoreElement.textContent = homeScore;
+//         updateCurrentRatio();
+//         decrementLastLineCounter();
+//         updateLocalStorage();
+//     }
+// });
 
 awayPlusButton.addEventListener('click', () => {
     const selectedLine = getSelectedLine();
@@ -156,22 +203,22 @@ awayPlusButton.addEventListener('click', () => {
 
     awayScore++;
     awayScoreElement.textContent = awayScore;
+    scoreEvents.push('away');
     updateCurrentRatio();
     incrementLineCounter(selectedLine);
-    scoreEvents.push('away');
     updateLocalStorage();
     clearLineSelection();
 });
 
-awayMinusButton.addEventListener('click', () => {
-    if (awayScore > 0) {
-        awayScore--;
-        awayScoreElement.textContent = awayScore;
-        updateCurrentRatio();
-        decrementLastLineCounter();
-        updateLocalStorage();
-    }
-});
+// awayMinusButton.addEventListener('click', () => {
+//     if (awayScore > 0) {
+//         awayScore--;
+//         awayScoreElement.textContent = awayScore;
+//         updateCurrentRatio();
+//         decrementLastLineCounter();
+//         updateLocalStorage();
+//     }
+// });
 
 document.getElementById('saveGame').addEventListener('click', () => {
     if (homeScore + awayScore > 0) {
@@ -187,11 +234,27 @@ document.getElementById('saveGame').addEventListener('click', () => {
     }
 });
 
+document.getElementById('exportGames').addEventListener('click', () => {
+    const gamesData = JSON.stringify(games, null, 2); // Convert games array to JSON
+    const blob = new Blob([gamesData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'games.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
+
+
 // Function to update local storage
 function updateLocalStorage() {
     localStorage.setItem('homeScore', homeScore);
     localStorage.setItem('awayScore', awayScore);
     localStorage.setItem('startingRatio', startingRatio);
+    localStorage.setItem('gameTo', gameTo);
+    localStorage.setItem('startOn', startOn);
     localStorage.setItem('opponentName', opponentName);
     localStorage.setItem('lineOCount', lineOCount);
     localStorage.setItem('lineDCount', lineDCount);
@@ -230,7 +293,9 @@ function loadGame(selectedGame) {
         lineKCount,
         scoreLines,
         scoreEvents,
-        startingRatio
+        startingRatio,
+        gameTo, 
+        startOn
     } = selectedGame);
 
     // Update UI and localStorage
@@ -244,13 +309,42 @@ function loadGame(selectedGame) {
     alert(`Game vs ${selectedGame.opponentName} loaded!`)
 }
 
+function updateCurrentStatus() {
+    updateCurrentRatio();
+    // updateCurrentPossession();
+    renderGamesList();
+}
+
 // Function to calculate and update current ratio
 function updateCurrentRatio() {
     const totalPoints = homeScore + awayScore;
     const ratioPattern = startingRatio === 'M' ? ['M', 'W', 'W', 'M'] : ['W', 'M', 'M', 'W'];
     const currentRatio = ratioPattern[totalPoints % 4];
+    const nextRatio = ratioPattern[(totalPoints + 1) % 4];
     currentRatioElement.textContent = `Current Ratio: ${currentRatio}`;
+    nextRatioElement.textContent = `Next Ratio: ${nextRatio}`;
+    updateCurrentPossession();
     return currentRatio;
+}
+
+function updateCurrentPossession() {
+    let nextPossession = startOn;
+    
+    const halftime = (gameTo+1)/2;
+    const isHalftime = ((homeScore === halftime) && awayScore < halftime) || ((awayScore === halftime) && homeScore < halftime);
+    currentPossessionInputs.forEach(input => input.checked = false);
+    if (scoreEvents.length > 0) {
+        if (isHalftime) {
+            nextPossession = nextPossession === 'O' ? 'D' : 'O';
+        }
+        else {
+            const lastEvent = scoreEvents[scoreEvents.length-1];
+            nextPossession = lastEvent === 'home' ? 'D' : 'O'
+        }
+    }
+    currentPossessionElement.textContent = `We Are On: ${nextPossession}`
+    let possessionId = `possession${nextPossession}`;
+    document.querySelector(`input[name="currentPossession"][id="${possessionId}"]`).checked = true;
 }
 
 function getSelectedLine() {
@@ -326,6 +420,31 @@ function resetScoreLines() {
     lineKCountElement.textContent = lineKCount;
 }
 
+function minusScore(team) {
+    switch (team) {
+        case 'home':
+            if (homeScore > 0) {
+                homeScore--;
+                homeScoreElement.textContent = homeScore;
+                updateCurrentRatio();
+                decrementLastLineCounter();
+                updateLocalStorage();
+            }
+            break;
+        case 'away':
+            if (awayScore > 0) {
+                awayScore--;
+                awayScoreElement.textContent = awayScore;
+                updateCurrentRatio();
+                decrementLastLineCounter();
+                updateLocalStorage();
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 function saveGame() {
     let game = {
         opponentName,
@@ -338,6 +457,8 @@ function saveGame() {
         scoreLines,
         scoreEvents,
         startingRatio,
+        gameTo, 
+        startOn,
         timestamp: new Date().toISOString(),
         ratioHistory: calculateRatioHistory()
     };
@@ -410,9 +531,7 @@ function renderGamesList() {
         const events = document.createElement('div');
         const eventStuff = `
             <p>Lines: <span>${game.scoreLines.toString()}</span></p>
-            <br>
             <p>Scores: <span>${(game.scoreEvents.map((event) => event === 'home' ? 'W' : 'L')).toString()}</span></p>
-            <br>
             <p>Ratio: <span>${game.ratioHistory.toString()}</span></p>`;
         events.innerHTML = eventStuff;
         gameItem.appendChild(events)
@@ -432,8 +551,8 @@ function renderGamesList() {
 
     gamesList.childNodes[0].appendChild(lineCounts);
 
-    const gamesJson = document.getElementById('gamesJson');
-    gamesJson.innerHTML = JSON.stringify(games) + '<br><br>' + JSON.stringify(totals);
+    // const gamesJson = document.getElementById('gamesJson');
+    // gamesJson.innerHTML = JSON.stringify(games) + '<br><br>' + JSON.stringify(totals);
 }
 
 function updateUI() {
