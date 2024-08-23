@@ -28,6 +28,11 @@ const lineDCountElement = document.getElementById('lineDCount');
 const lineXCountElement = document.getElementById('lineXCount');
 const lineKCountElement = document.getElementById('lineKCount');
 
+const lastEventLineElement = document.getElementById('lastEventLine');
+const lastEventRatioElement = document.getElementById('lastEventRatio');
+const lastEventPossessionElement = document.getElementById('lastEventPossession');
+const lastEventScoreElement = document.getElementById('lastEventScore');
+
 const currentPossessionInputs = document.querySelectorAll('input[name="currentPossession"]');
 
 // Initialize scores from local storage or set to 0 if not present
@@ -65,7 +70,10 @@ lineKCountElement.textContent = lineKCount;
 let scoreLines = JSON.parse(localStorage.getItem('scoreLines')) || [];
 let scoreEvents = JSON.parse(localStorage.getItem('scoreEvents')) || [];
 let games = JSON.parse(localStorage.getItem('games')) || [];
+let events = JSON.parse(localStorage.getItem('events')) || [];
 let gameIndex;
+let ratio;
+let possession;
 
 updateCurrentStatus();
 
@@ -164,61 +172,17 @@ undoLastButton.addEventListener('click', () => {
     const lastEvent = scoreEvents.pop();
     if (!lastEvent) return;
 
-    // localStorage.setItem('scoreEvents', JSON.stringify(scoreEvents));
     minusScore(lastEvent);
-    // if (lastEvent === 'home') {
-    //     homeMinusButton.click();
-    // } else if (lastEvent === 'away') {
-    //     awayMinusButton.click();
-    // }
 });
 
 // Event listeners for score buttons
 homePlusButton.addEventListener('click', () => {
-    const selectedLine = getSelectedLine();
-    if (!selectedLine) return;
-
-    homeScore++;
-    homeScoreElement.textContent = homeScore;
-    scoreEvents.push('home');
-    updateCurrentRatio();
-    incrementLineCounter(selectedLine);
-    updateLocalStorage();
-    clearLineSelection();
+    increaseScore('home');
 });
-
-// homeMinusButton.addEventListener('click', () => {
-//     if (homeScore > 0) {
-//         homeScore--;
-//         homeScoreElement.textContent = homeScore;
-//         updateCurrentRatio();
-//         decrementLastLineCounter();
-//         updateLocalStorage();
-//     }
-// });
 
 awayPlusButton.addEventListener('click', () => {
-    const selectedLine = getSelectedLine();
-    if (!selectedLine) return;
-
-    awayScore++;
-    awayScoreElement.textContent = awayScore;
-    scoreEvents.push('away');
-    updateCurrentRatio();
-    incrementLineCounter(selectedLine);
-    updateLocalStorage();
-    clearLineSelection();
+    increaseScore('away');
 });
-
-// awayMinusButton.addEventListener('click', () => {
-//     if (awayScore > 0) {
-//         awayScore--;
-//         awayScoreElement.textContent = awayScore;
-//         updateCurrentRatio();
-//         decrementLastLineCounter();
-//         updateLocalStorage();
-//     }
-// });
 
 document.getElementById('saveGame').addEventListener('click', () => {
     if (homeScore + awayScore > 0) {
@@ -262,6 +226,7 @@ function updateLocalStorage() {
     localStorage.setItem('lineKCount', lineKCount);
     localStorage.setItem('scoreLines', JSON.stringify(scoreLines));
     localStorage.setItem('scoreEvents', JSON.stringify(scoreEvents));
+    localStorage.setItem('events', JSON.stringify(events));
 }
 
 function startNewGame() {
@@ -313,6 +278,7 @@ function updateCurrentStatus() {
     updateCurrentRatio();
     // updateCurrentPossession();
     renderGamesList();
+    updateLastEvent(getLastEvent());
 }
 
 // Function to calculate and update current ratio
@@ -323,6 +289,7 @@ function updateCurrentRatio() {
     const nextRatio = ratioPattern[(totalPoints + 1) % 4];
     currentRatioElement.textContent = `Current Ratio: ${currentRatio}`;
     nextRatioElement.textContent = `Next Ratio: ${nextRatio}`;
+    ratio = currentRatio;
     updateCurrentPossession();
     return currentRatio;
 }
@@ -345,6 +312,7 @@ function updateCurrentPossession() {
     currentPossessionElement.textContent = `We Are On: ${nextPossession}`
     let possessionId = `possession${nextPossession}`;
     document.querySelector(`input[name="currentPossession"][id="${possessionId}"]`).checked = true;
+    possession = nextPossession;
 }
 
 function getSelectedLine() {
@@ -420,7 +388,46 @@ function resetScoreLines() {
     lineKCountElement.textContent = lineKCount;
 }
 
+function increaseScore(team) {
+    const selectedLine = getSelectedLine();
+    if (!selectedLine) return;
+
+    const event = {
+        line: selectedLine,
+        ratio: ratio,
+        possession: possession,
+        score: team
+    }
+    events.push(event)
+    updateLastEvent(event)
+
+    switch (team) {
+        case 'home':
+            homeScore++;
+            homeScoreElement.textContent = homeScore;
+            scoreEvents.push('home');
+            updateCurrentRatio();
+            incrementLineCounter(selectedLine);
+            updateLocalStorage();
+            clearLineSelection();
+            break;
+        case 'away':
+            awayScore++;
+            awayScoreElement.textContent = awayScore;
+            scoreEvents.push('away');
+            updateCurrentRatio();
+            incrementLineCounter(selectedLine);
+            updateLocalStorage();
+            clearLineSelection();
+            break;
+        default:
+            break;
+    }
+
+}
+
 function minusScore(team) {
+    let event = events.pop();
     switch (team) {
         case 'home':
             if (homeScore > 0) {
@@ -443,6 +450,25 @@ function minusScore(team) {
         default:
             break;
     }
+    updateLastEvent(getLastEvent());
+}
+
+function updateLastEvent(event) {
+    lastEventLineElement.textContent = event.line;
+    lastEventRatioElement.textContent = event.ratio;
+    lastEventPossessionElement.textContent = event.possession;
+    lastEventScoreElement.textContent = event.score === 'home' ? 'Star' : 'Bad';
+}
+
+function getLastEvent() {
+    return events.length > 0 ?
+        events[events.length-1] :
+        {
+            line: 'X',
+            ratio: 'X',
+            possession: 'X',
+            score: 'X'
+        }
 }
 
 function saveGame() {

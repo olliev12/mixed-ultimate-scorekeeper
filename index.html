@@ -40,20 +40,6 @@
         </div>
         <button id="undoLast">Undo Last</button>
     </div>
-    <main>
-        <div class="team">
-            <h2>Starfire</h2>
-            <p id="homeScore">0</p>
-            <button class="scoreButton" id="homePlus">+</button>
-            <!-- <button class="scoreButton" id="homeMinus">-</button> -->
-        </div>
-        <div class="team">
-            <h2 id="awayTeamName">Away</h2>
-            <p id="awayScore">0</p>
-            <button class="scoreButton" id="awayPlus">+</button>
-            <!-- <button class="scoreButton" id="awayMinus">-</button> -->
-        </div>
-    </main>
     <footer>
         <h2 id="currentRatio">Current Ratio: W</h2>
         <h2 id="nextRatio">Next Ratio: W</h2>
@@ -82,11 +68,30 @@
             <input type="radio" id="possessionD" name="currentPossession" value="D">
             <label for="possessionD">D</label>
         </div>
-        <!-- <div class="lineCounters">
-            <p>O: <span id="possessionOCount">0</span></p>
-            <p>D: <span id="possessionD">0</span></p>
-        </div> -->
+        <h2 id="currentPossession">Last Event</h2>
+        <div class="eventTrackers">
+            <p>Line: <span id="lastEventLine">X</span></p>
+            <p>Ratio: <span id="lastEventRatio">X</span></p>
+            <p>Possession: <span id="lastEventPossession">X</span></p>
+            <p>Score: <span id="lastEventScore">X</span></p>
+        </div>
+        
     </footer>
+    <main>
+        <div class="team">
+            <h2>Starfire</h2>
+            <p id="homeScore">0</p>
+            <button class="scoreButton" id="homePlus">+</button>
+            <!-- <button class="scoreButton" id="homeMinus">-</button> -->
+        </div>
+        <div class="team">
+            <h2 id="awayTeamName">Away</h2>
+            <p id="awayScore">0</p>
+            <button class="scoreButton" id="awayPlus">+</button>
+            <!-- <button class="scoreButton" id="awayMinus">-</button> -->
+        </div>
+    </main>
+    
     <section id="gamesSection">
         <button id="saveGame" style="float: right;">Save Game</button>
         <h2>Games</h2>

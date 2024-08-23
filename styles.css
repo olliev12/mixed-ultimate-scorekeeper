@@ -28,11 +28,14 @@ p {
 
 /* Header and Footer */
 header, footer {
-    /* width: 100%; */
+    width: 100%;
     padding: 10px;
     background-color: #111;
     border-bottom: 2px solid #f4a7a7;
     border-top: 2px solid #f4a7a7;
+}
+footer {
+    margin-bottom: 15px;
 }
 
 main {
@@ -144,6 +147,19 @@ label {
     padding: 10px;
     border-radius: 5px;
     width: 60px;
+}
+
+.eventTrackers {
+    display: flex;
+    justify-content: space-around;
+}
+
+.eventTrackers p {
+    background-color: #111;
+    border: 1px solid #f4a7a7;
+    padding: 10px 0px;
+    border-radius: 5px;
+    width: 25%;
 }
 
 /* Hamburger Menu */
