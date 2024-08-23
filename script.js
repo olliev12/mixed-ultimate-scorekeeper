@@ -67,12 +67,11 @@ lineDCountElement.textContent = lineDCount;
 lineXCountElement.textContent = lineXCount;
 lineKCountElement.textContent = lineKCount;
 
-let scoreLines = JSON.parse(localStorage.getItem('scoreLines')) || [];
-let scoreEvents = JSON.parse(localStorage.getItem('scoreEvents')) || [];
 let games = JSON.parse(localStorage.getItem('games')) || [];
 let events = JSON.parse(localStorage.getItem('events')) || [];
 let gameIndex;
-let ratio;
+let currentRatio;
+let nextRatio;
 let possession;
 
 updateCurrentStatus();
@@ -111,7 +110,6 @@ newGameButton.addEventListener('click', () => {
 
 document.getElementById('importGames').addEventListener('change', (event) => {
     const file = event.target.files[0];
-    console.log(file.type)
     if (file && file.type === 'application/json') {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -159,6 +157,7 @@ startOnInputs.forEach(input => {
     input.addEventListener('change', () => {
         startOn = document.querySelector('input[name="startOn"]:checked').value;
         updateLocalStorage();
+        updateCurrentPossession();
     });
 });
 
@@ -169,7 +168,7 @@ opponentNameInput.addEventListener('input', () => {
 });
 
 undoLastButton.addEventListener('click', () => {
-    const lastEvent = scoreEvents.pop();
+    const lastEvent = events.pop();
     if (!lastEvent) return;
 
     minusScore(lastEvent);
@@ -224,8 +223,6 @@ function updateLocalStorage() {
     localStorage.setItem('lineDCount', lineDCount);
     localStorage.setItem('lineXCount', lineXCount);
     localStorage.setItem('lineKCount', lineKCount);
-    localStorage.setItem('scoreLines', JSON.stringify(scoreLines));
-    localStorage.setItem('scoreEvents', JSON.stringify(scoreEvents));
     localStorage.setItem('events', JSON.stringify(events));
 }
 
@@ -239,8 +236,7 @@ function startNewGame() {
     document.querySelector(`input[name="startingRatio"][value="${startingRatio}"]`).checked = true;
     opponentNameInput.value = opponentName;
     awayTeamNameElement.textContent = opponentName;
-    scoreLines = [];
-    scoreEvents = [];
+    events = [];
     resetScoreLines();
     updateCurrentRatio();
     updateLocalStorage();
@@ -256,8 +252,7 @@ function loadGame(selectedGame) {
         lineDCount,
         lineXCount,
         lineKCount,
-        scoreLines,
-        scoreEvents,
+        events,
         startingRatio,
         gameTo, 
         startOn
@@ -285,11 +280,10 @@ function updateCurrentStatus() {
 function updateCurrentRatio() {
     const totalPoints = homeScore + awayScore;
     const ratioPattern = startingRatio === 'M' ? ['M', 'W', 'W', 'M'] : ['W', 'M', 'M', 'W'];
-    const currentRatio = ratioPattern[totalPoints % 4];
-    const nextRatio = ratioPattern[(totalPoints + 1) % 4];
+    currentRatio = ratioPattern[totalPoints % 4];
+    nextRatio = ratioPattern[(totalPoints + 1) % 4];
     currentRatioElement.textContent = `Current Ratio: ${currentRatio}`;
     nextRatioElement.textContent = `Next Ratio: ${nextRatio}`;
-    ratio = currentRatio;
     updateCurrentPossession();
     return currentRatio;
 }
@@ -300,13 +294,13 @@ function updateCurrentPossession() {
     const halftime = (gameTo+1)/2;
     const isHalftime = ((homeScore === halftime) && awayScore < halftime) || ((awayScore === halftime) && homeScore < halftime);
     currentPossessionInputs.forEach(input => input.checked = false);
-    if (scoreEvents.length > 0) {
+    if (events.length > 0) {
         if (isHalftime) {
             nextPossession = nextPossession === 'O' ? 'D' : 'O';
         }
         else {
-            const lastEvent = scoreEvents[scoreEvents.length-1];
-            nextPossession = lastEvent === 'home' ? 'D' : 'O'
+            const lastEvent = getLastEvent();
+            nextPossession = lastEvent.score === 'home' ? 'D' : 'O'
         }
     }
     currentPossessionElement.textContent = `We Are On: ${nextPossession}`
@@ -325,7 +319,6 @@ function getSelectedLine() {
 }
 
 function incrementLineCounter(line) {
-    scoreLines.push(line);
     switch (line) {
         case 'O':
             lineOCount++;
@@ -351,10 +344,10 @@ function clearLineSelection() {
     currentLineInputs.forEach(input => input.checked = false);
 }
 
-function decrementLastLineCounter() {
+function decrementLastLineCounter(line) {
     // Implement logic to determine which line was last used and decrement the corresponding counter
     // This requires keeping track of the lines used per score
-    const lastLine = scoreLines.pop();
+    const lastLine = line;
     if (!lastLine) return;
     switch (lastLine) {
         case 'O':
@@ -376,7 +369,7 @@ function decrementLastLineCounter() {
     }
     updateLocalStorage();
 }
-
+//
 function resetScoreLines() {
     lineOCount = 0;
     lineOCountElement.textContent = lineOCount;
@@ -394,7 +387,7 @@ function increaseScore(team) {
 
     const event = {
         line: selectedLine,
-        ratio: ratio,
+        ratio: currentRatio,
         possession: possession,
         score: team
     }
@@ -405,7 +398,6 @@ function increaseScore(team) {
         case 'home':
             homeScore++;
             homeScoreElement.textContent = homeScore;
-            scoreEvents.push('home');
             updateCurrentRatio();
             incrementLineCounter(selectedLine);
             updateLocalStorage();
@@ -414,7 +406,6 @@ function increaseScore(team) {
         case 'away':
             awayScore++;
             awayScoreElement.textContent = awayScore;
-            scoreEvents.push('away');
             updateCurrentRatio();
             incrementLineCounter(selectedLine);
             updateLocalStorage();
@@ -426,15 +417,14 @@ function increaseScore(team) {
 
 }
 
-function minusScore(team) {
-    let event = events.pop();
-    switch (team) {
+function minusScore(event) {
+    switch (event.score) {
         case 'home':
             if (homeScore > 0) {
                 homeScore--;
                 homeScoreElement.textContent = homeScore;
                 updateCurrentRatio();
-                decrementLastLineCounter();
+                decrementLastLineCounter(event.line);
                 updateLocalStorage();
             }
             break;
@@ -443,7 +433,7 @@ function minusScore(team) {
                 awayScore--;
                 awayScoreElement.textContent = awayScore;
                 updateCurrentRatio();
-                decrementLastLineCounter();
+                decrementLastLineCounter(event.line);
                 updateLocalStorage();
             }
             break;
@@ -480,28 +470,26 @@ function saveGame() {
         lineDCount,
         lineXCount,
         lineKCount,
-        scoreLines,
-        scoreEvents,
+        events,
         startingRatio,
         gameTo, 
         startOn,
-        timestamp: new Date().toISOString(),
-        ratioHistory: calculateRatioHistory()
+        timestamp: new Date().toISOString()
     };
     games.push(game)
     localStorage.setItem('games', JSON.stringify(games));
 }
 
-function calculateRatioHistory() {
-    let ratioHistory = [];
-    const ratioPattern = startingRatio === 'M' ? ['M', 'W', 'W', 'M'] : ['W', 'M', 'M', 'W'];
-    for (let i = 0; i < (homeScore+awayScore); i++) {
-        // Determine the ratio for the current point based on the ratioPattern and index
-        ratioHistory.push(ratioPattern[i % 4]);
-    }
-    // ratioHistory.push(startingRatio)
-    return ratioHistory;
-}
+// function calculateRatioHistory() {
+//     let ratioHistory = [];
+//     const ratioPattern = startingRatio === 'M' ? ['M', 'W', 'W', 'M'] : ['W', 'M', 'M', 'W'];
+//     for (let i = 0; i < (homeScore+awayScore); i++) {
+//         // Determine the ratio for the current point based on the ratioPattern and index
+//         ratioHistory.push(ratioPattern[i % 4]);
+//     }
+//     // ratioHistory.push(startingRatio)
+//     return ratioHistory;
+// }
 
 function renderGamesList() {
     const gamesList = document.getElementById('gamesList');
@@ -535,13 +523,14 @@ function renderGamesList() {
         
         lineCounts.className = 'lineCounters';
 
-        let stats = getMatches(game.scoreLines, game.scoreEvents, game.ratioHistory)
+        let stats = getMatches(game.events)
         // game['stats'] = stats;
         Object.keys(totals).forEach((key) => {
             Object.keys(totals[key]).forEach((stat) => {
                 totals[key][stat] += stats[key][stat];
             });
         });
+        console.log(stats)
 
         const lineCountItems = `
             <p>Line <br> Points <br> Scored <br> W <br> M </p>
@@ -554,15 +543,17 @@ function renderGamesList() {
         gameItem.appendChild(lineCounts)
 
 
-        const events = document.createElement('div');
-        const eventStuff = `
-            <p>Lines: <span>${game.scoreLines.toString()}</span></p>
-            <p>Scores: <span>${(game.scoreEvents.map((event) => event === 'home' ? 'W' : 'L')).toString()}</span></p>
-            <p>Ratio: <span>${game.ratioHistory.toString()}</span></p>`;
-        events.innerHTML = eventStuff;
-        gameItem.appendChild(events)
+        // re-do events later
+        // const events = document.createElement('div');
+        // const eventStuff = `
+        //     <p>Lines: <span>${game.scoreLines.toString()}</span></p>
+        //     <p>Scores: <span>${(game.scoreEvents.map((event) => event === 'home' ? 'W' : 'L')).toString()}</span></p>
+        //     <p>Ratio: <span>${game.ratioHistory.toString()}</span></p>`;
+        // events.innerHTML = eventStuff;
+        // gameItem.appendChild(events);
         gamesList.appendChild(gameItem);
     });
+    console.log(totals)
     
     const lineCounts = document.createElement('div');
     lineCounts.className = 'lineCounters';
@@ -595,21 +586,25 @@ function updateUI() {
     awayTeamNameElement.textContent = opponentName;
 
     document.querySelector(`input[name="startingRatio"][value="${startingRatio}"]`).checked = true;
+
+    gameToInput.value = gameTo;
+    document.querySelector(`input[name="startOn"][value="${startOn}"]`).checked = true;
 }
 
-function getMatches(lines, events, history) {
+function getMatches(events) {
     const matches = makeStatsObj();
-
-    for (let x=0; x < lines.length; x++) {
-        let line = lines[x];
-        let score = events[x] === 'home' ? 1 : 0;
-        let W = history[x] === 'W' ? 1 : 0;
-        let M = history[x] === 'M' ? 1 : 0;
+    events.forEach((event) => {
+        let line = event.line;
+        let score = event.score === 'home' ? 1 : 0;
+        let rp = event.ratio + event.possession;
         matches[line].points ++;
+        matches[line][event.ratio] ++;
         matches[line].scores += score;
-        matches[line].W += W;
-        matches[line].M += M;
-    }
+        matches[line][rp] ++;
+        if (score) {
+            matches[line][(rp+'S')] ++;
+        }
+    });
 
     return matches;
 }
@@ -620,25 +615,57 @@ function makeStatsObj() {
             points: 0,
             scores: 0,
             W: 0,
-            M: 0
+            M: 0,
+            WO: 0,
+            WD: 0,
+            MO: 0,
+            MD: 0,
+            WOS: 0,
+            WDS: 0,
+            MOS: 0,
+            MDS: 0
         },
         D: {
             points: 0,
             scores: 0,
             W: 0,
-            M: 0
+            M: 0,
+            WO: 0,
+            WD: 0,
+            MO: 0,
+            MD: 0,
+            WOS: 0,
+            WDS: 0,
+            MOS: 0,
+            MDS: 0
         },
         X: {
             points: 0,
             scores: 0,
             W: 0,
-            M: 0
+            M: 0,
+            WO: 0,
+            WD: 0,
+            MO: 0,
+            MD: 0,
+            WOS: 0,
+            WDS: 0,
+            MOS: 0,
+            MDS: 0
         },
         K: {
             points: 0,
             scores: 0,
             W: 0,
-            M: 0
+            M: 0,
+            WO: 0,
+            WD: 0,
+            MO: 0,
+            MD: 0,
+            WOS: 0,
+            WDS: 0,
+            MOS: 0,
+            MDS: 0
         }
     };
 }
