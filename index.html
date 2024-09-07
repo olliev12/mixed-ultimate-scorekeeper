@@ -25,7 +25,7 @@
         </div>
         <div>
             <label for="gameTo">Game To:</label>
-            <input type="number" id="gameTo" value="13">
+            <input type="number" id="gameTo" value="15">
         </div>
         <div>
             <label>We Start On:</label>
@@ -85,12 +85,22 @@
     </main>
     
     <section id="gamesSection">
-        <h2 id="currentPossession">Last Event</h2>
-        <div class="eventTrackers">
-            <p>Line: <span id="lastEventLine">X</span></p>
-            <p>Ratio: <span id="lastEventRatio">X</span></p>
-            <p>Possession: <span id="lastEventPossession">X</span></p>
-            <p>Score: <span id="lastEventScore">X</span></p>
+        <h2 id="currentPossession">Events</h2>
+        <div class="gameItem">
+            <div class="eventTrackers">
+                <p>Point</p>
+                <p>Line</p>
+                <p>Ratio</p>
+                <p>Start</p>
+                <p>Score</p>
+            </div>
+            <div class="eventTrackers">
+                <p id="lastEventPoint"></p>
+                <p id="lastEventLine"></p>
+                <p id="lastEventRatio"></p>
+                <p id="lastEventPossession"></p>
+                <p id="lastEventScore"></p>
+            </div>
         </div>
         <button id="saveGame" style="float: right;">Save Game</button>
         <h2>Games</h2>
