@@ -1,0 +1,78 @@
+{
+    "name": "Starfire",
+    "players": [
+        {
+            "firstName": "Oliver",
+            "genderMatch": "M",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0591",
+            "lastName": "Voorhees",
+            "line": "X",
+            "nickname": "Ollie",
+            "position": "H"
+        },
+        {
+            "firstName": "Kim",
+            "genderMatch": "W",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0592",
+            "lastName": "Duong",
+            "line": "O",
+            "nickname": "",
+            "position": "H"
+        },
+        {
+            "firstName": "Blake",
+            "genderMatch": "M",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0593",
+            "lastName": "Reino",
+            "line": "D",
+            "nickname": "",
+            "position": "F"
+        },
+        {
+            "firstName": "Jaisy",
+            "genderMatch": "W",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0594",
+            "lastName": "Lau",
+            "line": "O",
+            "nickname": "",
+            "position": "F"
+        },
+        {
+            "firstName": "Britney",
+            "genderMatch": "W",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0595",
+            "lastName": "Echeveria",
+            "line": "X",
+            "nickname": "",
+            "position": "C"
+        },
+        {
+            "firstName": "Seewing",
+            "genderMatch": "W",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0596",
+            "lastName": "Zheng",
+            "line": "D",
+            "nickname": "",
+            "position": "C"
+        },
+        {
+            "firstName": "Henry",
+            "genderMatch": "M",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0597",
+            "lastName": "Lin",
+            "line": "X",
+            "nickname": "",
+            "position": "F"
+        },
+        {
+            "firstName": "Sean",
+            "genderMatch": "M",
+            "id": "f8bab860-7b78-4048-86cd-858f43ff0598",
+            "lastName": "O'Sullivan",
+            "line": "O",
+            "nickname": "Mega",
+            "position": "F"
+        }
+    ],
+    "tournaments": []
+}

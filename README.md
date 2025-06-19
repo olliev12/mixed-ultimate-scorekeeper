@@ -10,3 +10,23 @@ Next Steps:
 - Edit game 
     - load & don't pop, or
     - load, pop, save & re-insert in original position
+
+TODO: 
+- players
+    - manage team, add players
+    - choose players for every line
+    - track play time
+    - enforce ratio
+- more game settings
+    - add caps
+    - alert warnings when approaching caps
+    - start game button
+    - disallow editing settings after game start (or when editing a saved game)
+        - handle suggested alternative (saving current and starting a new game)
+- lines
+    - choose line popup
+    - suggested line based on rotation
+        - future feature to have different rotation types
+        - for now, an even rotation should be default
+    - choose players
+    

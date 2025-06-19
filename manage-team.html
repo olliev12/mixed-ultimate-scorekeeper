@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Team - Starfire Ultimate</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Manage Team</h1>
+        <a href="index.html"><button>Home</button></a>
+    </header>
+    <main>
+        <h2>Current Players</h2>
+        <ul id="playerList">
+            <!-- Player list will be populated here -->
+        </ul>
+
+        <button id="addPlayerBtn">Add Player</button>
+
+        <!-- Add Player Popup -->
+        <div id="addPlayerPopup" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Add New Player</h2>
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName"><br><br>
+
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName"><br><br>
+
+                <label for="nickname">Nickname:</label>
+                <input type="text" id="nickname"><br><br>
+
+                <label for="genderMatch">Gender Match:</label>
+                <select id="genderMatch">
+                    <option value="M">DoM</option>
+                    <option value="W">DoW</option>
+                </select><br><br>
+
+                <label for="position">Position:</label>
+                <select id="position">
+                    <option value="H">Handler</option>
+                    <option value="C">Cutter</option>
+                    <option value="F">Flex</option>
+                </select><br><br>
+
+                <label for="playerLine">Line:</label>
+                <select id="playerLine">
+                    <option value="O">O</option>
+                    <option value="D">D</option>
+                    <option value="X">X</option>
+                </select><br><br>
+
+                <button id="savePlayerBtn">Save Player</button>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        /* Basic Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; color: black; }
+        .close-button { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; }
+    </style>
+    <script src="scripts/manage-team.js"></script>
+    <script src="scripts/data-manager.js"></script>
+</body>
+</html>
