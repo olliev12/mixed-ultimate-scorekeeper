@@ -28,5 +28,8 @@ TODO:
     - suggested line based on rotation
         - future feature to have different rotation types
         - for now, an even rotation should be default
-    - choose players
-    
+- events
+    - horizontal aligned boxes
+    - bg color fill based on who scored (green for us and red for them)
+- games
+    - green/red for win/loss?

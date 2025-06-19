@@ -11,14 +11,23 @@ body {
 /* Header */
 header {
     padding: 5px 15px; /* Adjusted padding for mobile */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children (h1, nav) vertically */
+    align-items: center; /* Center children horizontally */
+    gap: 5px; /* Optional: adds a little space between h1 and nav */
+}
+
+header nav {
+    display: flex; /* Lay out buttons in a row */
+    justify-content: center; /* Center buttons within the nav */
 }
 
 h1, h2 {
     margin: 0;
     padding: 10px;
+}
+
+.inline-header {
     display: inline-block;
 }
 
@@ -245,6 +254,15 @@ input[type="text"] {
     margin-left: 10px;
 }
 
+/* Players */
+ul {
+    list-style-type: none;
+    padding-inline-start: 5px;
+}
+
+.delete-button {
+    border-radius: 20%;
+}
 
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {

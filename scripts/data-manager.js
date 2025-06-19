@@ -11,6 +11,16 @@ function generateUUID() {
     );
 }
 
+/**
+ * Creates a "safe" ID from a string (e.g., a nickname).
+ * Converts to lowercase, replaces spaces and non-alphanumeric characters with underscores.
+ * @param {string} inputString - The string to convert.
+ * @returns {string} The safe ID string.
+ */
+function createSafeId(inputString) {
+    if (!inputString) return '';
+    return inputString.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+}
 
 async function loadStarfireData() {
     if (appData) return appData; // Return cached data if already loaded
@@ -73,20 +83,43 @@ function getPlayers() {
     return appData?.players || [];
 }
 
+/**
+ * Adds a new player to the roster.
+ * The player's ID will be derived from their nickname.
+ * @param {object} playerData - Object containing player details (must include nickname).
+ * @returns {object|null} The new player object with an ID, or null if nickname is missing or ID is not unique.
+ */
 function addPlayer(playerData) {
     if (!appData) {
         console.error("App data not loaded. Cannot add player.");
         return null;
     }
-    const newPlayer = { id: generateUUID(), ...playerData };
+    if (!playerData.nickname || playerData.nickname.trim() === "") {
+        console.error("Nickname is required to add a player.");
+        alert("Nickname is required.");
+        return null;
+    }
+    const newPlayerId = createSafeId(playerData.nickname);
+    if (getPlayerById(newPlayerId)) {
+        alert(`A player with the nickname (or similar) "${playerData.nickname}" already exists. Please choose a unique nickname.`);
+        return null;
+    }
+
+    const newPlayer = { ...playerData, id: newPlayerId }; // Assign safe nickname as ID
     appData.players.push(newPlayer);
     saveStarfireData();
     return newPlayer;
 }
 
 function deletePlayer(playerId) {
-    // Assuming tournamentId is the index for now
-    return appData?.tournaments?.[tournamentId];
+    if (!appData || !appData.players) return false;
+    const initialLength = appData.players.length;
+    appData.players = appData.players.filter(player => player.id !== playerId);
+    if (appData.players.length < initialLength) {
+        saveStarfireData();
+        return true;
+    }
+    return false;
 }
 
 function addTournament(tournamentName) {

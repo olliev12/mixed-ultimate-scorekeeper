@@ -9,15 +9,19 @@
 <body>
     <header>
         <h1>Manage Team</h1>
-        <a href="index.html"><button>Home</button></a>
+        <nav>
+            <a href="index.html"><button>Home</button></a>
+            <button id="addPlayerBtn">Add Player</button>
+        </nav>
     </header>
     <main>
-        <h2>Current Players</h2>
+        <h2 class="inline-header">Current Players</h2>
+        
         <ul id="playerList">
             <!-- Player list will be populated here -->
         </ul>
 
-        <button id="addPlayerBtn">Add Player</button>
+        
 
         <!-- Add Player Popup -->
         <div id="addPlayerPopup" class="modal">
@@ -30,24 +34,24 @@
                 <label for="lastName">Last Name:</label>
                 <input type="text" id="lastName"><br><br>
 
-                <label for="nickname">Nickname:</label>
-                <input type="text" id="nickname"><br><br>
+                <label for="nickname">Nickname/Display Name*:</label>
+                <input type="text" id="nickname" required><br><br>
 
                 <label for="genderMatch">Gender Match:</label>
-                <select id="genderMatch">
+                <select id="genderMatch" required>
                     <option value="M">DoM</option>
                     <option value="W">DoW</option>
                 </select><br><br>
 
                 <label for="position">Position:</label>
-                <select id="position">
+                <select id="position" required>
                     <option value="H">Handler</option>
                     <option value="C">Cutter</option>
                     <option value="F">Flex</option>
                 </select><br><br>
 
                 <label for="playerLine">Line:</label>
-                <select id="playerLine">
+                <select id="playerLine" required>
                     <option value="O">O</option>
                     <option value="D">D</option>
                     <option value="X">X</option>

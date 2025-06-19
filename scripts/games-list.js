@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('tournamentNameHeader').textContent = `${tournament.name || 'Tournament'} - Games`;
 
     renderGamesList(tournamentId, tournament.games);
+    renderTournamentPlayerStats(tournament.games);
 
     const addNewGameBtn = document.getElementById('addNewGameBtn');
     if (addNewGameBtn) {
@@ -57,5 +58,46 @@ function renderGamesList(tournamentId, games) {
         // You'll need to adapt the getMatches and makeStatsObj functions or similar logic.
         // For now, keeping it simple.
         gamesListSection.appendChild(gameItem);
+    });
+}
+
+/**
+ * Calculates and renders player statistics (points played) for the entire tournament.
+ * @param {Array<object>} games - An array of game objects for the current tournament.
+ */
+function renderTournamentPlayerStats(games) {
+    const playerPointsMap = new Map();
+    const allPlayers = getPlayers(); // Fetch all player details once
+
+    games.forEach(game => {
+        if (game.events && Array.isArray(game.events)) {
+            game.events.forEach(event => {
+                if (event.players && Array.isArray(event.players)) {
+                    event.players.forEach(playerId => {
+                        playerPointsMap.set(playerId, (playerPointsMap.get(playerId) || 0) + 1);
+                    });
+                }
+            });
+        }
+    });
+
+    const statsListElement = document.getElementById('tournamentPlayerStatsList');
+    statsListElement.innerHTML = ''; // Clear existing stats
+
+    if (playerPointsMap.size === 0) {
+        statsListElement.innerHTML = '<li>No player stats available for this tournament yet.</li>';
+        return;
+    }
+
+    // Create an array from the map, include player details, then sort
+    const sortedStats = Array.from(playerPointsMap.entries())
+        .map(([playerId, points]) => ({ player: allPlayers.find(p => p.id === playerId), points }))
+        .filter(stat => stat.player) // Ensure player exists
+        .sort((a, b) => b.points - a.points || (a.player.nickname || a.player.lastName).localeCompare(b.player.nickname || b.player.lastName)); // Sort by points desc, then name
+
+    sortedStats.forEach(stat => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${stat.player.nickname || (stat.player.firstName + ' ' + stat.player.lastName)}: ${stat.points} points`;
+        statsListElement.appendChild(listItem);
     });
 }

@@ -4,7 +4,7 @@
         {
             "firstName": "Oliver",
             "genderMatch": "M",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0591",
+            "id": "ollie",
             "lastName": "Voorhees",
             "line": "X",
             "nickname": "Ollie",
@@ -13,64 +13,64 @@
         {
             "firstName": "Kim",
             "genderMatch": "W",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0592",
+            "id": "kim",
             "lastName": "Duong",
             "line": "O",
-            "nickname": "",
+            "nickname": "Kim",
             "position": "H"
         },
         {
             "firstName": "Blake",
             "genderMatch": "M",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0593",
+            "id": "blake",
             "lastName": "Reino",
             "line": "D",
-            "nickname": "",
+            "nickname": "Blake",
             "position": "F"
         },
         {
             "firstName": "Jaisy",
             "genderMatch": "W",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0594",
+            "id": "jaisy",
             "lastName": "Lau",
             "line": "O",
-            "nickname": "",
+            "nickname": "Jaisy",
             "position": "F"
         },
         {
             "firstName": "Britney",
             "genderMatch": "W",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0595",
+            "id": "brit",
             "lastName": "Echeveria",
             "line": "X",
-            "nickname": "",
+            "nickname": "Brit",
             "position": "C"
         },
         {
             "firstName": "Seewing",
             "genderMatch": "W",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0596",
+            "id": "seewing",
             "lastName": "Zheng",
             "line": "D",
-            "nickname": "",
+            "nickname": "Seewing",
             "position": "C"
         },
         {
             "firstName": "Henry",
             "genderMatch": "M",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0597",
+            "id": "henry",
             "lastName": "Lin",
             "line": "X",
-            "nickname": "",
+            "nickname": "Henry",
             "position": "F"
         },
         {
             "firstName": "Sean",
             "genderMatch": "M",
-            "id": "f8bab860-7b78-4048-86cd-858f43ff0598",
+            "id": "sean",
             "lastName": "O'Sullivan",
             "line": "O",
-            "nickname": "Mega",
+            "nickname": "Sean",
             "position": "F"
         }
     ],

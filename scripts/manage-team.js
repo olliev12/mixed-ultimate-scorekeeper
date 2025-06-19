@@ -21,16 +21,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     savePlayerBtn.addEventListener('click', () => {
         const firstName = document.getElementById('firstName').value;
         const lastName = document.getElementById('lastName').value;
-        const nickname = document.getElementById('nickname').value;
+        const nickname = document.getElementById('nickname').value.trim(); // Trim whitespace
         const genderMatch = document.getElementById('genderMatch').value;
         const position = document.getElementById('position').value;
         const line = document.getElementById('playerLine').value;
 
-        if (firstName && lastName && genderMatch && position && line) {
-            addPlayer({ firstName, lastName, nickname, genderMatch, position, line });
-            addPlayerPopup.style.display = 'none';
-            renderPlayerList();
-            clearPlayerForm();
+        if (!nickname) { // Nickname is now required
+            alert("Nickname is required.");
+            return;
+        }
+
+        if (firstName && lastName && genderMatch && position && line) { // Nickname already checked
+            const newPlayer = addPlayer({ firstName, lastName, nickname, genderMatch, position, line });
+            if (newPlayer) { // Check if player was successfully added (ID was unique)
+                addPlayerPopup.style.display = 'none';
+                renderPlayerList();
+                clearPlayerForm();
+            }
         } else {
             alert("Please fill in all required fields.");
         }
@@ -57,11 +64,12 @@ function renderPlayerList() {
 
     players.forEach(player => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${player.firstName} ${player.lastName} (${player.nickname || 'N/A'}) - ${player.genderMatch}, ${player.position}, Line: ${player.line}`;
+        listItem.textContent = `${player.firstName} ${player.lastName} (${player.nickname}) - ID: ${player.id} - ${player.genderMatch}, ${player.position}, Line: ${player.line}`;
 
         // Basic delete functionality for now
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'X';
         deleteButton.addEventListener('click', () => {
             if (confirm(`Delete ${player.firstName} ${player.lastName}?`)) {
                 deletePlayer(player.id);

@@ -9,13 +9,20 @@
 <body>
     <header>
         <h1 id="tournamentNameHeader">Tournament Games</h1>
-        <a href="tournaments.html"><button>Back to Tournaments</button></a>
+        <nav>
+            <a href="tournaments.html"><button>Back to Tournaments</button></a>
+            <button id="addNewGameBtn">New Game</button>
+        </nav>
     </header>
     <main>
-        <button id="addNewGameBtn">New Game</button>
+        <br>
         <section id="gamesListSection">
-            <!-- This will be similar to your current #gamesSection but for a specific tournament -->
             <!-- Games will be listed here by games-list.js -->
+        </section>
+
+        <section id="tournamentPlayerStatsSection">
+            <h2>Tournament Player Stats (Points Played)</h2>
+            <ul id="tournamentPlayerStatsList"></ul>
         </section>
     </main>
     <script src="scripts/data-manager.js"></script>
