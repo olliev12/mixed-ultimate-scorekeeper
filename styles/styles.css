@@ -14,6 +14,10 @@ header {
   flex-direction: column; /* Stack children (h1, nav) vertically */
   align-items: center; /* Center children horizontally */
   gap: 5px; /* Optional: adds a little space between h1 and nav */
+  width: 100%;
+  background-color: #111;
+  border-bottom: 2px solid #f4a7a7;
+  border-top: 2px solid #f4a7a7;
 }
 header nav {
   width: 100%;
@@ -41,15 +45,31 @@ p {
 }
 
 /* Header and Footer */
-header,
+
 #gameStatusPanel {
   width: 100%;
   background-color: #111;
   border-bottom: 2px solid #f4a7a7;
   border-top: 2px solid #f4a7a7;
+  padding-bottom: 10px;
 }
-#gameStatusPanel {
-  margin-bottom: 15px;
+#gameStatusPanel div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2px 10px;
+}
+
+#selectedPlayersDisplayContainer {
+    display: block !important;
+}
+
+#gameStatusPanel h1,h2 {
+  padding: 0px;
+}
+#gameStatusPanel button {
+  width: 90%;
+  margin: 10px ;
 }
 
 main {
@@ -115,9 +135,13 @@ main {
   padding-top: 0;
   padding-bottom: 0;
 }
-#settingsContent div {
+#settingsContent > div {
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 .toggle-button {
   background: none;
   border: none;
@@ -131,11 +155,6 @@ main {
   color: #fff;
 }
 #settings h3 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-#settingsContent div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -402,6 +421,8 @@ input[type="text"] {
 
 /* Custom checkbox visual (using label::before) */
 .player-item-container > label::before {
+  content: '';
+  display: inline-block;
   width: 18px;
   height: 18px;
   border: 2px solid #777;
@@ -415,14 +436,16 @@ input[type="text"] {
 /* --- Styles for the CHECKED state --- */
 
 /* Style the surrounding div (.player-item-container) when its checkbox is checked */
-.player-item-container:has(> input[type="checkbox"]:checked) {
-  background-color: #f4a7a7; /* Highlight background for the div */
-  border-color: #ff9c9c;       /* Highlight border for the div */
-}
-.player-item-container:has(> input[type="checkbox"]:checked) > label {
-  color: #000; /* Text color changes for contrast on new div background */
+.player-item-container-hide:has(> input[type="checkbox"]:checked) {
+  display: none;      
 }
 
+.player-item-container:has(> input[type="checkbox"][data-gender="M"])  {
+  background-color: #457a5b;
+}  
+.player-item-container:has(> input[type="checkbox"][data-gender="W"])  {
+  background-color: #4a304d;
+}  
 /* Players */
 ul {
   list-style-type: none;
@@ -431,6 +454,7 @@ ul {
 .player-item-container input[type="checkbox"]:checked + label::before {
   background-color: #000; /* Checkbox fill color when checked */
   border-color: #000;    /* Checkbox border color when checked */
+  content: '\2714';      /* Unicode checkmark */
   color: #f4a7a7;        /* Checkmark color */
   font-size: 14px;
   text-align: center;
@@ -463,5 +487,28 @@ ul {
   .team {
     width: 100%; /* Make team sections full-width */
     max-width: 100%; /* Remove max-width to fill screen */
+  }
+}
+
+/* Styles for the 'Select Line & Players' button based on state */
+#selectLinePlayersBtn.select-line-attention {
+  font-weight: bold;
+  /* Optional: Add a subtle animation */
+  animation: pulse-attention 1.5s infinite ease-in-out;
+}
+
+#selectLinePlayersBtn.select-line-confirmed {
+  /* Optionally, remove animation if it was applied by another class */
+  animation: none;
+}
+
+@keyframes pulse-attention {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 35px rgba(255, 193, 7, 0.8);
   }
 }

@@ -834,6 +834,25 @@ function triggerAutosave() {
 }
 
 // --- Player Selection Logic ---
+
+/**
+ * Updates the visual state of the 'Select Line & Players' button
+ * based on whether a line is currently set for the point.
+ */
+function updateSelectLinePlayersButtonState() {
+    if (!selectLinePlayersBtn) return; // Guard clause
+
+    if (lineForCurrentPoint) {
+        // Line is selected and confirmed
+        selectLinePlayersBtn.classList.add('select-line-confirmed');
+        selectLinePlayersBtn.classList.remove('select-line-attention');
+    } else {
+        // No line selected, needs attention
+        selectLinePlayersBtn.classList.add('select-line-attention');
+        selectLinePlayersBtn.classList.remove('select-line-confirmed');
+    }
+}
+
 /**
  * Opens the player selection popup, populates it with available players.
  */
@@ -925,6 +944,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     sortedPlayers.forEach(player => {
         const div = document.createElement('div');
         div.classList.add('player-item-container'); // Add a class for styling
+        div.classList.add('player-item-container-hide');
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `player-${player.id}`;
@@ -1098,6 +1118,7 @@ function handlePlayerSelectionConfirm() {
 
     lineForCurrentPoint = confirmedLine; // Set the game's current line for the point
     updateSelectedPlayersDisplay();
+    updateSelectLinePlayersButtonState();
     displaySelectedLineForPointElement.textContent = lineForCurrentPoint || 'None';
     playerSelectionModal.style.display = 'none';
 }
@@ -1106,16 +1127,16 @@ function handlePlayerSelectionConfirm() {
  * Updates the display of selected players on the main game control page.
  */
 function updateSelectedPlayersDisplay() {
-    selectedPlayersListElement.innerHTML = '';
-    if (currentPointPlayers.length === 0) {
-        selectedPlayersListElement.innerHTML = '<li>No players selected for this point.</li>';
-        return;
-    }
-    currentPointPlayers.forEach(player => {
-        const li = document.createElement('li');
-        li.textContent = `${player.nickname || (player.firstName + " " + player.lastName)} (${player.genderMatch})`;
-        selectedPlayersListElement.appendChild(li);
-    });
+    // selectedPlayersListElement.innerHTML = '';
+    // if (currentPointPlayers.length === 0) {
+    //     selectedPlayersListElement.innerHTML = '<div>No players selected for this point.</div>';
+    //     return;
+    // }
+    // currentPointPlayers.forEach(player => {
+    //     const li = document.createElement('div');
+    //     li.textContent = `${player.nickname || (player.nickname)} (${player.genderMatch})`;
+    //     selectedPlayersListElement.appendChild(li);
+    // });
 }
 
 /**
@@ -1126,6 +1147,7 @@ function clearPointSetup() {
     lineForCurrentPoint = null;
     displaySelectedLineForPointElement.textContent = 'None';
     updateSelectedPlayersDisplay();
+    updateSelectLinePlayersButtonState();
 }
 
 // --- Utility functions for stats (can be used by games-list.js or if storing stats with game) ---

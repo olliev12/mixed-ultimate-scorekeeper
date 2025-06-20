@@ -34,35 +34,42 @@
             </div>
             <div>
                 <label>Starting Ratio:</label>
-                <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
-                <label for="ratioM">M</label>
-                <input type="radio" id="ratioW" name="startingRatio" value="W">
-                <label for="ratioW">W</label>
+                <div class="radio-container">
+                    <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
+                    <label for="ratioM">M</label>
+                    <input type="radio" id="ratioW" name="startingRatio" value="W">
+                    <label for="ratioW">W</label>
+                </div>
             </div>
             <div>
                 <label>We Start On: &nbsp;</label>
-                <input type="radio" id="startO" name="startOn" value="O" checked>
-                <label for="startO">O</label>
-                <input type="radio" id="startD" name="startOn" value="D">
-                <label for="startD">D</label>
+                <div class="radio-container">
+                    <input type="radio" id="startO" name="startOn" value="O" checked>
+                    <label for="startO">O</label>
+                    <input type="radio" id="startD" name="startOn" value="D">
+                    <label for="startD">D</label>
+                </div>
             </div>
         </div>
         <button id="startGame">Start Game</button>
     </section>
 
     <section id="gameStatusPanel">
-        <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
-
-        <h2 class="inline-header" id="currentRatio">Current Ratio: M</h2>
-        <h3 class="inline-header" id="nextRatio">Next Ratio: W</h3>
-
-        <button id="selectLinePlayersBtn">Select/Edit Line & Players</button>
-        <p>Selected Line for Point: <span id="displaySelectedLineForPoint">None</span></p>
-        <div id="selectedPlayersDisplayContainer">
-            <h3>Current Line Players:</h3>
-            <ul id="selectedPlayersList"></ul>
+        <div>
+            <h2 class="inline-header" id="currentRatio">Current Ratio: M</h2>
+            <h3 class="inline-header" id="nextRatio">Next Ratio: W</h3>
         </div>
-
+        <div>
+            <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
+            <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
+        </div>
+        
+        
+        <!-- <div id="selectedPlayersDisplayContainer">
+            <h3>Current Line Players:</h3>
+            <div id="selectedPlayersList"></div>
+        </div> -->
+        <button id="selectLinePlayersBtn" class="select-line-attention">Edit Line & Players</button>
     </section>
 
     <main>
@@ -79,8 +86,10 @@
     </main>
 
     <section id="eventsSection">
-        <h2 class="inline-header">Events</h2>
-        <button id="undoLast">Undo Last</button>
+        <div>
+            <h2 class="inline-header">Events</h2>
+            <button id="undoLast">Undo Last</button>
+        </div>
         <!-- Event display structure from original index.html -->
         <div class="gameItem">
             <div class="eventTrackers">
