@@ -44,7 +44,10 @@ p {
   margin: 5px 0;
 }
 
-/* Header and Footer */
+.importExport {
+    top: 300px;
+    position: relative;
+}
 
 #gameStatusPanel {
   width: 100%;
@@ -73,7 +76,7 @@ p {
 }
 
 main {
-  margin-bottom: 15px;
+  margin: 10px;
 }
 
 .modal {
@@ -247,6 +250,13 @@ label {
   display: inline-block;
 }
 
+.home-team {
+    background-color: #457a5b;
+}
+.away-team {
+    background-color: #6e4772;
+}
+
 /* Scoreboard Layout */
 .main-content {
   display: flex;
@@ -257,7 +267,6 @@ label {
 }
 
 .team {
-  background-color: #111;
   border: 1px solid #f4a7a7;
   border-radius: 5px;
   width: 100%;
@@ -283,34 +292,54 @@ label {
   width: 60px;
 }
 
-.eventTrackers {
+#eventsSection {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #222;
+  color: #fff;
+  text-align: left;
+  border-top: 2px solid #f4a7a7;
+}
+
+#eventsSection > div:first-child { /* Container for "Events" title and "Undo Last" button */
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.eventTrackers p {
-  background-color: #111;
-  border: 1px solid #f4a7a7;
-  padding: 10px;
-  border-radius: 5px;
-  width: 25%;
-  margin: 0;
+#eventsContainer {
+  /* Optional: Add some padding or border to the container */
 }
 
-/* Hamburger Menu */
-#hamburgerMenu {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  cursor: pointer;
-  padding: 10px;
-  background-color: #111;
-  border: 1px solid #f4a7a7;
-  border-radius: 5px;
+.event-row {
+  display: flex;
+  justify-content: space-between; /* Distribute columns evenly */
+  padding: 8px 5px;
+  border-bottom: 1px solid #333; /* Separator between rows */
 }
 
-#hamburgerMenu:hover {
-  background-color: #ff9c9c;
+.event-row:last-child {
+  border-bottom: none; /* No border on the last row */
+}
+
+.event-header {
+  font-weight: bold;
+  border-bottom: 2px solid #f4a7a7; /* Thicker border for header */
+  margin-bottom: 5px;
+}
+
+/* Event Row Backgrounds based on Score */
+.event-row.home-score {
+  background-color: #457a5b; /* Semi-transparent home team color */
+}
+
+.event-row.away-score {
+  background-color: #6e4772; /* Semi-transparent away team color */
+}
+
+.event-col {
+  flex: 1; /* Allow columns to grow and shrink */
 }
 
 /* Settings Section */
@@ -375,6 +404,7 @@ input[type="text"] {
   cursor: pointer;
   border-radius: 5px;
   margin-left: 10px;
+  font-size: 14px;
 }
 
 #modalOtherPlayers, #modalLineSpecificPlayers, #modalSelectedPlayers {
@@ -442,7 +472,7 @@ input[type="text"] {
   background-color: #457a5b;
 }  
 .player-item-container:has(> input[type="checkbox"][data-gender="W"])  {
-  background-color: #4a304d;
+  background-color: #6e4772;
 }  
 /* Players */
 ul {
@@ -466,10 +496,6 @@ ul {
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {
   /* Adjustments for smaller screens */
-
-  #hamburgerMenu {
-    padding: 8px;
-  }
 
   #undoLast {
     padding: 8px 10px;

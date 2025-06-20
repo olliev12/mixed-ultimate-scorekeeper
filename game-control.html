@@ -73,12 +73,12 @@
     </section>
 
     <main>
-        <div class="team">
+        <div class="team home-team">
             <h2>Starfire</h2>
             <p id="homeScore">0</p>
             <button class="scoreButton" id="homePlus">+</button>
         </div>
-        <div class="team">
+        <div class="team away-team">
             <h2 id="awayTeamName">Away Team</h2>
             <p id="awayScore">0</p>
             <button class="scoreButton" id="awayPlus">+</button>
@@ -90,21 +90,15 @@
             <h2 class="inline-header">Events</h2>
             <button id="undoLast">Undo Last</button>
         </div>
-        <!-- Event display structure from original index.html -->
-        <div class="gameItem">
-            <div class="eventTrackers">
-                <p>Point</p>
-                <p>Line</p>
-                <p>Ratio</p>
-                <p>Start</p>
-                <p>Score</p>
-            </div>
-            <div class="eventTrackers">
-                <p id="lastEventPoint"></p>
-                <p id="lastEventLine"></p>
-                <p id="lastEventRatio"></p>
-                <p id="lastEventPossession"></p>
-                <p id="lastEventScore"></p>
+        
+        <div id="eventsContainer">
+            <!-- Header Row -->
+            <div class="event-row event-header">
+                <div class="event-col">Point</div>
+                <div class="event-col">Line</div>
+                <div class="event-col">Ratio</div>
+                <div class="event-col">Start</div>
+                <div class="event-col">Score</div>
             </div>
         </div>
 

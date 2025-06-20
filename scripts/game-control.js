@@ -45,7 +45,7 @@ let homeScoreElement, awayScoreElement, homePlusButton, awayPlusButton,
     lastEventPossessionElement, lastEventScoreElement, saveGameButton, gameTitleElement, backButton, halfTimeAtElement,
     halftimeModal, closeHalftimeModalBtn, modalSelectedPlayersElement,
     updateHalftimeTargetBtn,
-    selectLinePlayersBtn, displaySelectedLineForPointElement;
+    selectLinePlayersBtn, displaySelectedLineForPointElement, eventsContainerElement;
 let autosaveTimeoutId = null; // For debouncing autosave
 
 // Constants
@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     halftimeModal = document.getElementById('halftimeModal');
     closeHalftimeModalBtn = document.getElementById('closeHalftimeModalBtn');
     updateHalftimeTargetBtn = document.getElementById('updateHalftimeTargetBtn');
+    eventsContainerElement = document.getElementById('eventsContainer'); // Get the new container
     backButton = document.getElementById('backButton');
 
     // Hide toggle button initially
@@ -668,25 +669,29 @@ function handleUndoLast() {
  * Updates the display of game events in the UI.
  */
 function updateEventsDisplay() {
-    let pointsHTML = ``;
-    let linesHTML = ``;
-    let ratioHTML = ``;
-    let possessionHTML = ``;
-    let scoreHTML = ``;
+    // Clear previous event rows, but keep the header
+    const eventRows = eventsContainerElement.querySelectorAll('.event-row:not(.event-header)');
+    eventRows.forEach(row => row.remove());
 
-    for (let i = events.length - 1; i >= 0; i--) {
+    // Iterate through events and create a row for each
+    // Iterate backwards to display newest events at the top
+    for (let i = events.length - 1; i >= 0; i--) { 
         const event = events[i];
-        pointsHTML += ` ${(i + 1)} <br>`;
-        linesHTML += ` ${event.line} <br>`;
-        ratioHTML += ` ${event.ratio} <br>`;
-        possessionHTML += ` ${event.possession} <br>`;
-        scoreHTML += ` ${event.score === 'home' ? 'Star' : 'Bad'} <br>`;
+        const eventRow = document.createElement('div');
+        eventRow.classList.add('event-row');
+        eventRow.classList.add(event.score === 'home' ? 'home-score' : 'away-score'); // Add score class for styling
+
+        eventRow.innerHTML = `
+            <div class="event-col">${i + 1}</div>
+            <div class="event-col">${event.line}</div>
+            <div class="event-col">${event.ratio}</div>
+            <div class="event-col">${event.possession}</div>
+            <div class="event-col">${event.score === 'home' ? 'Star' : opponentName || 'Away'}</div>
+        `;
+
+        // Insert the new row after the header row
+        eventsContainerElement.insertBefore(eventRow, eventsContainerElement.children[1]);
     }
-    lastPointEventElement.innerHTML = pointsHTML;
-    lastEventLineElement.innerHTML = linesHTML;
-    lastEventRatioElement.innerHTML = ratioHTML;
-    lastEventPossessionElement.innerHTML = possessionHTML;
-    lastEventScoreElement.innerHTML = scoreHTML;
 }
 
 /**
@@ -954,7 +959,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
         if (lineForCurrentPoint === lineSelectedInModal && currentPointPlayers.some(p => p.id === player.id)) {
             checkbox.checked = true;
         }
-        checkbox.addEventListener('change', updateModalPlayerCounts);
+        checkbox.addEventListener('change', (event) => updateModalPlayerCounts(event.target)); // Pass the triggering checkbox
 
         const pointsPlayedInGame = gamePlayerPoints.get(player.id) || 0;
         const isDesignatedLinePlayer = player.line === lineSelectedInModal;
@@ -1013,7 +1018,7 @@ function calculatePlayerPointsInCurrentGame() {
 /**
  * Updates the player counts displayed in the modal during selection.
  */
-function updateModalPlayerCounts() {
+function updateModalPlayerCounts(triggeringCheckbox = null) {
     const selectedCheckboxes = Array.from(playerListContainerElement.querySelectorAll('input[type="checkbox"]:checked'));
     const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
     let mCount = 0;
@@ -1043,10 +1048,39 @@ function updateModalPlayerCounts() {
         div.appendChild(label)
         modalSelectedPlayersElement.appendChild(div);
     });
-    
-    
+
+    // --- Real-time Validation ---
+    const requiredM = currentRatio === RATIO_TYPES.MALE ? 4 : 3;
+    const requiredW = currentRatio === RATIO_TYPES.FEMALE ? 4 : 3;
+
+    let validationError = null;
+    if (selectedCheckboxes.length > 7) {
+        validationError = "Cannot select more than 7 players.";
+    } else if (mCount > requiredM) {
+        validationError = `Cannot select more than ${requiredM} M-match players for ratio ${currentRatio}.`;
+    } else if (wCount > requiredW) {
+        validationError = `Cannot select more than ${requiredW} W-match players for ratio ${currentRatio}.`;
+    }
+
+    if (validationError && triggeringCheckbox) {
+        // If there's a validation error and we know which checkbox triggered it,
+        // uncheck the triggering checkbox and alert the user.
+        triggeringCheckbox.checked = false;
+        alert(validationError);
+
+        // Recursively call updateModalPlayerCounts to update the display
+        // based on the corrected set of checked boxes.
+        // Pass null for triggeringCheckbox to avoid infinite loop if validation
+        // somehow still fails after unchecking.
+        updateModalPlayerCounts(null);
+        return; // Stop further updates in this call
+    }
+    // --- End Real-time Validation ---
+
+    // Update counts display if no validation error occurred
     modalPlayerCountElement.textContent = `${selectedCheckboxes.length}`;
-    
+
+
     modalSelectedMCountElement.textContent = mCount;
     modalSelectedWCountElement.textContent = wCount;
     if (selectedCheckboxes.length === 0) modalSelectedPlayersElement.innerHTML = "<li>No players selected yet.</li>";
