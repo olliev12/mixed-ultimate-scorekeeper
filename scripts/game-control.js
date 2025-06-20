@@ -43,7 +43,7 @@ let homeScoreElement, awayScoreElement, homePlusButton, awayPlusButton,
     playerListContainerElement, confirmPlayersBtn,
     resetModalSelectionsBtn, lastPointEventElement, lastEventLineElement, lastEventRatioElement,
     lastEventPossessionElement, lastEventScoreElement, saveGameButton, gameTitleElement, backButton, halfTimeAtElement,
-    halftimeModal, closeHalftimeModalBtn, // Removed currentPossessionInputs
+    halftimeModal, closeHalftimeModalBtn, modalSelectedPlayersElement,
     updateHalftimeTargetBtn,
     selectLinePlayersBtn, displaySelectedLineForPointElement;
 let autosaveTimeoutId = null; // For debouncing autosave
@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     playerListContainerElement = document.getElementById('playerListContainer');
     resetModalSelectionsBtn = document.getElementById('resetModalSelectionsBtn');
     confirmPlayersBtn = document.getElementById('confirmPlayersBtn');
+    modalSelectedPlayersElement = document.getElementById('modalSelectedPlayers');
     halfTimeAtElement = document.getElementById('halfTimeAt');
     halftimeModal = document.getElementById('halftimeModal');
     closeHalftimeModalBtn = document.getElementById('closeHalftimeModalBtn');
@@ -891,28 +892,39 @@ function openPlayerSelectionPopup() {
 function populatePlayerCheckboxes(lineSelectedInModal) {
     const requiredM = currentRatio === RATIO_TYPES.MALE ? 4 : 3;
     const requiredW = currentRatio === RATIO_TYPES.FEMALE ? 4 : 3;
-    modalRequiredRatioInfoElement.textContent = `Need ${requiredM} M-match, ${requiredW} W-match`;
+    modalRequiredRatioInfoElement.textContent = `${requiredM} M-match, ${requiredW} W-match`;
+
+    playerListContainerElement.innerHTML = '';
     const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
 
     const allPlayers = getPlayers(); // From data-manager.js
     if (!allPlayers || allPlayers.length === 0) {
         playerListContainerElement.innerHTML = "<p>No players available in the team roster.</p>";
-        // playerSelectionModal.style.display = 'block'; // Modal is already shown
         return;
     }
 
     // Sort players: those matching the line type first, then by name
     const sortedPlayers = [...allPlayers].sort((a, b) => {
-        const aMatchesLine = a.line === lineSelectedInModal;
-        const bMatchesLine = b.line === lineSelectedInModal;
-        if (aMatchesLine && !bMatchesLine) return -1;
-        if (!aMatchesLine && bMatchesLine) return 1;
+        const pointsA = gamePlayerPoints.get(a.id) || 0;
+        const pointsB = gamePlayerPoints.get(b.id) || 0;
+        if (pointsA !== pointsB) return pointsA - pointsB;
         return (a.nickname || (a.lastName + a.firstName)).localeCompare(b.nickname || (b.lastName + b.firstName));
     });
 
-    playerListContainerElement.innerHTML = '';
+    const linePlayersSection = document.createElement('div');
+    linePlayersSection.innerHTML = `<h4>${lineSelectedInModal} Line Players (Available)</h4><ul id="modalLineSpecificPlayers"></ul>`;
+    playerListContainerElement.appendChild(linePlayersSection);
+    const lineSpecificPlayersUl = document.getElementById('modalLineSpecificPlayers');
+
+    const otherPlayersSection = document.createElement('div');
+    otherPlayersSection.innerHTML = `<h4>Other Players (Available)</h4><div id="modalOtherPlayers"></div>`;
+    playerListContainerElement.appendChild(otherPlayersSection);
+    const otherPlayersUl = document.getElementById('modalOtherPlayers');
+
+    
     sortedPlayers.forEach(player => {
         const div = document.createElement('div');
+        div.classList.add('player-item-container'); // Add a class for styling
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `player-${player.id}`;
@@ -925,14 +937,23 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
         checkbox.addEventListener('change', updateModalPlayerCounts);
 
         const pointsPlayedInGame = gamePlayerPoints.get(player.id) || 0;
+        const isDesignatedLinePlayer = player.line === lineSelectedInModal;
+
         const label = document.createElement('label');
         label.htmlFor = `player-${player.id}`;
-        label.textContent = `${player.nickname} - ${player.genderMatch} (Line: ${player.line}, Pos: ${player.position}) (Played: ${pointsPlayedInGame})`;
+        label.textContent = `${player.nickname} (${pointsPlayedInGame})`;
 
         div.appendChild(checkbox);
         div.appendChild(label);
-        playerListContainerElement.appendChild(div);
+        if (isDesignatedLinePlayer) {
+            lineSpecificPlayersUl.appendChild(div);
+        } else {
+            otherPlayersUl.appendChild(div);
+        }
     });
+
+    if (lineSpecificPlayersUl.children.length === 0) lineSpecificPlayersUl.innerHTML = "<li>No players specifically designated for this line.</li>";
+    if (otherPlayersUl.children.length === 0) otherPlayersUl.innerHTML = "<li>No other players available.</li>";
     updateModalPlayerCounts(); // Update counts after populating/checking
 }
 
@@ -974,16 +995,57 @@ function calculatePlayerPointsInCurrentGame() {
  */
 function updateModalPlayerCounts() {
     const selectedCheckboxes = Array.from(playerListContainerElement.querySelectorAll('input[type="checkbox"]:checked'));
+    const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
     let mCount = 0;
     let wCount = 0;
+    modalSelectedPlayersElement.innerHTML = ''; // Clear and rebuild the "Selected for this Point" list
     selectedCheckboxes.forEach(cb => {
+        const player = getPlayerById(cb.value)
         if (cb.dataset.gender === RATIO_TYPES.MALE) mCount++;
         if (cb.dataset.gender === RATIO_TYPES.FEMALE) wCount++;
+
+        const div = document.createElement('div');
+        div.classList.add('player-item-container'); // Add a class for styling
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `${cb.id}-selected`;
+        checkbox.value = player.id;
+        checkbox.dataset.gender = player.genderMatch;
+        checkbox.checked = true;
+        checkbox.addEventListener('change', unselectPlayer)
+
+        const pointsPlayedInGame = gamePlayerPoints.get(player.id) || 0;
+        const label = document.createElement('label');
+        label.htmlFor = `${cb.id}-selected`;
+        label.textContent = `${player.nickname} (${pointsPlayedInGame})`;
+
+        div.appendChild(checkbox)
+        div.appendChild(label)
+        modalSelectedPlayersElement.appendChild(div);
     });
+    
+    
     modalPlayerCountElement.textContent = `${selectedCheckboxes.length}`;
+    
     modalSelectedMCountElement.textContent = mCount;
     modalSelectedWCountElement.textContent = wCount;
+    if (selectedCheckboxes.length === 0) modalSelectedPlayersElement.innerHTML = "<li>No players selected yet.</li>";
+ }
+
+ /**
+  * when a selected player is unselected within modalSelectedPlayersElement, 
+  * this unchecks the related checkbox from the other sections and triggers updateModalPlayerCounts
+  */
+ function unselectPlayer() {
+    const id = this.value;
+    const checkbox = document.getElementById(`player-${id}`);
+    // should always be true
+    if (checkbox) {
+        checkbox.checked = false;
+        checkbox.dispatchEvent(new Event('change'));
+    }
 }
+
 
 /**
  * Handles the confirmation of selected players from the popup.

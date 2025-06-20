@@ -358,10 +358,84 @@ input[type="text"] {
   margin-left: 10px;
 }
 
+#modalOtherPlayers, #modalLineSpecificPlayers, #modalSelectedPlayers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Styling for custom checkbox items within player selection modals */
+.player-item-container {
+  margin-bottom: 5px; /* Space between items */
+  border-radius: 4px;
+  /* Default state for the container div */
+  border: 1px solid #444; /* Default border for the div */
+  background-color: #282828; /* Default background for the div */
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Hide the actual checkbox input securely */
+.player-item-container > input[type="checkbox"] {
+  /* Hide the default checkbox */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the label to be the clickable area and to contain the custom checkbox + text */
+.player-item-container > label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 8px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #eee;
+}
+
+/* Custom checkbox visual (using label::before) */
+.player-item-container > label::before {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #777;
+  border-radius: 3px;
+  margin-right: 10px;
+  background-color: #333;
+  transition: background-color 0.2s, border-color 0.2s;
+  flex-shrink: 0; /* Prevent shrinking if label text is long */
+}
+
+/* --- Styles for the CHECKED state --- */
+
+/* Style the surrounding div (.player-item-container) when its checkbox is checked */
+.player-item-container:has(> input[type="checkbox"]:checked) {
+  background-color: #f4a7a7; /* Highlight background for the div */
+  border-color: #ff9c9c;       /* Highlight border for the div */
+}
+.player-item-container:has(> input[type="checkbox"]:checked) > label {
+  color: #000; /* Text color changes for contrast on new div background */
+}
+
 /* Players */
 ul {
   list-style-type: none;
   padding-inline-start: 5px;
+}
+.player-item-container input[type="checkbox"]:checked + label::before {
+  background-color: #000; /* Checkbox fill color when checked */
+  border-color: #000;    /* Checkbox border color when checked */
+  color: #f4a7a7;        /* Checkmark color */
+  font-size: 14px;
+  text-align: center;
+  line-height: 18px;     /* Vertically center checkmark */
+  font-weight: bold;
 }
 
 .delete-button {
