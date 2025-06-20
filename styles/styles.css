@@ -421,8 +421,6 @@ input[type="text"] {
 
 /* Custom checkbox visual (using label::before) */
 .player-item-container > label::before {
-  content: '';
-  display: inline-block;
   width: 18px;
   height: 18px;
   border: 2px solid #777;
@@ -454,7 +452,6 @@ ul {
 .player-item-container input[type="checkbox"]:checked + label::before {
   background-color: #000; /* Checkbox fill color when checked */
   border-color: #000;    /* Checkbox border color when checked */
-  content: '\2714';      /* Unicode checkmark */
   color: #f4a7a7;        /* Checkmark color */
   font-size: 14px;
   text-align: center;
