@@ -8,7 +8,7 @@ let homeScore = 0;
 let awayScore = 0;
 let startingRatio = 'M';
 let opponentName = 'Away Team';
-let gameTo = 15;
+let gameTo = 13;
 let startOn = 'O';
 let events = [];
 
@@ -24,6 +24,9 @@ let possession;   // Calculated
 let currentPointPlayers = []; // Array to store player objects selected for the current point
 let lineForCurrentPoint = null; // Stores the line (O,D,X,K) selected for the current point being set up
 let isGameStarted = false; // New state variable
+let effectiveHalftimePoint = null; // Stores the point at which halftime was actually declared
+// @todo - we might not need this
+let hasHalftimeBeenReachedAndAlerted = false; // Tracks if halftime popup has been shown
 
 // DOM Element References
 let homeScoreElement, awayScoreElement, homePlusButton, awayPlusButton,
@@ -38,10 +41,12 @@ let homeScoreElement, awayScoreElement, homePlusButton, awayPlusButton,
     modalRequiredRatioInfoElement, modalPlayerCountElement,
     modalSelectedMCountElement, modalSelectedWCountElement,
     playerListContainerElement, confirmPlayersBtn,
-    lastPointEventElement, lastEventLineElement, lastEventRatioElement,
-    lastEventPossessionElement, lastEventScoreElement,
-    currentPossessionInputs, saveGameButton, gameTitleElement, backButton,
+    resetModalSelectionsBtn, lastPointEventElement, lastEventLineElement, lastEventRatioElement,
+    lastEventPossessionElement, lastEventScoreElement, saveGameButton, gameTitleElement, backButton, halfTimeAtElement,
+    halftimeModal, closeHalftimeModalBtn, // Removed currentPossessionInputs
+    updateHalftimeTargetBtn,
     selectLinePlayersBtn, displaySelectedLineForPointElement;
+let autosaveTimeoutId = null; // For debouncing autosave
 
 // Constants
 const LINE_TYPES = { OFFENSE: 'O', DEFENSE: 'D', EXTRA: 'X', KILL: 'K' };
@@ -58,7 +63,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('gameStatusPanel').style.display = 'none';
     document.querySelector('main').style.display = 'none'; // Main score display
     document.getElementById('eventsSection').style.display = 'none';
-
 
     // Get DOM elements
     homeScoreElement = document.getElementById('homeScore');
@@ -86,7 +90,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     lastEventRatioElement = document.getElementById('lastEventRatio');
     lastEventPossessionElement = document.getElementById('lastEventPossession');
     lastEventScoreElement = document.getElementById('lastEventScore');
-    currentPossessionInputs = document.querySelectorAll('input[name="currentPossession"]');
     saveGameButton = document.getElementById('saveGameButton');
     gameTitleElement = document.getElementById('gameTitle');
     selectedPlayersListElement = document.getElementById('selectedPlayersList');
@@ -103,7 +106,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     modalSelectedMCountElement = document.getElementById('modalSelectedMCount');
     modalSelectedWCountElement = document.getElementById('modalSelectedWCount');
     playerListContainerElement = document.getElementById('playerListContainer');
+    resetModalSelectionsBtn = document.getElementById('resetModalSelectionsBtn');
     confirmPlayersBtn = document.getElementById('confirmPlayersBtn');
+    halfTimeAtElement = document.getElementById('halfTimeAt');
+    halftimeModal = document.getElementById('halftimeModal');
+    closeHalftimeModalBtn = document.getElementById('closeHalftimeModalBtn');
+    updateHalftimeTargetBtn = document.getElementById('updateHalftimeTargetBtn');
     backButton = document.getElementById('backButton');
 
     // Hide toggle button initially
@@ -124,26 +132,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadStarfireData(); // From data-manager.js
 
+    let gameLoadedSuccessfully = false;
     if (currentGameId) {
-        // Load existing game
-        const gameData = getGameById(tournamentId, currentGameId);
-        if (gameData) {
-            loadGameData(gameData);
+        const autosavedGameJSON = localStorage.getItem(`autosave_game_${currentGameId}`);
+        if (autosavedGameJSON) {
+            console.log("Loading from autosave for game:", currentGameId);
+            loadGameData(JSON.parse(autosavedGameJSON));
             gameTitleElement.textContent = `Starfire vs ${opponentName || 'Opponent'}`;
             startGameSetup(startGameButton, toggleSettingsButton, settingsContent); // A loaded game is considered started
+            gameLoadedSuccessfully = true;
         } else {
-            alert("Game data not found. Starting a new game setup in this tournament.");
-            setupNewGameDefaults(); // Setup for a new game if specific gameId not found
-            gameTitleElement.textContent = `New Game Setup`;
+            // No autosave, try loading from main data
+            const mainGameData = getGameById(tournamentId, currentGameId);
+            if (mainGameData) {
+                console.log("Loading from main data for game:", currentGameId);
+                loadGameData(mainGameData);
+                gameTitleElement.textContent = `Starfire vs ${opponentName || 'Opponent'}`;
+                startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
+                // Create an initial temporary autosave from this loaded main data
+                triggerAutosave(); 
+                gameLoadedSuccessfully = true;
+            } else {
+                alert(`Game with ID ${currentGameId} not found. Setting up for a new game.`);
+                currentGameId = null; // Clear invalid ID
+            }
         }
-    } else {
+    }
+    
+    if (!gameLoadedSuccessfully) { // Handles both no currentGameId from URL and failed load by ID
         // New game
         setupNewGameDefaults();
         gameTitleElement.textContent = `New Game`;
+        updateAllCalculatedStatus();
     }
 
     updateUI();
-    updateAllCalculatedStatus();
     attachEventListeners();
 });
 
@@ -155,7 +178,7 @@ function setupNewGameDefaults() {
     awayScore = 0;
     startingRatio = 'M';
     opponentName = "Away Team";
-    gameTo = 15;
+    gameTo = 13;
     startOn = 'O';
     events = [];
     lineOCount = 0;
@@ -165,6 +188,8 @@ function setupNewGameDefaults() {
     currentGameId = null; // Ensure it's null for a new game
     lineForCurrentPoint = null;
     isGameStarted = false; // Reset for new game setup
+    effectiveHalftimePoint = null;
+    hasHalftimeBeenReachedAndAlerted = false;
 }
 
 /**
@@ -176,7 +201,7 @@ function loadGameData(gameData) {
     awayScore = gameData.awayScore;
     startingRatio = gameData.startingRatio;
     opponentName = gameData.opponentName;
-    gameTo = parseInt(gameData.gameTo) || 15; // Ensure gameTo is a number
+    gameTo = parseInt(gameData.gameTo) || 13; // Ensure gameTo is a number
     startOn = gameData.startOn;
     events = gameData.events ? [...gameData.events] : []; // Deep copy events
     lineOCount = gameData.lineOCount || 0;
@@ -184,6 +209,15 @@ function loadGameData(gameData) {
     lineXCount = gameData.lineXCount || 0;
     lineKCount = gameData.lineKCount || 0;
     currentGameId = gameData.id; // Store the game's ID
+    effectiveHalftimePoint = gameData.effectiveHalftimePoint || null;
+
+    // Determine if halftime was already reached in the loaded game
+    const actualHalftimeTriggerPoint = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
+    if (homeScore > actualHalftimeTriggerPoint || awayScore > actualHalftimeTriggerPoint) {
+        hasHalftimeBeenReachedAndAlerted = true;
+    } else {
+        hasHalftimeBeenReachedAndAlerted = false;
+    }
     // lineForCurrentPoint and currentPointPlayers will be empty on load, user must set them for the next point.
     isGameStarted = true; // A loaded game is considered started
 }
@@ -205,6 +239,15 @@ function updateUI() {
 
     if (isGameStarted) {
         disableSettings();
+        if (effectiveHalftimePoint !== null) {
+            // Check if halftime has been reached to disable button
+            const actualHalftimeTriggerPoint = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
+            if (homeScore >= actualHalftimeTriggerPoint || awayScore >= actualHalftimeTriggerPoint) {
+                updateHalftimeTargetBtn.disabled = true;
+            } else {
+                updateHalftimeTargetBtn.disabled = false;
+            }
+        }
     }
 
     // Update line counts in modal labels as well
@@ -215,6 +258,7 @@ function updateUI() {
 
     displaySelectedLineForPointElement.textContent = lineForCurrentPoint || 'None';
     updateSelectedPlayersDisplay();
+    updateHalftimeAtDisplay(); // Update halftime display
     updateEventsDisplay();
 }
 
@@ -234,6 +278,14 @@ function disableSettings() {
  */
 function updateAllCalculatedStatus() {
     updateCurrentRatioAndPossession(); // This will also call updateCurrentPossession
+    updateHalftimeAtDisplay(); // Ensure halftime display is updated with gameTo changes
+}
+
+/**
+ * Updates the "Halftime at" display based on gameTo or effectiveHalftimePoint.
+ */
+function updateHalftimeAtDisplay() {
+    halfTimeAtElement.textContent = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
 }
 
 /**
@@ -255,10 +307,17 @@ function attachEventListeners() {
         });
     });
 
+    let gameToDebounceTimeout = null;
     gameToInput.addEventListener('input', () => {
         if (isGameStarted) return;
-        gameTo = parseInt(gameToInput.value) || 15;
-        updateAllCalculatedStatus();
+        gameTo = parseInt(gameToInput.value) || 13;
+        // Debounce the updateAllCalculatedStatus call for gameTo input
+        clearTimeout(gameToDebounceTimeout);
+        gameToDebounceTimeout = setTimeout(() => {
+            updateAllCalculatedStatus(); 
+            // No need to call triggerAutosave here as settings changes aren't autosaved until game starts
+            // and initial save captures these.
+        }, 500); // 500ms debounce
     });
 
     startOnInputs.forEach(input => {
@@ -282,7 +341,7 @@ function attachEventListeners() {
 
     if (startGameButton) {
         startGameButton.addEventListener('click', () => {
-            if (confirm("Are you sure you want to start the game? Settings will be locked.")) {
+            if (confirm("Are you sure you want to start the game? Settings will be locked. (Halftime target can be changed later)")) {
                 startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
             }
         });
@@ -317,6 +376,10 @@ function attachEventListeners() {
     if (closePlayerModalBtn) {
         closePlayerModalBtn.addEventListener('click', () => playerSelectionModal.style.display = 'none');
     }
+    if (resetModalSelectionsBtn) {
+        resetModalSelectionsBtn.addEventListener('click', handleResetModalSelections);
+    }
+
     if (confirmPlayersBtn) {
         confirmPlayersBtn.addEventListener('click', handlePlayerSelectionConfirm);
     }
@@ -324,13 +387,13 @@ function attachEventListeners() {
         if (event.target === playerSelectionModal) playerSelectionModal.style.display = 'none';
     });
 
-    // Optional: Update possession manually (though it's mostly automatic)
-    currentPossessionInputs.forEach(input => {
-        input.addEventListener('change', () => {
-            possession = document.querySelector('input[name="currentPossession"]:checked').value;
-            currentPossessionElement.textContent = `We Are On: ${possession}`;
-        });
-    });
+    if (updateHalftimeTargetBtn) {
+        updateHalftimeTargetBtn.addEventListener('click', handleUpdateHalftimeTarget);
+    }
+
+    if (closeHalftimeModalBtn) {
+        closeHalftimeModalBtn.addEventListener('click', () => halftimeModal.style.display = 'none');
+    }
 }
 
 /**
@@ -353,6 +416,54 @@ function startGameSetup(startGameButton, toggleSettingsButton, settingsContent) 
     document.querySelector('main').style.display = 'flex'; // Or 'block' depending on your main layout
     document.getElementById('eventsSection').style.display = 'block';
     updateAllCalculatedStatus(); // Ensure ratio/possession is correct based on locked settings
+    // Trigger initial save for brand new games (where currentGameId was initially null)
+    if (!currentGameId) triggerInitialSave();
+    
+}
+
+/**
+ * Triggers an initial minimal save when starting a new game to establish a game ID and an autosave point.
+ */
+async function triggerInitialSave() {
+    if (currentGameId) return; // Only trigger if there is no currentGameId yet
+
+    // Create a minimal game data object with settings only
+    const initialGameData = {
+        opponentName,
+        gameTo,
+        startingRatio,
+        startOn,
+        homeScore: 0,
+        awayScore: 0,
+        events: [],
+        lineOCount: 0,
+        lineDCount: 0,
+        lineXCount: 0,
+        lineKCount: 0,
+        effectiveHalftimePoint: null,
+        timestamp: new Date().toISOString(),
+    };
+
+    const success = await saveGame(tournamentId, initialGameData);
+
+    if (success && initialGameData.id) { // Ensure an ID was assigned by saveGame
+        // If the initial save was successful, update currentGameId and create the temp autosave.
+        // Since saveGame might modify the data (e.g. assigning an ID), we get the latest data.
+        const savedGame = getGameById(tournamentId, initialGameData.id); // Use the potential ID.
+        if (savedGame) {
+            currentGameId = savedGame.id;
+            console.log(`New game started with ID: ${currentGameId}. Initial save complete.`);
+            // Update URL to include the new gameId for refresh/autosave robustness
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('gameId', currentGameId);
+            history.replaceState(null, '', currentUrl.toString());
+            console.log(`URL updated to: ${currentUrl.toString()}`);
+            // Now, immediately create a temporary autosave reflecting this initial state:
+            triggerAutosave();
+        }
+    } else {
+        alert("Error during initial game setup/save. Game might not be properly saved.");
+    }
 }
 
 
@@ -380,31 +491,24 @@ function updateCurrentRatioAndPossession() {
  */
 function updateCurrentPossession() {
     let nextPossessionCalc = startOn; // Default to initial setting
-    const halftimePoint = Math.ceil(gameTo / 2);
 
     let lastEventBeforeThisPoint = events.length > 0 ? events[events.length - 1] : null;
     let scoreBeforeThisPoint = { home: homeScore, away: awayScore };
 
+    // events.length > 0
     if (lastEventBeforeThisPoint) {
         if (lastEventBeforeThisPoint.score === 'home') scoreBeforeThisPoint.home--;
         else scoreBeforeThisPoint.away--;
-    }
 
-    const homeReachedHalftime = scoreBeforeThisPoint.home === halftimePoint && scoreBeforeThisPoint.away < halftimePoint;
-    const awayReachedHalftime = scoreBeforeThisPoint.away === halftimePoint && scoreBeforeThisPoint.home < halftimePoint;
-    const isAfterHalftimePoint = homeReachedHalftime || awayReachedHalftime;
+        const halftimeNow = checkForHalftime();
 
-    if (events.length > 0) {
-        if (isAfterHalftimePoint && events.length === (scoreBeforeThisPoint.home + scoreBeforeThisPoint.away)) {
-            nextPossessionCalc = startOn === POSSESSION_TYPES.OFFENSE ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE;
-        } else {
-            nextPossessionCalc = lastEventBeforeThisPoint.score === 'home' ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE;
-        }
+        nextPossessionCalc = halftimeNow 
+            ? startOn === POSSESSION_TYPES.OFFENSE ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE
+            : lastEventBeforeThisPoint.score === 'home' ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE;
     }
 
     possession = nextPossessionCalc;
     currentPossessionElement.textContent = `We Are On: ${possession}`;
-    document.querySelector(`input[name="currentPossession"][value="${possession}"]`).checked = true;
 }
 
 /**
@@ -414,14 +518,6 @@ function updateCurrentPossession() {
 function getSelectedLine() {
     // This now refers to the line confirmed for the current point
     return lineForCurrentPoint;
-}
-
-
-/**
- * Clears the selection of the current line radio buttons.
- */
-function clearLineSelection() {
-    currentLineInputs.forEach(input => input.checked = false);
 }
 
 /**
@@ -502,6 +598,25 @@ function handleScore(team) {
     updateAllCalculatedStatus(); // Recalculate ratio and next possession
     updateEventsDisplay();
     clearPointSetup(); // Clear line and players after point is scored
+    triggerAutosave(); // Autosave after scoring
+}
+
+function checkForHalftime() {
+    const actualHalftimeTriggerPoint = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
+    const lastEventScore = events.length > 0 ? events[events.length - 1].score : null;
+
+    const justReachedHalftimeHome = (homeScore === actualHalftimeTriggerPoint) && (awayScore < actualHalftimeTriggerPoint) && (lastEventScore === 'home');
+    const justReachedHalftimeAway = (awayScore === actualHalftimeTriggerPoint) && (homeScore < actualHalftimeTriggerPoint) && (lastEventScore === 'away');
+    
+
+    if ((justReachedHalftimeHome || justReachedHalftimeAway) && !hasHalftimeBeenReachedAndAlerted) {
+        halftimeModal.style.display = 'block';
+        hasHalftimeBeenReachedAndAlerted = true;
+        if (updateHalftimeTargetBtn) updateHalftimeTargetBtn.disabled = true; // Disable after halftime is hit
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -527,6 +642,24 @@ function handleUndoLast() {
     decrementLineCounter(lastEvent.line);
     updateAllCalculatedStatus(); // Recalculate based on new score
     updateEventsDisplay();
+
+    // If undoing brings score below a declared early halftime, reset that declaration
+    if (effectiveHalftimePoint !== null && (homeScore + awayScore) < effectiveHalftimePoint) {
+        // Only reset if the new score is also below the default halftime,
+        // otherwise, the effective halftime might still be relevant if it was set higher than default.
+        // For simplicity now, let's just re-enable the button if we are no longer past the effective halftime.
+        if (updateHalftimeTargetBtn) updateHalftimeTargetBtn.disabled = false;
+        // We might not want to nullify effectiveHalftimePoint automatically,
+        // as the user might have set it for a reason. Let them change it again if needed.
+        // effectiveHalftimePoint = null; // Optional: uncomment to fully reset
+    }
+    // If undoing means halftime is no longer reached
+    const actualHalftimeTriggerPoint = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
+    if (homeScore < actualHalftimeTriggerPoint && awayScore < actualHalftimeTriggerPoint && hasHalftimeBeenReachedAndAlerted) {
+        hasHalftimeBeenReachedAndAlerted = false;
+        if (updateHalftimeTargetBtn) updateHalftimeTargetBtn.disabled = false; // Re-enable if not past halftime
+    }
+    triggerAutosave(); // Autosave after undo
     clearPointSetup(); // Clear line and players as context has changed
 }
 
@@ -587,12 +720,17 @@ function handleSaveGame() {
         gameTo,
         startOn,
         timestamp: new Date().toISOString(), // last modified timestamp
+        effectiveHalftimePoint: effectiveHalftimePoint,
+        // hasHalftimeBeenReachedAndAlerted is a UI state, not typically saved with game core data
     };
 
     const success = saveGame(tournamentId, gameData); // From data-manager.js
 
     if (success) {
         alert('Game saved successfully!');
+        if (currentGameId) { // Clear autosave only if there was a game ID
+            localStorage.removeItem(`autosave_game_${currentGameId}`);
+        }
         window.location.href = `games-list.html?tournamentId=${tournamentId}`;
     } else {
         alert('Failed to save game. Tournament ID might be invalid or data not loaded.');
@@ -604,16 +742,97 @@ function handleSaveGame() {
  */
 function handleBack() {
     if (!isGameStarted && events.length === 0 && homeScore === 0 && awayScore === 0) {
+        if (currentGameId) localStorage.removeItem(`autosave_game_${currentGameId}`); // Clean up if navigating back from a new game setup
         window.location.href = `games-list.html?tournamentId=${tournamentId}`;
         return;
     }
     if (confirm("Leave the current game? Any unsaved changes will be lost.")) {
+        // User confirmed to leave, so clear the temporary autosave for this game
+        if (currentGameId) {
+            localStorage.removeItem(`autosave_game_${currentGameId}`);
+            console.log(`Autosave for game ${currentGameId} cleared on back navigation.`);
+        }
         window.location.href = `games-list.html?tournamentId=${tournamentId}`;
     }
 }
 
-// --- Player Selection Logic ---
+/**
+ * Handles the "Update Halftime Target" button click.
+ */
+function handleUpdateHalftimeTarget() {
+    if (!isGameStarted) {
+        alert("Please start the game first.");
+        return;
+    }
+    const defaultHalftime = Math.ceil(gameTo / 2);
+    const currentTargetDisplay = effectiveHalftimePoint !== null ? effectiveHalftimePoint : defaultHalftime;
+    const highestScore = Math.max(homeScore, awayScore);
+    const minHalftime = Math.max(highestScore, 1);
 
+    const newTargetStr = prompt(
+        `The current halftime trigger point is ${currentTargetDisplay} (default based on 'Game To' is ${defaultHalftime}).\n` +
+        `Enter new halftime target point (must be between ${minHalftime} and ${defaultHalftime}).\n` +
+        "Caution: This should only be done for time-capped games where halftime occurs earlier than normal."
+    );
+    
+
+    if (newTargetStr !== null) { // User didn't cancel
+        const newTarget = parseInt(newTargetStr);
+        if (!isNaN(newTarget) && (newTarget > 0) && (newTarget <= defaultHalftime) && (newTarget >= minHalftime)) {
+            effectiveHalftimePoint = newTarget;
+            alert(`Halftime target updated to ${effectiveHalftimePoint} points.`);
+            updateUI(); // To potentially re-enable/disable the button based on new target
+            updateAllCalculatedStatus(); // Re-evaluate possession and other statuses
+            triggerAutosave(); // Autosave after updating halftime target
+        } else {
+            alert(`Invalid input. Please enter a valid number between ${minHalftime} and ${defaultHalftime}.`);
+        }
+    }
+}
+
+// --- Autosave Logic ---
+/**
+ * Triggers a debounced autosave to a temporary localStorage item.
+ */
+function triggerAutosave() {
+    if (!isGameStarted || !currentGameId) {
+        // console.log("Autosave skipped: Game not started or no currentGameId.");
+        return; 
+    }
+
+    if (autosaveTimeoutId) {
+        clearTimeout(autosaveTimeoutId);
+    }
+    autosaveTimeoutId = setTimeout(() => {
+        const gameDataForAutosave = {
+            id: currentGameId,
+            opponentName,
+            homeScore,
+            awayScore,
+            lineOCount,
+            lineDCount,
+            lineXCount,
+            lineKCount,
+            events: [...events],
+            startingRatio, // Game setting
+            gameTo,        // Game setting
+            startOn,       // Game setting
+            effectiveHalftimePoint,
+            // Note: hasHalftimeBeenReachedAndAlerted is UI state, not part of core game data for autosave
+            // currentPointPlayers and lineForCurrentPoint are transient for point setup, not part of game state to save
+            lastAutosaveTimestamp: new Date().toISOString() // For potential future comparison
+        };
+        try {
+            localStorage.setItem(`autosave_game_${currentGameId}`, JSON.stringify(gameDataForAutosave));
+            console.log(`Game ${currentGameId} autosaved to temporary storage.`);
+        } catch (e) {
+            console.error("Error during autosave:", e);
+            // Potentially alert user if localStorage is full
+        }
+    }, 1500); // Autosave 1.5 seconds after the last relevant action
+}
+
+// --- Player Selection Logic ---
 /**
  * Opens the player selection popup, populates it with available players.
  */
@@ -650,14 +869,14 @@ function openPlayerSelectionPopup() {
             const nextLineIndex = (lastLineIndex + 1) % lineRotation.length;
             const defaultLine = lineRotation[nextLineIndex];
             if (defaultLine) {
-                lineForCurrentPoint = defaultLine;
+                // lineForCurrentPoint = defaultLine; // Don't set lineForCurrentPoint yet, just default in modal
 
                 const lineRadioToSelect = document.getElementById(`modalLine${defaultLine}`);
                 if (lineRadioToSelect) {
                     lineRadioToSelect.checked = true;
                     modalSelectedLineDisplayElement.textContent = defaultLine;
                     modalPlayerSelectionArea.style.display = 'block';
-                    populatePlayerCheckboxes(lineForCurrentPoint); // Also pre-populate and check players
+                    populatePlayerCheckboxes(defaultLine); // Populate for the defaulted line
                 }
             }
         }
@@ -678,7 +897,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     const allPlayers = getPlayers(); // From data-manager.js
     if (!allPlayers || allPlayers.length === 0) {
         playerListContainerElement.innerHTML = "<p>No players available in the team roster.</p>";
-        playerSelectionModal.style.display = 'block';
+        // playerSelectionModal.style.display = 'block'; // Modal is already shown
         return;
     }
 
@@ -699,8 +918,8 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
         checkbox.id = `player-${player.id}`;
         checkbox.value = player.id;
         checkbox.dataset.gender = player.genderMatch; // Store gender for validation
-        // Pre-check if this player was part of currentPointPlayers
-        if (currentPointPlayers.some(p => p.id === player.id)) {
+        // Pre-check if this player was part of currentPointPlayers AND if the modal is being opened for the current line
+        if (lineForCurrentPoint === lineSelectedInModal && currentPointPlayers.some(p => p.id === player.id)) {
             checkbox.checked = true;
         }
         checkbox.addEventListener('change', updateModalPlayerCounts);
@@ -715,6 +934,23 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
         playerListContainerElement.appendChild(div);
     });
     updateModalPlayerCounts(); // Update counts after populating/checking
+}
+
+/**
+ * Handles the click of the "Reset Selections" button within the player selection modal.
+ * Clears selected line in modal, hides player selection area, and clears player checkboxes.
+ */
+function handleResetModalSelections() {
+    // Uncheck all line radio buttons in the modal
+    modalCurrentLineInputs.forEach(input => input.checked = false);
+    // Clear the display of the selected line in the modal
+    modalSelectedLineDisplayElement.textContent = '';
+    // Hide the player selection area
+    modalPlayerSelectionArea.style.display = 'none';
+    // Clear any player checkboxes that might have been populated
+    playerListContainerElement.innerHTML = '';
+    // Reset the player counts in the modal
+    updateModalPlayerCounts(); // This will set counts to 0 as no checkboxes are present/checked
 }
 
 /**

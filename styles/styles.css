@@ -1,292 +1,393 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 /* Header */
 header {
-    padding: 5px 15px; /* Adjusted padding for mobile */
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack children (h1, nav) vertically */
-    align-items: center; /* Center children horizontally */
-    gap: 5px; /* Optional: adds a little space between h1 and nav */
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column; /* Stack children (h1, nav) vertically */
+  align-items: center; /* Center children horizontally */
+  gap: 5px; /* Optional: adds a little space between h1 and nav */
 }
-
 header nav {
-    display: flex; /* Lay out buttons in a row */
-    justify-content: center; /* Center buttons within the nav */
+  width: 100%;
+  display: flex; /* Lay out buttons in a row */
+  justify-content: space-between; /* Space buttons evenly */
+  align-items: center; /* Center buttons within the nav */
 }
 
-h1, h2 {
-    margin: 0;
-    padding: 10px;
+header nav button {
+  margin: 0px 10px 10px 10px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  padding: 10px;
 }
 
 .inline-header {
-    display: inline-block;
+  display: inline-block;
 }
 
 p {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 /* Header and Footer */
-header, #gameStatusPanel {
-    width: 100%;
-    padding: 10px;
-    background-color: #111;
-    border-bottom: 2px solid #f4a7a7;
-    border-top: 2px solid #f4a7a7;
+header,
+#gameStatusPanel {
+  width: 100%;
+  background-color: #111;
+  border-bottom: 2px solid #f4a7a7;
+  border-top: 2px solid #f4a7a7;
 }
 #gameStatusPanel {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 main {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+  background-color: #222;
+  margin: 10% auto;
+  padding: 10px;
+  border: 1px solid #f4a7a7;
+  width: 90%;
+  max-width: 600px;
+  color: #fff;
+  border-radius: 5px;
+}
+.modal-content h2,
+.modal-content p {
+  color: #fff;
+}
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+#playerListContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  text-align: left;
+}
+#playerListContainer label {
+  display: block;
+  margin-bottom: 5px;
+}
+#settingsContent {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+  max-height: 500px;
+  opacity: 1;
+}
+#settingsContent.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+#settingsContent div {
+  margin-bottom: 10px;
+}
+.toggle-button {
+  background: none;
+  border: none;
+  color: #f4a7a7;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 0 5px;
+  margin: 0;
+}
+.toggle-button:hover {
+  color: #fff;
+}
+#settings h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#settingsContent div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; color: black; } */
+
 #settings {
-    margin-top: 5px; /* Reduce top margin for mobile */
-    padding: 10px 5px; /* Adjust padding for smaller screens */
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  margin-top: 5px; /* Reduce top margin for mobile */
+  padding: 0px 10px 0px 10px; /* Adjust padding for smaller screens */
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #settings label {
-    /* display: block; Ensure labels are block-level for proper left alignment */
-    margin-bottom: 5px;
+  /* display: block; Ensure labels are block-level for proper left alignment */
+  margin-bottom: 5px;
 }
 
 #settings input[type="radio"],
 #settings input[type="number"],
 #settings input[type="text"] {
-    margin-left: 20px;
-    padding: 5px;
-    background-color: #111;
-    color: #fff;
-    border-radius: 5px;
-    /* border: none; Removed border */
+  margin-left: 20px;
+  padding: 5px;
+  background-color: #111;
+  color: #fff;
+  border-radius: 5px;
+  /* border: none; Removed border */
+}
+
+/* Style for disabled radio buttons to make the selection more visible */
+#settings input[type="radio"]:disabled + label {
+  color: #aaa; /* Dim the label text for disabled items */
+  cursor: not-allowed;
+}
+
+#settings input[type="radio"]:checked:disabled + label {
+  color: #f4a7a7; /* Highlight the label of the checked and disabled radio */
+  font-weight: bold; /* Make it stand out a bit more */
+}
+
+#settings input[type="radio"]:disabled {
+  opacity: 0.7; /* Slightly dim the radio button itself */
 }
 
 /* Buttons */
 button {
-    padding: 8px 10px; /* Adjust button padding for better mobile fit */
-    font-size: 14px; /* Slightly reduce font size for mobile */
-    background-color: #f4a7a7;
-    color: #000;
-    border: none;
-    margin: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 8px 10px; /* Adjust button padding for better mobile fit */
+  font-size: 14px; /* Slightly reduce font size for mobile */
+  background-color: #f4a7a7;
+  color: #000;
+  border: none;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #ff9c9c;
+  background-color: #ff9c9c;
 }
 
 button:active {
-    background-color: #ff7b7b;
+  background-color: #ff7b7b;
 }
 
 input[type="radio"] {
-    margin: 0 5px;
+  margin: 0 5px;
 }
 
 label {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 #undoLast {
-    align-self: flex-end; /* Right-align the "Undo Last" button */
-    /* background-color: #ff7b7b; */
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
+  align-self: flex-end; /* Right-align the "Undo Last" button */
+  /* background-color: #ff7b7b; */
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* Score Buttons */
 .scoreButton {
-    width: 100px;
-    height: 50px;
-    border-radius: 5px;
-    display: inline-block;
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  display: inline-block;
 }
 
 /* Scoreboard Layout */
 .main-content {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 600px;
-    margin: 20px 0;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
 }
 
 .team {
-    background-color: #111;
-    border: 1px solid #f4a7a7;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    max-width: 250px;
+  background-color: #111;
+  border: 1px solid #f4a7a7;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 250px;
 }
 
 .team h2 {
-    padding: 0px;
+  padding: 0px;
 }
 
 /* Line Counters */
 .lineCounters {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
 .lineCounters p {
-    background-color: #111;
-    border: 1px solid #f4a7a7;
-    padding: 10px;
-    border-radius: 5px;
-    width: 60px;
+  background-color: #111;
+  border: 1px solid #f4a7a7;
+  padding: 10px;
+  border-radius: 5px;
+  width: 60px;
 }
 
 .eventTrackers {
-    display: flex;
-    justify-content: space-around;
+  display: flex;
+  justify-content: space-around;
 }
 
 .eventTrackers p {
-    background-color: #111;
-    border: 1px solid #f4a7a7;
-    padding: 10px;
-    border-radius: 5px;
-    width: 25%;
-    margin: 0;
+  background-color: #111;
+  border: 1px solid #f4a7a7;
+  padding: 10px;
+  border-radius: 5px;
+  width: 25%;
+  margin: 0;
 }
 
 /* Hamburger Menu */
 #hamburgerMenu {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    cursor: pointer;
-    padding: 10px;
-    background-color: #111;
-    border: 1px solid #f4a7a7;
-    border-radius: 5px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #111;
+  border: 1px solid #f4a7a7;
+  border-radius: 5px;
 }
 
 #hamburgerMenu:hover {
-    background-color: #ff9c9c;
+  background-color: #ff9c9c;
 }
-
 
 /* Settings Section */
 
-
 input[type="number"] {
-    padding: 5px;
-    border: 1px solid #f4a7a7;
-    border-radius: 5px;
-    background-color: #111;
-    color: #fff;
+  padding: 5px;
+  border: 1px solid #f4a7a7;
+  border-radius: 5px;
+  background-color: #111;
+  color: #fff;
 }
 
 input[type="text"] {
-    padding: 5px;
-    border: 1px solid #f4a7a7;
-    border-radius: 5px;
-    background-color: #111;
-    color: #fff;
+  padding: 5px;
+  border: 1px solid #f4a7a7;
+  border-radius: 5px;
+  background-color: #111;
+  color: #fff;
 }
 
 #gamesSection {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #222;
-    color: #fff;
-    border-radius: 5px;
-    text-align: left;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #222;
+  color: #fff;
+  border-radius: 5px;
+  text-align: left;
 }
 
 #gamesList {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .gameItem {
-    background-color: #111;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #f4a7a7;
-    cursor: pointer;
+  background-color: #111;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #f4a7a7;
+  cursor: pointer;
 }
 .gameItemSelected {
-    background-color:#f4a7a7;
+  background-color: #f4a7a7;
 }
 
 #saveGame {
-    /* background-color: #ff7b7b; */
-    margin-bottom: 10px;
-    cursor: pointer;
+  /* background-color: #ff7b7b; */
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
 #loadGame {
-    /* background-color: #ff7b7b; */
-    cursor: pointer;
+  /* background-color: #ff7b7b; */
+  cursor: pointer;
 }
 
 .upload-label {
-    display: inline-block;
-    background-color: #f4a7a7;
-    color: #000;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left: 10px;
+  display: inline-block;
+  background-color: #f4a7a7;
+  color: #000;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
 }
 
 /* Players */
 ul {
-    list-style-type: none;
-    padding-inline-start: 5px;
+  list-style-type: none;
+  padding-inline-start: 5px;
 }
 
 .delete-button {
-    border-radius: 20%;
+  border-radius: 20%;
 }
 
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {
-    /* Adjustments for smaller screens */
-    header {
-        padding: 10px 10px;
-    }
+  /* Adjustments for smaller screens */
 
-    #hamburgerMenu {
-        padding: 8px;
-    }
+  #hamburgerMenu {
+    padding: 8px;
+  }
 
-    #undoLast {
-        padding: 8px 10px;
-        font-size: 14px;
-    }
+  #undoLast {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
 
-    .main-content {
-        flex-direction: column; /* Stack team sections vertically on mobile */
-        gap: 15px;
-    }
+  .main-content {
+    flex-direction: column; /* Stack team sections vertically on mobile */
+    gap: 15px;
+  }
 
-    .team {
-        width: 100%; /* Make team sections full-width */
-        max-width: 100%; /* Remove max-width to fill screen */
-    }
+  .team {
+    width: 100%; /* Make team sections full-width */
+    max-width: 100%; /* Remove max-width to fill screen */
+  }
 }
