@@ -129,6 +129,9 @@ main {
   display: block;
   margin-bottom: 5px;
 }
+.other-players-section {
+  margin-bottom: 15px;
+}
 #settingsContent {
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
@@ -258,7 +261,7 @@ label {
     background-color: #457a5b;
 }
 .away-team {
-    background-color: #6e4772;
+    background-color: #943f3f;
 }
 
 /* Scoreboard Layout */
@@ -339,7 +342,7 @@ label {
 }
 
 .event-row.away-score {
-  background-color: #6e4772; /* Semi-transparent away team color */
+  background-color: #943f3f; /* Semi-transparent away team color */
 }
 
 .event-col {
@@ -414,16 +417,22 @@ input[type="text"] {
 #modalOtherPlayers, #modalLineSpecificPlayers, #modalSelectedPlayers {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+#modalPlayerSelectionInfoContainer > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
 /* Styling for custom checkbox items within player selection modals */
 .player-item-container {
-  margin-bottom: 5px; /* Space between items */
+  margin: 0px 1px 5px 1px; /* Space between items */
   border-radius: 4px;
   /* Default state for the container div */
-  border: 1px solid #444; /* Default border for the div */
+  border: 2px solid #444; /* Default border for the div */
   background-color: #282828; /* Default background for the div */
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
@@ -570,4 +579,50 @@ select {
 #gamesListSection {
     border-bottom: 2px solid #f4a7a7;
     padding: 15px 0px;
+}
+
+#tournamentPlayerStatsSection {
+  padding-bottom: 10px;
+}
+
+#tournamentPlayerStatsList {
+  width: 50%;
+  left: 25%;
+  position: relative;
+}
+#tournamentPlayerStatsList > li {
+  display: flex;
+  justify-content: space-between;
+}
+#lineSelectors {
+  display: flex;
+  justify-content: space-between;
+}
+.lineSelector input[type="radio"] {
+  /* Hide the default checkbox */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.lineSelector {
+  border: 2px solid #444;
+  padding: 5px;
+  border-radius: 5px;
+}
+.lineSelector:has(> input[type="radio"]:checked)  {
+  background-color: #f4a7a7;
+}  
+
+.line-label-full {
+  display: inline-block; /* Allows setting width/margin if needed */
+}
+#playerSelectionModal label {
+  margin: 0px;
 }

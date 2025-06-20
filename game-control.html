@@ -29,7 +29,7 @@
                 <input type="number" id="gameTo" value="13">
             </div>
             <div>
-                <label for="halfTimeAt">Halftime at:  <span id="halfTimeAt">7</span></label>
+                <label for="halfTimeAt">Halftime at: <span id="halfTimeAt">7</span></label>
                 <button id="updateHalftimeTargetBtn">Update Halftime Target</button>
             </div>
             <div>
@@ -63,8 +63,8 @@
             <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
             <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
         </div>
-        
-        
+
+
         <!-- <div id="selectedPlayersDisplayContainer">
             <h3>Current Line Players:</h3>
             <div id="selectedPlayersList"></div>
@@ -88,9 +88,9 @@
     <section id="eventsSection">
         <div>
             <h2 class="inline-header">Events</h2>
-            <button id="undoLast">Undo Last</button>
+            <button id="undoLast">Undo Last Event</button>
         </div>
-        
+
         <div id="eventsContainer">
             <!-- Header Row -->
             <div class="event-row event-header">
@@ -111,25 +111,55 @@
             <h2>Setup Line & Players</h2>
             <div id="modalLineSelectionContainer">
                 <h3>1. Select Line:</h3>
-                <input type="radio" id="modalLineO" name="modalCurrentLine" value="O"> <label for="modalLineO">O (<span id="lineOCount">0</span>)</label>
-                <input type="radio" id="modalLineD" name="modalCurrentLine" value="D"> <label for="modalLineD">D (<span id="lineDCount">0</span>)</label>
-                <input type="radio" id="modalLineX" name="modalCurrentLine" value="X"> <label for="modalLineX">X (<span id="lineXCount">0</span>)</label>
-                <input type="radio" id="modalLineK" name="modalCurrentLine" value="K"> <label for="modalLineK">K (<span id="lineKCount">0</span>)</label>
+                <!-- @todo - make the names dynamic -->
+                <div id="lineSelectors">
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineO" name="modalCurrentLine" value="O"> <label
+                            for="modalLineO"><span class="line-label-full">Squirtle</span> (<span
+                                id="lineOCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineD" name="modalCurrentLine" value="D"> <label
+                            for="modalLineD"><span class="line-label-full">Charmander</span> (<span
+                                id="lineDCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineX" name="modalCurrentLine" value="X"> <label
+                            for="modalLineX"><span class="line-label-full">Bulbasaur</span> (<span
+                                id="lineXCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineK" name="modalCurrentLine" value="K"> <label
+                            for="modalLineK"><span class="line-label-full">Ditto</span> (<span
+                                id="lineKCount">0</span>)</label>
+                    </div>
+                </div>
             </div>
             <hr>
             <div id="modalPlayerSelectionArea" style="display: none;"> <!-- Initially hidden -->
                 <h3>2. Select Players for Line: <span id="modalSelectedLineDisplay"></span></h3>
-            <p>Ratio: <span id="modalRequiredRatioInfo"></span></p>
-            <p>Currently Selected: <span id="modalPlayerCount">0</span>/7 players (M: <span id="modalSelectedMCount">0</span>, W: <span id="modalSelectedWCount">0</span>)</p>
-            
-            <div id="modalSelectedPlayersListContainer">
-                <h4>Selected for this Point:</h4>
-                <div id="modalSelectedPlayers"></div>
-            </div>
-            <hr>
-            <div id="playerListContainer"> 
-                <!-- This will now hold sub-sections for Line Players and Other Players -->
-            </div>
+                <div id="modalPlayerSelectionInfoContainer">
+                    <div>
+                        <p>Current Ratio: </p>
+                        <p><span id="modalRequiredRatioInfo"></span></p>
+                    </div>
+                    <div>
+                        <p>Currently Selected: </p>
+                        <p>
+                            <span id="modalPlayerCount">0</span>/7 players (M: <span
+                            id="modalSelectedMCount">0</span>, W: <span id="modalSelectedWCount">0</span>)
+                        </p>
+                    </div>
+                </div>
+
+                <div id="modalSelectedPlayersListContainer">
+                    <h4>Selected for this Point:</h4>
+                    <div id="modalSelectedPlayers"></div>
+                </div>
+                <hr>
+                <div id="playerListContainer">
+                    <!-- This will now hold sub-sections for Line Players and Other Players -->
+                </div>
             </div>
             <button id="resetModalSelectionsBtn">Reset Selections</button>
             <button id="confirmPlayersBtn">Confirm Players</button>

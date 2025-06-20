@@ -3,6 +3,12 @@
 // Global state variables for the current game
 let tournamentId = null;
 let currentGameId = null; // To identify if we are editing an existing game
+let tournamentLineNames = { // Default names
+    O: { full: 'Squirtle', abbr: 'Squirt' },
+    D: { full: 'Charmander', abbr: 'Charm' },
+    X: { full: 'Bulbasaur', abbr: 'Bulba' },
+    K: { full: 'Ditto', abbr: 'Ditto' }
+};
 
 let homeScore = 0;
 let awayScore = 0;
@@ -133,6 +139,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     tournamentId = parseInt(tournamentId); // Ensure it's a number if it's an index
 
     await loadStarfireData(); // From data-manager.js
+    // @todo - enable
+    // const currentTournament = getTournamentById(tournamentId);
+    // if (currentTournament && currentTournament.lineNames) {
+    //     // Merge loaded line names, keeping defaults if specific ones are missing
+    //     tournamentLineNames = { ...tournamentLineNames, ...currentTournament.lineNames };
+    // }
 
     let gameLoadedSuccessfully = false;
     if (currentGameId) {
@@ -258,7 +270,7 @@ function updateUI() {
     document.getElementById('lineXCount').textContent = lineXCount;
     document.getElementById('lineKCount').textContent = lineKCount;
 
-    displaySelectedLineForPointElement.textContent = lineForCurrentPoint || 'None';
+    displaySelectedLineForPointElement.textContent = tournamentLineNames[lineForCurrentPoint]?.full || 'None';
     updateSelectedPlayersDisplay();
     updateHalftimeAtDisplay(); // Update halftime display
     updateEventsDisplay();
@@ -369,7 +381,7 @@ function attachEventListeners() {
     modalCurrentLineInputs.forEach(input => {
         input.addEventListener('change', (event) => {
             const selectedLineInModal = event.target.value;
-            modalSelectedLineDisplayElement.textContent = selectedLineInModal;
+            modalSelectedLineDisplayElement.textContent = tournamentLineNames[selectedLineInModal]?.full || selectedLineInModal;
             modalPlayerSelectionArea.style.display = 'block'; // Show player selection area
             populatePlayerCheckboxes(selectedLineInModal); // Populate players for this line
         });
@@ -683,7 +695,7 @@ function updateEventsDisplay() {
 
         eventRow.innerHTML = `
             <div class="event-col">${i + 1}</div>
-            <div class="event-col">${event.line}</div>
+            <div class="event-col">${tournamentLineNames[event.line]?.abbr || event.line}</div>
             <div class="event-col">${event.ratio}</div>
             <div class="event-col">${event.possession}</div>
             <div class="event-col">${event.score === 'home' ? 'Star' : opponentName || 'Away'}</div>
@@ -873,7 +885,7 @@ function openPlayerSelectionPopup() {
         const lineRadioToSelect = document.getElementById(`modalLine${lineForCurrentPoint}`);
         if (lineRadioToSelect) {
             lineRadioToSelect.checked = true;
-            modalSelectedLineDisplayElement.textContent = lineForCurrentPoint;
+            modalSelectedLineDisplayElement.textContent = tournamentLineNames[lineForCurrentPoint]?.full || lineForCurrentPoint;
             modalPlayerSelectionArea.style.display = 'block';
             populatePlayerCheckboxes(lineForCurrentPoint); // Also pre-populate and check players
         }
@@ -899,7 +911,7 @@ function openPlayerSelectionPopup() {
                 const lineRadioToSelect = document.getElementById(`modalLine${defaultLine}`);
                 if (lineRadioToSelect) {
                     lineRadioToSelect.checked = true;
-                    modalSelectedLineDisplayElement.textContent = defaultLine;
+                    modalSelectedLineDisplayElement.textContent = tournamentLineNames[defaultLine]?.full || defaultLine;
                     modalPlayerSelectionArea.style.display = 'block';
                     populatePlayerCheckboxes(defaultLine); // Populate for the defaulted line
                 }
@@ -916,7 +928,7 @@ function openPlayerSelectionPopup() {
 function populatePlayerCheckboxes(lineSelectedInModal) {
     const requiredM = currentRatio === RATIO_TYPES.MALE ? 4 : 3;
     const requiredW = currentRatio === RATIO_TYPES.FEMALE ? 4 : 3;
-    modalRequiredRatioInfoElement.textContent = `${requiredM} M-match, ${requiredW} W-match`;
+    modalRequiredRatioInfoElement.textContent = `${requiredM} DoM, ${requiredW} DoW`;
 
     playerListContainerElement.innerHTML = '';
     const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
@@ -936,11 +948,12 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     });
 
     const linePlayersSection = document.createElement('div');
-    linePlayersSection.innerHTML = `<h4>${lineSelectedInModal} Line Players (Available)</h4><ul id="modalLineSpecificPlayers"></ul>`;
+    linePlayersSection.innerHTML = `<h4>${tournamentLineNames[lineSelectedInModal]?.full || lineSelectedInModal} Line Players (Available)</h4><ul id="modalLineSpecificPlayers"></ul>`;
     playerListContainerElement.appendChild(linePlayersSection);
     const lineSpecificPlayersUl = document.getElementById('modalLineSpecificPlayers');
 
     const otherPlayersSection = document.createElement('div');
+    otherPlayersSection.classList.add('other-players-section');
     otherPlayersSection.innerHTML = `<h4>Other Players (Available)</h4><div id="modalOtherPlayers"></div>`;
     playerListContainerElement.appendChild(otherPlayersSection);
     const otherPlayersUl = document.getElementById('modalOtherPlayers');
@@ -1057,9 +1070,9 @@ function updateModalPlayerCounts(triggeringCheckbox = null) {
     if (selectedCheckboxes.length > 7) {
         validationError = "Cannot select more than 7 players.";
     } else if (mCount > requiredM) {
-        validationError = `Cannot select more than ${requiredM} M-match players for ratio ${currentRatio}.`;
+        validationError = `Cannot select more than ${requiredM} DoM players for ratio ${currentRatio}.`;
     } else if (wCount > requiredW) {
-        validationError = `Cannot select more than ${requiredW} W-match players for ratio ${currentRatio}.`;
+        validationError = `Cannot select more than ${requiredW} DoW players for ratio ${currentRatio}.`;
     }
 
     if (validationError && triggeringCheckbox) {
@@ -1107,7 +1120,7 @@ function updateModalPlayerCounts(triggeringCheckbox = null) {
 function handlePlayerSelectionConfirm() {
     const selectedLineInModalRadio = document.querySelector('input[name="modalCurrentLine"]:checked');
     if (!selectedLineInModalRadio) {
-        alert("Please select a line (O, D, X, K).");
+        alert("Please select a line.");
         return;
     }
     const confirmedLine = selectedLineInModalRadio.value;
@@ -1138,7 +1151,7 @@ function handlePlayerSelectionConfirm() {
     const requiredW = currentRatio === RATIO_TYPES.FEMALE ? 4 : 3;
 
     if (mCount !== requiredM || wCount !== requiredW) {
-        alert(`Gender ratio incorrect. Need ${requiredM} M-match and ${requiredW} W-match for ratio ${currentRatio}. You selected ${mCount}M, ${wCount}W.`);
+        alert(`Gender ratio incorrect. Need ${requiredM} DoM and ${requiredW} DoW for ratio ${currentRatio}. You selected ${mCount}DoM, ${wCount}DoW.`);
         currentPointPlayers = []; // Clear if invalid
         return;
     }
@@ -1153,7 +1166,7 @@ function handlePlayerSelectionConfirm() {
     lineForCurrentPoint = confirmedLine; // Set the game's current line for the point
     updateSelectedPlayersDisplay();
     updateSelectLinePlayersButtonState();
-    displaySelectedLineForPointElement.textContent = lineForCurrentPoint || 'None';
+    displaySelectedLineForPointElement.textContent = tournamentLineNames[lineForCurrentPoint]?.full || 'None';
     playerSelectionModal.style.display = 'none';
 }
 

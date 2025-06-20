@@ -1,230 +1,400 @@
 {
-    "name": "Starfire",
-    "players": [
+  "name": "Starfire",
+  "players": [
+    {
+      "firstName": "Oliver",
+      "genderMatch": "M",
+      "id": "ollie",
+      "lastName": "Voorhees",
+      "line": "D",
+      "nickname": "Ollie",
+      "position": "H"
+    },
+    {
+      "firstName": "Kim",
+      "genderMatch": "W",
+      "id": "kim",
+      "lastName": "Duong",
+      "line": "O",
+      "nickname": "Kim",
+      "position": "H"
+    },
+    {
+      "firstName": "Blake",
+      "genderMatch": "M",
+      "id": "blake",
+      "lastName": "Reino",
+      "line": "X",
+      "nickname": "Blake",
+      "position": "F"
+    },
+    {
+      "firstName": "Jaisy",
+      "genderMatch": "W",
+      "id": "jaisy",
+      "lastName": "Lau",
+      "line": "O",
+      "nickname": "Jaisy",
+      "position": "F"
+    },
+    {
+      "firstName": "Britney",
+      "genderMatch": "W",
+      "id": "brit",
+      "lastName": "Echeveria",
+      "line": "D",
+      "nickname": "Brit",
+      "position": "C"
+    },
+    {
+      "firstName": "Seewing",
+      "genderMatch": "W",
+      "id": "seewing",
+      "lastName": "Zheng",
+      "line": "X",
+      "nickname": "Seewing",
+      "position": "C"
+    },
+    {
+      "firstName": "Sean",
+      "genderMatch": "M",
+      "id": "sean",
+      "lastName": "O'Sullivan",
+      "line": "O",
+      "nickname": "Sean",
+      "position": "F"
+    },
+    {
+      "firstName": "Aidan",
+      "genderMatch": "M",
+      "id": "aidan",
+      "lastName": "Falter",
+      "line": "D",
+      "nickname": "Aidan",
+      "position": "C"
+    },
+    {
+      "firstName": "Austin",
+      "genderMatch": "M",
+      "id": "austin",
+      "lastName": "Ngan",
+      "line": "X",
+      "nickname": "Austin",
+      "position": "F"
+    },
+    {
+      "firstName": "Connor",
+      "genderMatch": "M",
+      "id": "cojo",
+      "lastName": "Joseph",
+      "line": "X",
+      "nickname": "Cojo",
+      "position": "C"
+    },
+    {
+      "firstName": "Daisy",
+      "genderMatch": "W",
+      "id": "daisy",
+      "lastName": "Delgado",
+      "line": "D",
+      "nickname": "Daisy",
+      "position": "C"
+    },
+    {
+      "firstName": "Ethan",
+      "genderMatch": "M",
+      "id": "ethan_c",
+      "lastName": "Chi",
+      "line": "O",
+      "nickname": "Ethan C",
+      "position": "H"
+    },
+    {
+      "firstName": "Ethan",
+      "genderMatch": "M",
+      "id": "ethan_w",
+      "lastName": "Wang",
+      "line": "D",
+      "nickname": "Ethan W",
+      "position": "H"
+    },
+    {
+      "firstName": "Han",
+      "genderMatch": "M",
+      "id": "han",
+      "lastName": "Zhang",
+      "line": "X",
+      "nickname": "Han",
+      "position": "H"
+    },
+    {
+      "firstName": "Henry",
+      "genderMatch": "M",
+      "id": "henry",
+      "lastName": "Lin",
+      "line": "D",
+      "nickname": "Henry",
+      "position": "F"
+    },
+    {
+      "firstName": "Kristin",
+      "genderMatch": "W",
+      "id": "kristin",
+      "lastName": "Velazquez",
+      "line": "X",
+      "nickname": "Kristin",
+      "position": "H"
+    },
+    {
+      "firstName": "Lauren",
+      "genderMatch": "W",
+      "id": "lauren",
+      "lastName": "Duany",
+      "line": "O",
+      "nickname": "Lauren",
+      "position": "C"
+    },
+    {
+      "firstName": "Leonardo",
+      "genderMatch": "M",
+      "id": "leo",
+      "lastName": "Morelli",
+      "line": "O",
+      "nickname": "Leo",
+      "position": "H"
+    },
+    {
+      "firstName": "Lucien",
+      "genderMatch": "M",
+      "id": "loosh",
+      "lastName": "Betancourt",
+      "line": "D",
+      "nickname": "Loosh",
+      "position": "C"
+    },
+    {
+      "firstName": "Maggie",
+      "genderMatch": "W",
+      "id": "maggie",
+      "lastName": "Mai",
+      "line": "X",
+      "nickname": "Maggie",
+      "position": "C"
+    },
+    {
+      "firstName": "Roy",
+      "genderMatch": "M",
+      "id": "roy",
+      "lastName": "Park",
+      "line": "O",
+      "nickname": "Roy",
+      "position": "C"
+    },
+    {
+      "firstName": "Rushda",
+      "genderMatch": "W",
+      "id": "rushda",
+      "lastName": "Chowdhury",
+      "line": "D",
+      "nickname": "Rushda",
+      "position": "C"
+    },
+    {
+      "firstName": "Victoria",
+      "genderMatch": "W",
+      "id": "tori",
+      "lastName": "Ng",
+      "line": "D",
+      "nickname": "Tori",
+      "position": "H"
+    },
+    {
+      "firstName": "Wes",
+      "genderMatch": "M",
+      "id": "wes",
+      "lastName": "Collins",
+      "line": "D",
+      "nickname": "Wes",
+      "position": "H"
+    }
+  ],
+  "tournaments": [
+    {
+      "name": "PADA Flagship",
+      "location": "",
+      "id": "10d509cf-1d74-46d0-bcf4-9fd4e62f3b5b",
+      "games": [
         {
-            "firstName": "Oliver",
-            "genderMatch": "M",
-            "id": "ollie",
-            "lastName": "Voorhees",
-            "line": "D",
-            "nickname": "Ollie",
-            "position": "H"
-        },
-        {
-            "firstName": "Kim",
-            "genderMatch": "W",
-            "id": "kim",
-            "lastName": "Duong",
-            "line": "O",
-            "nickname": "Kim",
-            "position": "H"
-        },
-        {
-            "firstName": "Blake",
-            "genderMatch": "M",
-            "id": "blake",
-            "lastName": "Reino",
-            "line": "X",
-            "nickname": "Blake",
-            "position": "F"
-        },
-        {
-            "firstName": "Jaisy",
-            "genderMatch": "W",
-            "id": "jaisy",
-            "lastName": "Lau",
-            "line": "O",
-            "nickname": "Jaisy",
-            "position": "F"
-        },
-        {
-            "firstName": "Britney",
-            "genderMatch": "W",
-            "id": "brit",
-            "lastName": "Echeveria",
-            "line": "D",
-            "nickname": "Brit",
-            "position": "C"
-        },
-        {
-            "firstName": "Seewing",
-            "genderMatch": "W",
-            "id": "seewing",
-            "lastName": "Zheng",
-            "line": "X",
-            "nickname": "Seewing",
-            "position": "C"
-        },
-        {
-            "firstName": "Sean",
-            "genderMatch": "M",
-            "id": "sean",
-            "lastName": "O'Sullivan",
-            "line": "O",
-            "nickname": "Sean",
-            "position": "F"
-        },
-        {
-            "firstName": "Aidan",
-            "genderMatch": "M",
-            "id": "aidan",
-            "lastName": "Falter",
-            "line": "D",
-            "nickname": "Aidan",
-            "position": "C"
-        },
-        {
-            "firstName": "Austin",
-            "genderMatch": "M",
-            "id": "austin",
-            "lastName": "Ngan",
-            "line": "X",
-            "nickname": "Austin",
-            "position": "F"
-        },
-        {
-            "firstName": "Connor",
-            "genderMatch": "M",
-            "id": "cojo",
-            "lastName": "Joseph",
-            "line": "X",
-            "nickname": "Cojo",
-            "position": "C"
-        },
-        {
-            "firstName": "Daisy",
-            "genderMatch": "W",
-            "id": "daisy",
-            "lastName": "Delgado",
-            "line": "D",
-            "nickname": "Daisy",
-            "position": "C"
-        },
-        {
-            "firstName": "Ethan",
-            "genderMatch": "M",
-            "id": "ethan_c",
-            "lastName": "Chi",
-            "line": "O",
-            "nickname": "Ethan C",
-            "position": "H"
-        },
-        {
-            "firstName": "Ethan",
-            "genderMatch": "M",
-            "id": "ethan_w",
-            "lastName": "Wang",
-            "line": "D",
-            "nickname": "Ethan W",
-            "position": "H"
-        },
-        {
-            "firstName": "Han",
-            "genderMatch": "M",
-            "id": "han",
-            "lastName": "Zhang",
-            "line": "X",
-            "nickname": "Han",
-            "position": "H"
-        },
-        {
-            "firstName": "Henry",
-            "genderMatch": "M",
-            "id": "henry",
-            "lastName": "Lin",
-            "line": "D",
-            "nickname": "Henry",
-            "position": "F"
-        },
-        {
-            "firstName": "Kristin",
-            "genderMatch": "W",
-            "id": "kristin",
-            "lastName": "Velazquez",
-            "line": "X",
-            "nickname": "Kristin",
-            "position": "H"
-        },
-        {
-            "firstName": "Lauren",
-            "genderMatch": "W",
-            "id": "lauren",
-            "lastName": "Duany",
-            "line": "O",
-            "nickname": "Lauren",
-            "position": "C"
-        },
-        {
-            "firstName": "Leonardo",
-            "genderMatch": "M",
-            "id": "leo",
-            "lastName": "Morelli",
-            "line": "O",
-            "nickname": "Leo",
-            "position": "H"
-        },
-        {
-            "firstName": "Lucien",
-            "genderMatch": "M",
-            "id": "loosh",
-            "lastName": "Betancourt",
-            "line": "D",
-            "nickname": "Loosh",
-            "position": "C"
-        },
-        {
-            "firstName": "Maggie",
-            "genderMatch": "W",
-            "id": "maggie",
-            "lastName": "Mai",
-            "line": "X",
-            "nickname": "Maggie",
-            "position": "C"
-        },
-        {
-            "firstName": "Roy",
-            "genderMatch": "M",
-            "id": "roy",
-            "lastName": "Park",
-            "line": "O",
-            "nickname": "Roy",
-            "position": "C"
-        },
-        {
-            "firstName": "Rushda",
-            "genderMatch": "W",
-            "id": "rushda",
-            "lastName": "Chowdhury",
-            "line": "D",
-            "nickname": "Rushda",
-            "position": "C"
-        },
-        {
-            "firstName": "Victoria",
-            "genderMatch": "W",
-            "id": "tori",
-            "lastName": "Ng",
-            "line": "D",
-            "nickname": "Tori",
-            "position": "H"
-        },
-        {
-            "firstName": "Wes",
-            "genderMatch": "M",
-            "id": "wes",
-            "lastName": "Collins",
-            "line": "D",
-            "nickname": "Wes",
-            "position": "H"
+          "id": "3a5528af-6805-4c71-aee0-7283a4bce1b3",
+          "opponentName": "Philly Twist",
+          "homeScore": 5,
+          "awayScore": 4,
+          "lineOCount": 3,
+          "lineDCount": 3,
+          "lineXCount": 3,
+          "lineKCount": 0,
+          "events": [
+            {
+              "line": "O",
+              "ratio": "W",
+              "possession": "O",
+              "score": "home",
+              "players": [
+                "ethan_c",
+                "jaisy",
+                "kim",
+                "lauren",
+                "roy",
+                "sean",
+                "daisy"
+              ]
+            },
+            {
+              "line": "D",
+              "ratio": "M",
+              "possession": "D",
+              "score": "home",
+              "players": [
+                "aidan",
+                "brit",
+                "ethan_w",
+                "henry",
+                "loosh",
+                "rushda",
+                "tori"
+              ]
+            },
+            {
+              "line": "X",
+              "ratio": "M",
+              "possession": "D",
+              "score": "home",
+              "players": [
+                "austin",
+                "blake",
+                "cojo",
+                "han",
+                "kristin",
+                "maggie",
+                "seewing"
+              ]
+            },
+            {
+              "line": "O",
+              "ratio": "W",
+              "possession": "D",
+              "score": "away",
+              "players": [
+                "leo",
+                "ethan_c",
+                "jaisy",
+                "kim",
+                "lauren",
+                "roy",
+                "maggie"
+              ]
+            },
+            {
+              "line": "D",
+              "ratio": "W",
+              "possession": "O",
+              "score": "away",
+              "players": [
+                "ollie",
+                "aidan",
+                "brit",
+                "daisy",
+                "ethan_w",
+                "rushda",
+                "tori"
+              ]
+            },
+            {
+              "line": "X",
+              "ratio": "M",
+              "possession": "O",
+              "score": "away",
+              "players": [
+                "austin",
+                "blake",
+                "cojo",
+                "han",
+                "kristin",
+                "seewing",
+                "maggie"
+              ]
+            },
+            {
+              "line": "O",
+              "ratio": "M",
+              "possession": "O",
+              "score": "home",
+              "players": [
+                "leo",
+                "sean",
+                "ethan_c",
+                "jaisy",
+                "kim",
+                "lauren",
+                "roy"
+              ]
+            },
+            {
+              "line": "D",
+              "ratio": "W",
+              "possession": "D",
+              "score": "away",
+              "players": [
+                "ollie",
+                "aidan",
+                "brit",
+                "daisy",
+                "ethan_w",
+                "rushda",
+                "tori"
+              ]
+            },
+            {
+              "line": "X",
+              "ratio": "W",
+              "possession": "O",
+              "score": "home",
+              "players": [
+                "austin",
+                "blake",
+                "cojo",
+                "kristin",
+                "seewing",
+                "maggie",
+                "brit"
+              ]
+            }
+          ],
+          "startingRatio": "W",
+          "gameTo": 13,
+          "startOn": "O",
+          "timestamp": "2025-06-20T19:53:34.531Z",
+          "effectiveHalftimePoint": null
         }
-        
-    ],
-    "tournaments": [
-        {
-            "name": "PADA Flagship",
-            "location": "",
-            "id": "10d509cf-1d74-46d0-bcf4-9fd4e62f3b5b",
-            "games": []
+      ],
+      "lineNames": {
+        "O": {
+          "full": "Squirtle",
+          "abbr": "Squi"
+        },
+        "D": {
+          "full": "Charmander",
+          "abbr": "Char"
+        },
+        "X": {
+          "full": "Bulbasaur",
+          "abbr": "Bulb"
+        },
+        "K": {
+          "full": "Ditto",
+          "abbr": "Ditt"
         }
-    ]
+      }
+    }
+  ]
 }

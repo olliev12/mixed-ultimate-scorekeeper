@@ -97,7 +97,7 @@ function renderTournamentPlayerStats(games) {
 
     sortedStats.forEach(stat => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${stat.player.nickname || (stat.player.firstName + ' ' + stat.player.lastName)}: ${stat.points} points`;
+        listItem.innerHTML = `${stat.player.nickname || (stat.player.firstName + ' ' + stat.player.lastName)}: <span>${stat.points} points</span>`;
         statsListElement.appendChild(listItem);
     });
 }
