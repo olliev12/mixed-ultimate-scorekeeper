@@ -93,6 +93,9 @@ main {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.6);
 }
+.modal h3,h4 {
+  margin: 15px 0px 8px 0px;
+}
 .modal-content {
   background-color: #222;
   margin: 10% auto;
@@ -120,8 +123,6 @@ main {
   cursor: pointer;
 }
 #playerListContainer {
-  max-height: 300px;
-  overflow-y: auto;
   margin-bottom: 15px;
   text-align: left;
 }
@@ -425,6 +426,9 @@ input[type="text"] {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+}
+#modalRequiredRatioInfo {
+  font-weight: bold;
 }
 
 /* Styling for custom checkbox items within player selection modals */

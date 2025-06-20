@@ -388,7 +388,7 @@ function attachEventListeners() {
     });
 
     if (closePlayerModalBtn) {
-        closePlayerModalBtn.addEventListener('click', () => playerSelectionModal.style.display = 'none');
+        closePlayerModalBtn.addEventListener('click', closePlayerSelectionModal);
     }
     if (resetModalSelectionsBtn) {
         resetModalSelectionsBtn.addEventListener('click', handleResetModalSelections);
@@ -398,7 +398,7 @@ function attachEventListeners() {
         confirmPlayersBtn.addEventListener('click', handlePlayerSelectionConfirm);
     }
     window.addEventListener('click', (event) => { // Close modal if clicked outside
-        if (event.target === playerSelectionModal) playerSelectionModal.style.display = 'none';
+        if (event.target === playerSelectionModal) closePlayerSelectionModal();
     });
 
     if (updateHalftimeTargetBtn) {
@@ -871,6 +871,20 @@ function updateSelectLinePlayersButtonState() {
 }
 
 /**
+ * Closes the player selection modal and resets the scroll position of the player list.
+ */
+function closePlayerSelectionModal() {
+    // Reset scroll position of the player list container
+    if (playerListContainerElement) {
+        playerListContainerElement.scrollTop = 0;
+    }
+    if (playerSelectionModal) {
+        playerSelectionModal.style.display = 'none';
+    }
+    
+}
+
+/**
  * Opens the player selection popup, populates it with available players.
  */
 function openPlayerSelectionPopup() {
@@ -1097,6 +1111,14 @@ function updateModalPlayerCounts(triggeringCheckbox = null) {
     modalSelectedMCountElement.textContent = mCount;
     modalSelectedWCountElement.textContent = wCount;
     if (selectedCheckboxes.length === 0) modalSelectedPlayersElement.innerHTML = "<li>No players selected yet.</li>";
+
+    // Scroll to the confirm button when exactly 7 players are selected
+    if (selectedCheckboxes.length === 7) {
+        if (confirmPlayersBtn) {
+            confirmPlayersBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            confirmPlayersBtn.focus({ preventScroll: true }); // Focus for accessibility without a second scroll
+        }
+    }
  }
 
  /**
@@ -1167,7 +1189,7 @@ function handlePlayerSelectionConfirm() {
     updateSelectedPlayersDisplay();
     updateSelectLinePlayersButtonState();
     displaySelectedLineForPointElement.textContent = tournamentLineNames[lineForCurrentPoint]?.full || 'None';
-    playerSelectionModal.style.display = 'none';
+    closePlayerSelectionModal();
 }
 
 /**
