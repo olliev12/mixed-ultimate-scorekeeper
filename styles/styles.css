@@ -67,7 +67,10 @@ p {
     display: block !important;
 }
 
-#gameStatusPanel h1,h2 {
+#gameStatusPanel h1 {
+  padding: 0px;
+}
+#gameStatusPanel h2 {
   padding: 0px;
 }
 #gameStatusPanel button {
@@ -131,6 +134,7 @@ main {
   overflow: hidden;
   max-height: 500px;
   opacity: 1;
+  padding-top: 5px;
 }
 #settingsContent.collapsed {
   max-height: 0;
@@ -489,9 +493,7 @@ ul {
   font-weight: bold;
 }
 
-.delete-button {
-  border-radius: 20%;
-}
+
 
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {
@@ -534,4 +536,38 @@ ul {
     transform: scale(1.03);
     box-shadow: 0 0 35px rgba(255, 193, 7, 0.8);
   }
+}
+
+/* Styles for form rows within modals or other forms */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Vertically align items in the middle */
+  margin-bottom: 15px; /* Space between form rows */
+}
+
+select {
+  width: 100px; /* Set the desired width */
+  padding: 5px;
+  border: 1px solid #f4a7a7;
+  border-radius: 5px;
+  background-color: #111;
+  color: #fff;
+  box-sizing: border-box; /* Ensures padding and border are included in the width */
+  margin-left: 5px; /* Optional: add some space if next to a label */
+}
+
+#playerList > li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-button {
+  border-radius: 5px;
+}
+
+#gamesListSection {
+    border-bottom: 2px solid #f4a7a7;
+    padding: 15px 0px;
 }

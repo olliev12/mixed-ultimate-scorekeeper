@@ -27,37 +27,52 @@
         <div id="addPlayerPopup" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <h2>Add New Player</h2>
-                <label for="firstName">First Name:</label>
-                <input type="text" id="firstName"><br><br>
+                <h2 id="playerHeading">Add New Player</h2>
+                <div class="form-row">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName">
+                </div>
 
-                <label for="lastName">Last Name:</label>
-                <input type="text" id="lastName"><br><br>
+                <div class="form-row">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName">
+                </div>
 
-                <label for="nickname">Nickname/Display Name*:</label>
-                <input type="text" id="nickname" required><br><br>
+                <div class="form-row">
+                    <label for="nickname">Nickname/Display Name*:</label>
+                    <input type="text" id="nickname" required>
+                </div>
 
-                <label for="genderMatch">Gender Match:</label>
-                <select id="genderMatch" required>
-                    <option value="M">DoM</option>
-                    <option value="W">DoW</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="genderMatch">Gender Match:</label>
+                    <select id="genderMatch" required>
+                        <option value="M">DoM</option>
+                        <option value="W">DoW</option>
+                    </select>
+                </div>
 
-                <label for="position">Position:</label>
-                <select id="position" required>
-                    <option value="H">Handler</option>
-                    <option value="C">Cutter</option>
-                    <option value="F">Flex</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="position">Position:</label>
+                    <select id="position" required>
+                        <option value="H">Handler</option>
+                        <option value="C">Cutter</option>
+                        <option value="F">Flex</option>
+                    </select>
+                </div>
 
-                <label for="playerLine">Line:</label>
-                <select id="playerLine" required>
-                    <option value="O">O</option>
-                    <option value="D">D</option>
-                    <option value="X">X</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="playerLine">Line:</label>
+                    <select id="playerLine" required>
+                        <option value="O">O</option>
+                        <option value="D">D</option>
+                        <option value="X">X</option>
+                    </select>
+                </div>
 
-                <button id="savePlayerBtn">Save Player</button>
+                <div class="form-row">
+                    <button id="savePlayerBtn">Save Player</button>
+                    <button id="deletePlayerBtn">Delete Player</button>
+                </div>
             </div>
         </div>
     </main>

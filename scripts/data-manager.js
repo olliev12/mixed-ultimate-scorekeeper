@@ -111,6 +111,48 @@ function addPlayer(playerData) {
     return newPlayer;
 }
 
+/**
+ * Updates Existing Player.
+ * The player's ID will be derived from their nickname.
+ * @param {object} playerData - Object containing player details (must include nickname).
+ * @param {string} existingId - the existing player's ID
+ * @returns {object|null} The new player object with an ID, or null if nickname is missing or ID is not unique.
+ */
+function updatePlayer(playerData, existingId) {
+    if (!appData) {
+        console.error("App data not loaded. Cannot update player.");
+        return null;
+    }
+    if (!playerData.nickname || playerData.nickname.trim() === "") {
+        console.error("Nickname is required to update player.");
+        alert("Nickname is required.");
+        return null;
+    }
+
+    let updatedPlayer = getPlayerById(existingId);
+    const newPlayerId = createSafeId(playerData.nickname);
+
+    if (newPlayerId === existingId) {
+        updatedPlayer = { ...playerData, id: existingId };
+        appData.players = appData.players.map(player => player.id === existingId ? updatedPlayer : player);
+        saveStarfireData();
+    }
+    else if (getPlayerById(newPlayerId)) {
+        alert(`A player with the nickname (or similar) "${playerData.nickname}" already exists. Please choose a unique nickname.`);
+        return null;
+    }
+    else {
+        // new unique id
+        // push the "new" updated player and delete the existing one
+        updatedPlayer = { ...playerData, id: newPlayerId }; // Assign safe nickname as ID
+        appData.players.push(updatedPlayer);
+        deletePlayer(existingId);
+    }
+    
+    saveStarfireData();
+    return updatedPlayer;
+}
+
 function deletePlayer(playerId) {
     if (!appData || !appData.players) return false;
     const initialLength = appData.players.length;
