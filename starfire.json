@@ -74,6 +74,42 @@
             "position": "C"
         },
         {
+            "firstName": "Al",
+            "genderMatch": "M",
+            "id": "al",
+            "lastName": "Alam",
+            "line": "D",
+            "nickname": "Al",
+            "position": "C"
+        },
+        {
+            "firstName": "Allie",
+            "genderMatch": "W",
+            "id": "allie",
+            "lastName": "Dowling",
+            "line": "X",
+            "nickname": "Allie",
+            "position": "C"
+        },
+        {
+            "firstName": "Ana",
+            "genderMatch": "W",
+            "id": "ana",
+            "lastName": "Polinsky",
+            "line": "X",
+            "nickname": "Allie",
+            "position": "C"
+        },
+        {
+            "firstName": "Ashlyn",
+            "genderMatch": "W",
+            "id": "ash",
+            "lastName": "Schuman",
+            "line": "X",
+            "nickname": "Ash",
+            "position": "C"
+        },
+        {
             "firstName": "Austin",
             "genderMatch": "M",
             "id": "austin",
@@ -81,6 +117,15 @@
             "line": "X",
             "nickname": "Austin",
             "position": "F"
+        },
+        {
+            "firstName": "Cisco",
+            "genderMatch": "M",
+            "id": "cisco",
+            "lastName": "An-Torres",
+            "line": "X",
+            "nickname": "Cisco",
+            "position": "C"
         },
         {
             "firstName": "Connor",
@@ -119,6 +164,15 @@
             "position": "H"
         },
         {
+            "firstName": "George",
+            "genderMatch": "M",
+            "id": "george",
+            "lastName": "Cheung",
+            "line": "X",
+            "nickname": "George",
+            "position": "F"
+        },
+        {
             "firstName": "Han",
             "genderMatch": "M",
             "id": "han",
@@ -137,6 +191,15 @@
             "position": "F"
         },
         {
+            "firstName": "Kelly",
+            "genderMatch": "W",
+            "id": "kelly",
+            "lastName": "Lukito",
+            "line": "O",
+            "nickname": "Kelly",
+            "position": "F"
+        },
+        {
             "firstName": "Kristin",
             "genderMatch": "W",
             "id": "kristin",
@@ -144,6 +207,15 @@
             "line": "X",
             "nickname": "Kristin",
             "position": "H"
+        },
+        {
+            "firstName": "Krystal",
+            "genderMatch": "W",
+            "id": "krystal",
+            "lastName": "Lee",
+            "line": "O",
+            "nickname": "Krystal",
+            "position": "F"
         },
         {
             "firstName": "Lauren",
@@ -179,6 +251,15 @@
             "lastName": "Mai",
             "line": "X",
             "nickname": "Maggie",
+            "position": "C"
+        },
+        {
+            "firstName": "Paloma",
+            "genderMatch": "W",
+            "id": "paloma",
+            "lastName": "Oteiza",
+            "line": "O",
+            "nickname": "Paloma",
             "position": "C"
         },
         {
