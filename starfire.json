@@ -2286,6 +2286,30 @@
                     "abbr": "Ditt"
                 }
             }
+        },
+        {
+            "name": "Ow My Knee",
+            "location": "",
+            "id": "10d509cf-1d74-46d0-bcf4-9fd4e62f3b6c",
+            "games": [],
+            "lineNames": {
+                "O": {
+                    "full": "O",
+                    "abbr": "O"
+                },
+                "D": {
+                    "full": "D",
+                    "abbr": "D"
+                },
+                "X": {
+                    "full": "X",
+                    "abbr": "X"
+                },
+                "K": {
+                    "full": "K",
+                    "abbr": "K"
+                }
+            }
         }
     ]
 }
