@@ -6,7 +6,7 @@
             "genderMatch": "M",
             "id": "ollie",
             "lastName": "Voorhees",
-            "line": "D",
+            "line": "X",
             "nickname": "Ollie",
             "position": "H"
         },
@@ -24,7 +24,7 @@
             "genderMatch": "M",
             "id": "blake",
             "lastName": "Reino",
-            "line": "X",
+            "line": "D",
             "nickname": "Blake",
             "position": "F"
         },
@@ -51,7 +51,7 @@
             "genderMatch": "W",
             "id": "seewing",
             "lastName": "Zheng",
-            "line": "X",
+            "line": "D",
             "nickname": "Seewing",
             "position": "C"
         },
@@ -69,7 +69,7 @@
             "genderMatch": "M",
             "id": "aidan",
             "lastName": "Falter",
-            "line": "D",
+            "line": "X",
             "nickname": "Aidan",
             "position": "C"
         },
@@ -93,12 +93,12 @@
         },
         {
             "firstName": "Ana",
-            "genderMatch": "W",
-            "id": "ana",
             "lastName": "Polinsky",
+            "nickname": "Ana",
+            "genderMatch": "W",
+            "position": "C",
             "line": "X",
-            "nickname": "Allie",
-            "position": "C"
+            "id": "ana"
         },
         {
             "firstName": "Ashlyn",
@@ -114,7 +114,7 @@
             "genderMatch": "M",
             "id": "austin",
             "lastName": "Ngan",
-            "line": "X",
+            "line": "D",
             "nickname": "Austin",
             "position": "F"
         },
@@ -177,7 +177,7 @@
             "genderMatch": "M",
             "id": "han",
             "lastName": "Zhang",
-            "line": "X",
+            "line": "D",
             "nickname": "Han",
             "position": "H"
         },
@@ -204,7 +204,7 @@
             "genderMatch": "W",
             "id": "kristin",
             "lastName": "Velazquez",
-            "line": "X",
+            "line": "D",
             "nickname": "Kristin",
             "position": "H"
         },
@@ -249,7 +249,7 @@
             "genderMatch": "W",
             "id": "maggie",
             "lastName": "Mai",
-            "line": "X",
+            "line": "D",
             "nickname": "Maggie",
             "position": "C"
         },
@@ -2291,7 +2291,1306 @@
             "name": "Ow My Knee",
             "location": "",
             "id": "10d509cf-1d74-46d0-bcf4-9fd4e62f3b6c",
-            "games": [],
+            "games": [
+                {
+                    "id": "6e95a6e3-3d9d-4409-8109-fa4a0f9b61ea",
+                    "opponentName": "Garbage Pla(C)e",
+                    "homeScore": 8,
+                    "awayScore": 10,
+                    "lineOCount": 7,
+                    "lineDCount": 4,
+                    "lineXCount": 7,
+                    "lineKCount": 0,
+                    "events": [
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "austin",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "seewing",
+                                "aidan",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "cisco",
+                                "george",
+                                "austin",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kelly",
+                                "kim",
+                                "krystal",
+                                "leo",
+                                "roy",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "ollie",
+                                "tori",
+                                "aidan",
+                                "allie",
+                                "ana",
+                                "ash",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "krystal",
+                                "leo",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "sean",
+                                "wes",
+                                "austin"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "ollie",
+                                "tori",
+                                "aidan",
+                                "allie",
+                                "ana",
+                                "cisco",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "seewing",
+                                "ana",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "austin",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "krystal",
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "roy",
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "blake",
+                                "seewing",
+                                "han",
+                                "kristin",
+                                "austin",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "tori",
+                                "aidan",
+                                "ash",
+                                "allie",
+                                "cisco",
+                                "ana",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "krystal",
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "blake",
+                                "maggie",
+                                "han",
+                                "kristin",
+                                "austin",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "ollie",
+                                "tori",
+                                "aidan",
+                                "allie",
+                                "cisco",
+                                "ana",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "seewing",
+                                "maggie",
+                                "han",
+                                "kristin",
+                                "austin",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "krystal",
+                                "paloma",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "seewing",
+                                "han",
+                                "kristin",
+                                "austin",
+                                "roy",
+                                "al",
+                                "brit"
+                            ]
+                        }
+                    ],
+                    "startingRatio": "W",
+                    "gameTo": 13,
+                    "startOn": "D",
+                    "timestamp": "2025-08-16T14:34:23.598Z",
+                    "effectiveHalftimePoint": null
+                },
+                {
+                    "id": "b67e0cfc-9ac7-4154-9012-f4c190399098",
+                    "opponentName": "UFO",
+                    "homeScore": 13,
+                    "awayScore": 10,
+                    "lineOCount": 9,
+                    "lineDCount": 4,
+                    "lineXCount": 10,
+                    "lineKCount": 0,
+                    "events": [
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "ash",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kelly",
+                                "kim",
+                                "paloma",
+                                "roy",
+                                "sean",
+                                "wes",
+                                "ollie"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "paloma",
+                                "roy",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "maggie",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "tori"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "maggie",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "tori"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "paloma",
+                                "roy",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "ollie",
+                                "tori",
+                                "allie",
+                                "ana",
+                                "cisco",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "maggie",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "paloma",
+                                "sean",
+                                "wes",
+                                "tori"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "aidan",
+                                "ollie",
+                                "tori",
+                                "ana",
+                                "ash",
+                                "cisco",
+                                "george"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "leo",
+                                "roy",
+                                "kelly",
+                                "kim",
+                                "sean",
+                                "wes",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "sean",
+                                "wes",
+                                "allie",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "maggie",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "paloma",
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "sean",
+                                "wes",
+                                "aidan"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "roy",
+                                "paloma",
+                                "leo",
+                                "kelly",
+                                "kim",
+                                "wes",
+                                "aidan"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "ollie",
+                                "tori",
+                                "allie",
+                                "ash",
+                                "cisco",
+                                "george",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "maggie",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "ollie",
+                                "tori",
+                                "allie",
+                                "cisco",
+                                "george",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "ash",
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "ash",
+                                "austin",
+                                "han",
+                                "kristin",
+                                "seewing",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "paloma",
+                                "leo",
+                                "sean",
+                                "kelly",
+                                "kim",
+                                "wes",
+                                "tori"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "maggie",
+                                "blake",
+                                "austin",
+                                "han",
+                                "kristin",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "maggie",
+                                "blake",
+                                "austin",
+                                "han",
+                                "kristin",
+                                "al",
+                                "brit"
+                            ]
+                        }
+                    ],
+                    "startingRatio": "W",
+                    "gameTo": 13,
+                    "startOn": "D",
+                    "timestamp": "2025-08-16T16:07:11.643Z",
+                    "effectiveHalftimePoint": null
+                },
+                {
+                    "id": "2b7923a8-1b07-4af5-9e14-b27240497de9",
+                    "opponentName": "Quahogs",
+                    "homeScore": 8,
+                    "awayScore": 13,
+                    "lineOCount": 8,
+                    "lineDCount": 6,
+                    "lineXCount": 7,
+                    "lineKCount": 0,
+                    "events": [
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kelly",
+                                "leo",
+                                "paloma",
+                                "roy",
+                                "sean",
+                                "wes",
+                                "tori"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "blake",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "seewing",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kim",
+                                "kelly",
+                                "leo",
+                                "paloma",
+                                "sean",
+                                "wes",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "seewing",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kim",
+                                "roy",
+                                "kelly",
+                                "leo",
+                                "paloma",
+                                "sean",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kim",
+                                "roy",
+                                "kelly",
+                                "leo",
+                                "paloma",
+                                "wes",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "aidan",
+                                "ollie",
+                                "brit",
+                                "allie",
+                                "ash",
+                                "george",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kim",
+                                "roy",
+                                "sean",
+                                "kelly",
+                                "leo",
+                                "paloma",
+                                "wes"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "aidan",
+                                "ollie",
+                                "brit",
+                                "cisco",
+                                "ash",
+                                "george",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "austin",
+                                "ash",
+                                "han",
+                                "maggie",
+                                "seewing",
+                                "kristin",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "brit",
+                                "allie",
+                                "cisco",
+                                "george",
+                                "ana",
+                                "kim"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "han",
+                                "maggie",
+                                "seewing",
+                                "kristin",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "han",
+                                "seewing",
+                                "kristin",
+                                "aidan",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "sean",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "wes",
+                                "ana",
+                                "seewing"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "ollie",
+                                "aidan",
+                                "allie",
+                                "ash",
+                                "george",
+                                "ana",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "roy",
+                                "sean",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "wes",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "cisco",
+                                "austin",
+                                "maggie",
+                                "han",
+                                "seewing",
+                                "kristin",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "sean",
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "wes",
+                                "allie",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "cisco",
+                                "ash",
+                                "george",
+                                "maggie",
+                                "ana",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "blake",
+                                "cisco",
+                                "austin",
+                                "han",
+                                "maggie",
+                                "seewing",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "al",
+                                "aidan",
+                                "allie",
+                                "ash",
+                                "blake",
+                                "george",
+                                "ana"
+                            ]
+                        }
+                    ],
+                    "startingRatio": "M",
+                    "gameTo": 13,
+                    "startOn": "O",
+                    "timestamp": "2025-08-16T17:43:38.299Z",
+                    "effectiveHalftimePoint": null
+                },
+                {
+                    "id": "6a7641e8-a769-4f68-b64a-4fb05755184c",
+                    "opponentName": "Mashed",
+                    "homeScore": 9,
+                    "awayScore": 11,
+                    "lineOCount": 7,
+                    "lineDCount": 6,
+                    "lineXCount": 7,
+                    "lineKCount": 0,
+                    "events": [
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "paloma",
+                                "sean",
+                                "wes",
+                                "seewing"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "allie",
+                                "ana",
+                                "ash",
+                                "cisco",
+                                "george",
+                                "roy"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "han",
+                                "kristin",
+                                "maggie",
+                                "seewing",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kelly",
+                                "kim",
+                                "leo",
+                                "paloma",
+                                "sean",
+                                "wes",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "brit",
+                                "allie",
+                                "ash",
+                                "cisco",
+                                "george",
+                                "han"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "home",
+                            "players": [
+                                "austin",
+                                "blake",
+                                "kristin",
+                                "maggie",
+                                "seewing",
+                                "han",
+                                "roy"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "aidan",
+                                "allie",
+                                "ana",
+                                "ash",
+                                "cisco",
+                                "george",
+                                "kim"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "kelly",
+                                "leo",
+                                "roy",
+                                "wes",
+                                "ana",
+                                "brit",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "allie",
+                                "austin",
+                                "maggie",
+                                "han",
+                                "al",
+                                "aidan",
+                                "kim"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kelly",
+                                "leo",
+                                "roy",
+                                "wes",
+                                "kim",
+                                "al",
+                                "seewing"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "aidan",
+                                "ash",
+                                "cisco",
+                                "george",
+                                "allie",
+                                "ana",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "austin",
+                                "maggie",
+                                "seewing",
+                                "han",
+                                "kristin",
+                                "al",
+                                "brit"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kelly",
+                                "leo",
+                                "roy",
+                                "wes",
+                                "kim",
+                                "cisco",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "kelly",
+                                "leo",
+                                "roy",
+                                "wes",
+                                "kim",
+                                "aidan",
+                                "ana"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "brit",
+                                "george",
+                                "allie",
+                                "austin",
+                                "seewing",
+                                "han",
+                                "kristin"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "away",
+                            "players": [
+                                "blake",
+                                "allie",
+                                "austin",
+                                "ana",
+                                "han",
+                                "kelly",
+                                "kim"
+                            ]
+                        },
+                        {
+                            "line": "O",
+                            "ratio": "M",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "leo",
+                                "roy",
+                                "wes",
+                                "kim",
+                                "ollie",
+                                "brit",
+                                "seewing"
+                            ]
+                        },
+                        {
+                            "line": "X",
+                            "ratio": "M",
+                            "possession": "D",
+                            "score": "away",
+                            "players": [
+                                "blake",
+                                "maggie",
+                                "austin",
+                                "kristin",
+                                "ana",
+                                "han",
+                                "al"
+                            ]
+                        },
+                        {
+                            "line": "D",
+                            "ratio": "W",
+                            "possession": "O",
+                            "score": "home",
+                            "players": [
+                                "ollie",
+                                "aidan",
+                                "george",
+                                "allie",
+                                "kelly",
+                                "seewing",
+                                "kim"
+                            ]
+                        }
+                    ],
+                    "startingRatio": "W",
+                    "gameTo": 13,
+                    "startOn": "O",
+                    "timestamp": "2025-08-16T22:22:32.268Z",
+                    "effectiveHalftimePoint": null
+                }
+            ],
             "lineNames": {
                 "O": {
                     "full": "O",
