@@ -4,10 +4,10 @@
 let tournamentId = null;
 let currentGameId = null; // To identify if we are editing an existing game
 let tournamentLineNames = { // Default names
-    O: { full: 'Squirtle', abbr: 'Squirt' },
-    D: { full: 'Charmander', abbr: 'Charm' },
-    X: { full: 'Bulbasaur', abbr: 'Bulba' },
-    K: { full: 'Ditto', abbr: 'Ditto' }
+    O: { full: 'Offense', abbr: 'O' },
+    D: { full: 'Defense', abbr: 'D' },
+    X: { full: 'Xtras', abbr: 'X' },
+    K: { full: 'Kill', abbr: 'K' }
 };
 
 let homeScore = 0;
