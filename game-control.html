@@ -18,7 +18,10 @@
     </header>
 
     <section id="settings">
-        <h3>Game Settings <button id="toggleSettingsButton" class="toggle-button">▼</button></h3>
+        <div class="settings-header">
+            <h3>Game Settings </h3>
+            <button id="toggleSettingsButton" class="toggle-button">></button>
+        </div>
         <div id="settingsContent">
             <div>
                 <label for="opponentName">Opponent Name:</label>
@@ -27,6 +30,14 @@
             <div>
                 <label for="gameTo">Game To:</label>
                 <input type="number" id="gameTo" value="13">
+            </div>
+            <div>
+                <label for="scheduledStartTime">Scheduled Start Time:</label>
+                <input type="time" id="scheduledStartTime">
+            </div>
+            <div>
+                <label for="scheduledStartDate">Scheduled Date:</label>
+                <input type="date" id="scheduledStartDate">
             </div>
             <div>
                 <label for="halfTimeAt">Halftime at: <span id="halfTimeAt">7</span></label>
@@ -50,25 +61,71 @@
                     <label for="startD">D</label>
                 </div>
             </div>
+            <div class="section-divider">Cap Timers</div>
+            <div class="cap-settings">
+                <div class="form-group">
+                    <label for="hardCapDuration">Hard Cap (minutes):</label>
+                    <input type="number" id="hardCapDuration" min="0" step="1" value="0" class="time-input">
+                    <span class="cap-description">(0 to disable)</span>
+                </div>
+                <div class="form-group">
+                    <label for="softCapDuration">Soft Cap (minutes):</label>
+                    <input type="number" id="softCapDuration" min="0" step="1" value="0" class="time-input">
+                    <span class="cap-description">(0 to disable)</span>
+                </div>
+                <div class="form-group">
+                    <label for="halfCapDuration">Half Cap (minutes):</label>
+                    <input type="number" id="halfCapDuration" min="0" step="1" value="0" class="time-input">
+                    <span class="cap-description">(0 to disable)</span>
+                </div>
+            </div>
         </div>
         <button id="startGame">Start Game</button>
     </section>
 
     <section id="gameStatusPanel">
-        <div>
-            <h2 class="inline-header" id="currentRatio">Current Ratio: M</h2>
-            <h3 class="inline-header" id="nextRatio">Next Ratio: W</h3>
+        <div class="status-header">
+            <h3>Game Status</h3>
+            <button id="toggleStatusButton" class="toggle-button">></button>
         </div>
-        <div>
-            <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
-            <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
+        <div id="gameStatusContent">
+            <div class="status-row">
+                <h3>Game Status: <span id="gameStatusBadge">scheduled</span></h3>
+                <div class="status-times">
+                    <span>Scheduled: <span id="scheduledStartTimeDisplay">--:--</span></span>
+                    <span>Started: <span id="actualStartTimeDisplay">--:--</span></span>
+                </div>
+            </div>
+            <div>
+                <h2 class="inline-header" id="currentRatio">Current Ratio: M</h2>
+                <h3 class="inline-header" id="nextRatio">Next Ratio: W</h3>
+            </div>
+            <div>
+                <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
+                <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
+            </div>
+    
+            <!-- Cap Timers Section -->
+            <div id="capTimers">
+                <h3>Cap Timers</h3>
+                <div class="cap-timer" id="hardCapTimer">
+                    <span class="cap-label">Hard Cap:</span>
+                    <span class="cap-time" id="hardCapTime">--:--</span>
+                    <span class="cap-status" id="hardCapStatus"></span>
+                </div>
+                <div class="cap-timer" id="softCapTimer">
+                    <span class="cap-label">Soft Cap:</span>
+                    <span class="cap-time" id="softCapTime">--:--</span>
+                    <span class="cap-status" id="softCapStatus"></span>
+                </div>
+                <div class="cap-timer" id="halfCapTimer">
+                    <span class="cap-label">Half Cap:</span>
+                    <span class="cap-time" id="halfCapTime">--:--</span>
+                    <span class="cap-status" id="halfCapStatus"></span>
+                </div>
+            </div>
         </div>
 
-
-        <!-- <div id="selectedPlayersDisplayContainer">
-            <h3>Current Line Players:</h3>
-            <div id="selectedPlayersList"></div>
-        </div> -->
         <button id="selectLinePlayersBtn" class="select-line-attention">Edit Line & Players</button>
     </section>
 
@@ -107,68 +164,75 @@
     <!-- Player Selection Modal -->
     <div id="playerSelectionModal" class="modal">
         <div class="modal-content">
-            <span class="close-button" id="closePlayerModalBtn">&times;</span>
-            <div id="modalLineSelectionContainer">
-                <h3>Select Line:</h3>
-                <!-- @todo - make the names dynamic -->
-                <div id="lineSelectors">
-                    <div class="lineSelector">
-                        <input type="radio" id="modalLineO" name="modalCurrentLine" value="O"> <label
-                            for="modalLineO"><span class="line-label-full">O</span> (<span
-                                id="lineOCount">0</span>)</label>
-                    </div>
-                    <div class="lineSelector">
-                        <input type="radio" id="modalLineX" name="modalCurrentLine" value="X"> <label
-                            for="modalLineX"><span class="line-label-full">X</span> (<span
-                                id="lineXCount">0</span>)</label>
-                    </div>
-                    <div class="lineSelector">
-                        <input type="radio" id="modalLineD" name="modalCurrentLine" value="D"> <label
-                            for="modalLineD"><span class="line-label-full">D</span> (<span
-                                id="lineDCount">0</span>)</label>
-                    </div>
-                    <div class="lineSelector">
-                        <input type="radio" id="modalLineK" name="modalCurrentLine" value="K"> <label
-                            for="modalLineK"><span class="line-label-full">K</span> (<span
-                                id="lineKCount">0</span>)</label>
-                    </div>
-                </div>
+            <div class="modal-header">
+                <h2>Player Selection</h2>
+                <span class="close" id="closePlayerModalBtn">&times;</span>
             </div>
-            <hr>
-            <div id="modalPlayerSelectionArea" style="display: none;"> <!-- Initially hidden -->
-                <h3>Select Players for Line: <span id="modalSelectedLineDisplay"></span></h3>
-                <div id="modalPlayerSelectionInfoContainer">
-                    <div>
-                        <p>Current Ratio: </p>
-                        <p><span id="modalRequiredRatioInfo"></span></p>
-                    </div>
-                    <div>
-                        <p>Currently Selected: </p>
-                        <p>
-                            <span id="modalPlayerCount">0</span>/7 players (M: <span
-                            id="modalSelectedMCount">0</span>, W: <span id="modalSelectedWCount">0</span>)
-                        </p>
+            <div class="modal-body">
+                <div id="modalLineSelectionContainer">
+                    <h3>Select Line:</h3>
+                    <!-- @todo - make the names dynamic -->
+                    <div id="lineSelectors">
+                        <div class="lineSelector">
+                            <input type="radio" id="modalLineO" name="modalCurrentLine" value="O"> <label
+                                for="modalLineO"><span class="line-label-full">O</span> (<span
+                                    id="lineOCount">0</span>)</label>
+                        </div>
+                        <div class="lineSelector">
+                            <input type="radio" id="modalLineX" name="modalCurrentLine" value="X"> <label
+                                for="modalLineX"><span class="line-label-full">X</span> (<span
+                                    id="lineXCount">0</span>)</label>
+                        </div>
+                        <div class="lineSelector">
+                            <input type="radio" id="modalLineD" name="modalCurrentLine" value="D"> <label
+                                for="modalLineD"><span class="line-label-full">D</span> (<span
+                                    id="lineDCount">0</span>)</label>
+                        </div>
+                        <div class="lineSelector">
+                            <input type="radio" id="modalLineK" name="modalCurrentLine" value="K"> <label
+                                for="modalLineK"><span class="line-label-full">K</span> (<span
+                                    id="lineKCount">0</span>)</label>
+                        </div>
                     </div>
                 </div>
                 <hr>
-                <div id="modalSelectedPlayersListContainer">
-                    <h4>Selected for this Point:</h4>
-                    <div id="modalSelectedPlayers"></div>
-                </div>
-                <hr>
-                <div id="playerListContainer">
-                    <!-- This will now hold sub-sections for Line Players and Other Players -->
+                <div id="modalPlayerSelectionArea" style="display: none;"> <!-- Initially hidden -->
+                    <h3>Select Players for Line: <span id="modalSelectedLineDisplay"></span></h3>
+                    <div id="modalPlayerSelectionInfoContainer">
+                        <div>
+                            <p>Current Ratio: </p>
+                            <p><span id="modalRequiredRatioInfo"></span></p>
+                        </div>
+                        <div>
+                            <p>Currently Selected: </p>
+                            <p>
+                                <span id="modalPlayerCount">0</span>/7 players (M: <span
+                                id="modalSelectedMCount">0</span>, W: <span id="modalSelectedWCount">0</span>)
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="modalSelectedPlayersListContainer">
+                        <h4>Selected for this Point:</h4>
+                        <div id="modalSelectedPlayers"></div>
+                    </div>
+                    <hr>
+                    <div id="playerListContainer">
+                        <!-- This will now hold sub-sections for Line Players and Other Players -->
+                    </div>
                 </div>
             </div>
-            <button id="resetModalSelectionsBtn">Reset Selections</button>
-            <button id="confirmPlayersBtn">Confirm Players</button>
+            <div class="modal-footer">
+                <button id="resetModalSelectionsBtn">Reset Selections</button>
+                <button id="confirmPlayersBtn">Confirm Players</button>
+            </div>
         </div>
     </div>
 
     <!-- Halftime Modal -->
     <div id="halftimeModal" class="modal">
         <div class="modal-content">
-            <span class="close-button" id="closeHalftimeModalBtn">&times;</span>
+            <span class="close" id="closeHalftimeModalBtn">&times;</span>
             <h2>Halftime!</h2>
             <p>Possession for the next point will be adjusted accordingly.</p>
         </div>

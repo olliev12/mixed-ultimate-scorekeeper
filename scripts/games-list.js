@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const tournament = getTournamentById(parseInt(tournamentId)); // Assuming ID is index
+    const tournament = getTournamentById(tournamentId); // Assuming ID is index
 
     if (!tournament) {
         alert("Tournament not found. Redirecting to tournaments page.");

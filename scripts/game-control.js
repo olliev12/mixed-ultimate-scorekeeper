@@ -10,6 +10,30 @@ let tournamentLineNames = { // Default names
     K: { full: 'Kill', abbr: 'K' }
 };
 
+/**
+ * Formats an ISO string or Date to HH:MM for display
+ */
+function formatTimeForDisplay(value) {
+    if (!value) return '--:--';
+    const d = (value instanceof Date) ? value : new Date(value);
+    if (isNaN(d.getTime())) return '--:--';
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${hh}:${mm}`;
+}
+
+/**
+ * Formats a Date into value acceptable by <input type="time"> (HH:MM)
+ */
+function formatInputTime(date) {
+    const d = (date instanceof Date) ? date : new Date(date);
+    if (isNaN(d.getTime())) return '';
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${hh}:${mm}`;
+}
+
+
 let homeScore = 0;
 let awayScore = 0;
 let startingRatio = 'M';
@@ -17,6 +41,45 @@ let opponentName = 'Away Team';
 let gameTo = 13;
 let startOn = 'O';
 let events = [];
+
+// Time and status tracking
+let gameStartTime = null; // used internally for cap timer base (will mirror scheduledStartTime)
+let scheduledStartTime = null; // ISO or Date in memory
+let actualStartTime = null; // Date when game actually started
+let gameStatus = 'scheduled'; // 'scheduled' | 'inProgress' | 'final'
+let caps = {
+    hard: {
+        duration: 0, // minutes, 0 means disabled
+        time: null,  // calculated as gameStartTime + duration
+        reached: false
+    },
+    soft: {
+        duration: 0, // minutes, 0 means disabled
+        time: null,  // calculated as gameStartTime + duration
+        reached: false
+    },
+    half: {
+        duration: 0, // minutes, 0 means disabled
+        time: null,  // calculated as gameStartTime + duration
+        reached: false
+    }
+};
+
+// Notification tracking
+let notifications = {
+    hard: {
+        fiveMinWarning: false,
+        capReached: false
+    },
+    soft: {
+        fiveMinWarning: false,
+        capReached: false
+    },
+    half: {
+        fiveMinWarning: false,
+        capReached: false
+    }
+};
 
 let lineOCount = 0;
 let lineDCount = 0;
@@ -51,13 +114,17 @@ let homeScoreElement, awayScoreElement, homePlusButton, awayPlusButton,
     lastEventPossessionElement, lastEventScoreElement, saveGameButton, gameTitleElement, backButton, halfTimeAtElement,
     halftimeModal, closeHalftimeModalBtn, modalSelectedPlayersElement,
     updateHalftimeTargetBtn,
-    selectLinePlayersBtn, displaySelectedLineForPointElement, eventsContainerElement;
+    selectLinePlayersBtn, displaySelectedLineForPointElement, eventsContainerElement,
+    scheduledStartTimeInput, scheduledStartDateInput, gameStatusBadge, scheduledStartTimeDisplay, actualStartTimeDisplay;
 let autosaveTimeoutId = null; // For debouncing autosave
 
 // Constants
 const LINE_TYPES = { OFFENSE: 'O', DEFENSE: 'D', EXTRA: 'X', KILL: 'K' };
 const RATIO_TYPES = { MALE: 'M', FEMALE: 'W' };
 const POSSESSION_TYPES = { OFFENSE: 'O', DEFENSE: 'D' };
+
+let capTimeElements = {};
+let capStatusElements = {};
 
 /**
  * Initializes the game control page.
@@ -87,6 +154,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const startGameButton = document.getElementById('startGame');
     const toggleSettingsButton = document.getElementById('toggleSettingsButton');
     const settingsContent = document.getElementById('settingsContent');
+    const toggleStatusButton = document.getElementById('toggleStatusButton');
+    const gameStatusContent = document.getElementById('gameStatusContent');
     lineOCountElement = document.getElementById('lineOCount');
     lineDCountElement = document.getElementById('lineDCount');
     lineXCountElement = document.getElementById('lineXCount');
@@ -121,9 +190,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateHalftimeTargetBtn = document.getElementById('updateHalftimeTargetBtn');
     eventsContainerElement = document.getElementById('eventsContainer'); // Get the new container
     backButton = document.getElementById('backButton');
+    scheduledStartTimeInput = document.getElementById('scheduledStartTime');
+    scheduledStartDateInput = document.getElementById('scheduledStartDate');
+    gameStatusBadge = document.getElementById('gameStatusBadge');
+    scheduledStartTimeDisplay = document.getElementById('scheduledStartTimeDisplay');
+    actualStartTimeDisplay = document.getElementById('actualStartTimeDisplay');
 
     // Hide toggle button initially
-    if (toggleSettingsButton) toggleSettingsButton.style.display = 'none';
+    // if (toggleSettingsButton) toggleSettingsButton.style.display = 'none';
 
 
     // Parse URL parameters
@@ -136,15 +210,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'tournaments.html';
         return;
     }
-    tournamentId = parseInt(tournamentId); // Ensure it's a number if it's an index
+    tournamentId = tournamentId;
 
     await loadStarfireData(); // From data-manager.js
-    // @todo - enable
-    // const currentTournament = getTournamentById(tournamentId);
-    // if (currentTournament && currentTournament.lineNames) {
-    //     // Merge loaded line names, keeping defaults if specific ones are missing
-    //     tournamentLineNames = { ...tournamentLineNames, ...currentTournament.lineNames };
-    // }
+    // Try to load current tournament to apply defaults and bounds
+    const currentTournament = getTournamentById(tournamentId);
+    if (currentTournament && currentTournament.lineNames) {
+        // Merge loaded line names, keeping defaults if specific ones are missing
+        tournamentLineNames = { ...tournamentLineNames, ...currentTournament.lineNames };
+    }
+    // Set optional date bounds if tournament has start/end
+    if (currentTournament && scheduledStartDateInput) {
+        if (currentTournament.startDate) scheduledStartDateInput.min = currentTournament.startDate;
+        if (currentTournament.endDate) scheduledStartDateInput.max = currentTournament.endDate;
+    }
 
     let gameLoadedSuccessfully = false;
     if (currentGameId) {
@@ -153,7 +232,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Loading from autosave for game:", currentGameId);
             loadGameData(JSON.parse(autosavedGameJSON));
             gameTitleElement.textContent = `Starfire vs ${opponentName || 'Opponent'}`;
-            startGameSetup(startGameButton, toggleSettingsButton, settingsContent); // A loaded game is considered started
+            if (gameStatus === 'inProgress') {
+                startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
+            } else {
+                // Show settings when scheduled
+                document.getElementById('gameStatusPanel').style.display = 'none';
+                document.querySelector('main').style.display = 'none';
+                document.getElementById('eventsSection').style.display = 'none';
+            }
             gameLoadedSuccessfully = true;
         } else {
             // No autosave, try loading from main data
@@ -162,7 +248,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.log("Loading from main data for game:", currentGameId);
                 loadGameData(mainGameData);
                 gameTitleElement.textContent = `Starfire vs ${opponentName || 'Opponent'}`;
-                startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
+                if (gameStatus === 'inProgress') {
+                    startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
+                }
                 // Create an initial temporary autosave from this loaded main data
                 triggerAutosave(); 
                 gameLoadedSuccessfully = true;
@@ -181,6 +269,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     updateUI();
+
+    // Get all cap timer elements
+    capTimeElements = {
+        hard: document.getElementById('hardCapTime'),
+        soft: document.getElementById('softCapTime'),
+        half: document.getElementById('halfCapTime')
+    };
+    
+    capStatusElements = {
+        hard: document.getElementById('hardCapStatus'),
+        soft: document.getElementById('softCapStatus'),
+        half: document.getElementById('halfCapStatus')
+    };
+
     attachEventListeners();
 });
 
@@ -192,7 +294,25 @@ function setupNewGameDefaults() {
     awayScore = 0;
     startingRatio = 'M';
     opponentName = "Away Team";
-    gameTo = 13;
+    // Seed from tournament defaults if present
+    const currentTournament = getTournamentById(tournamentId);
+    console.log(currentTournament)
+    if (currentTournament) {
+        gameTo = parseInt(currentTournament.defaultPointCap) || 13;
+        // Cap durations defaulting
+        const defHard = parseInt(currentTournament.hardCap) || 0;
+        const defSoft = parseInt(currentTournament.softCap) || 0;
+        const defHalf = parseInt(currentTournament.halfCap) || 0;
+        // Reflect into inputs if present so UI shows seeded values
+        const hardEl = document.getElementById('hardCapDuration');
+        const softEl = document.getElementById('softCapDuration');
+        const halfEl = document.getElementById('halfCapDuration');
+        if (hardEl) hardEl.value = defHard;
+        if (softEl) softEl.value = defSoft;
+        if (halfEl) halfEl.value = defHalf;
+    } else {
+        gameTo = 13;
+    }
     startOn = 'O';
     events = [];
     lineOCount = 0;
@@ -204,6 +324,47 @@ function setupNewGameDefaults() {
     isGameStarted = false; // Reset for new game setup
     effectiveHalftimePoint = null;
     hasHalftimeBeenReachedAndAlerted = false;
+    gameStatus = 'scheduled';
+    scheduledStartTime = null;
+    actualStartTime = null;
+    
+    // Get cap durations from settings or use defaults if not set yet
+    const hardCapDuration = document.getElementById('hardCapDuration') ? 
+        parseInt(document.getElementById('hardCapDuration').value) || 0 : 0;
+    const softCapDuration = document.getElementById('softCapDuration') ? 
+        parseInt(document.getElementById('softCapDuration').value) || 0 : 0;
+    const halfCapDuration = document.getElementById('halfCapDuration') ? 
+        parseInt(document.getElementById('halfCapDuration').value) || 0 : 0;
+    
+    // Initialize cap timer base from scheduledStartTime (or leave null until set)
+    gameStartTime = scheduledStartTime ? new Date(scheduledStartTime) : null;
+    
+    // Reset cap timers with new durations
+    caps.hard = {
+        duration: hardCapDuration,
+        time: (hardCapDuration > 0 && gameStartTime) ? new Date(gameStartTime.getTime() + hardCapDuration * 60000) : null,
+        reached: false
+    };
+    
+    caps.soft = {
+        duration: softCapDuration,
+        time: (softCapDuration > 0 && gameStartTime) ? new Date(gameStartTime.getTime() + softCapDuration * 60000) : null,
+        reached: false
+    };
+    
+    caps.half = {
+        duration: halfCapDuration,
+        time: (halfCapDuration > 0 && gameStartTime) ? new Date(gameStartTime.getTime() + halfCapDuration * 60000) : null,
+        reached: false
+    };
+    
+    // Reset notification states
+    Object.keys(notifications).forEach(capType => {
+        notifications[capType] = {
+            fiveMinWarning: false,
+            capReached: false
+        };
+    });
 }
 
 /**
@@ -224,6 +385,56 @@ function loadGameData(gameData) {
     lineKCount = gameData.lineKCount || 0;
     currentGameId = gameData.id; // Store the game's ID
     effectiveHalftimePoint = gameData.effectiveHalftimePoint || null;
+    
+    // Backward-compat and new time/status fields
+    gameStatus = gameData.gameStatus || (gameData.isGameStarted ? 'inProgress' : 'scheduled');
+    scheduledStartTime = gameData.scheduledStartTime || gameData.gameStartTime || null;
+    actualStartTime = gameData.actualStartTime || (gameData.isGameStarted && gameData.gameStartTime ? gameData.gameStartTime : null);
+
+    // Load cap settings if they exist
+    if (gameData.caps) {
+        // Use scheduled start time for cap time calculations
+        const originalStartTime = scheduledStartTime ? new Date(scheduledStartTime) : (gameData.gameStartTime ? new Date(gameData.gameStartTime) : null);
+        
+        Object.keys(gameData.caps).forEach(capType => {
+            if (caps[capType]) {
+                const capData = gameData.caps[capType];
+                const duration = capData.duration || 0;
+                
+                // Update cap with duration, calculated time, and reached status
+                caps[capType] = {
+                    duration: duration,
+                    time: (duration > 0 && originalStartTime) ? new Date(originalStartTime.getTime() + duration * 60000) : null,
+                    reached: !!capData.reached
+                };
+                
+                // Update the UI elements if they exist
+                const durationInput = document.getElementById(`${capType}CapDuration`);
+                if (durationInput) {
+                    durationInput.value = duration;
+                }
+                // Don't overwrite the time property as it will be recalculated
+            }
+        });
+    }
+    
+    // Load notification state if it exists
+    if (gameData.notifications) {
+        Object.keys(gameData.notifications).forEach(capType => {
+            if (notifications[capType]) {
+                notifications[capType] = {
+                    ...notifications[capType],
+                    ...gameData.notifications[capType]
+                };
+            }
+        });
+    }
+    
+    // Set timer base to scheduled start time
+    gameStartTime = scheduledStartTime ? new Date(scheduledStartTime) : null;
+    
+    // Set game started state and status
+    isGameStarted = gameStatus === 'inProgress';
 
     // Determine if halftime was already reached in the loaded game
     const actualHalftimeTriggerPoint = effectiveHalftimePoint !== null ? effectiveHalftimePoint : Math.ceil(gameTo / 2);
@@ -232,8 +443,18 @@ function loadGameData(gameData) {
     } else {
         hasHalftimeBeenReachedAndAlerted = false;
     }
+    
     // lineForCurrentPoint and currentPointPlayers will be empty on load, user must set them for the next point.
-    isGameStarted = true; // A loaded game is considered started
+    
+    // Set up cap timers if the game is in progress and caps are enabled
+    if (Object.values(caps).some(cap => cap.duration > 0)) {
+        setupCapTimers();
+    }
+    
+    // Request notification permission if not already granted/denied
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
 }
 
 /**
@@ -250,6 +471,39 @@ function updateUI() {
     document.querySelector(`input[name="startingRatio"][value="${startingRatio}"]`).checked = true;
     gameToInput.value = gameTo;
     document.querySelector(`input[name="startOn"][value="${startOn}"]`).checked = true;
+
+    // Status badge and times
+    if (gameStatusBadge) gameStatusBadge.textContent = gameStatus;
+    if (scheduledStartTimeDisplay) scheduledStartTimeDisplay.textContent = formatTimeForDisplay(scheduledStartTime);
+    if (actualStartTimeDisplay) actualStartTimeDisplay.textContent = formatTimeForDisplay(actualStartTime);
+    if (scheduledStartTimeInput) {
+        if (scheduledStartTime) {
+            const d = new Date(scheduledStartTime);
+            scheduledStartTimeInput.value = formatInputTime(d);
+            if (scheduledStartDateInput) {
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                scheduledStartDateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+        } else {
+            scheduledStartTimeInput.value = '';
+            if (scheduledStartDateInput) scheduledStartDateInput.value = '';
+        }
+    }
+
+    // Reflect Start button visibility
+    const startGameButton = document.getElementById('startGame');
+    if (startGameButton) startGameButton.style.display = gameStatus === 'scheduled' ? 'inline-block' : 'none';
+    if (scheduledStartTimeInput) scheduledStartTimeInput.disabled = gameStatus !== 'scheduled';
+    if (scheduledStartDateInput) scheduledStartDateInput.disabled = gameStatus !== 'scheduled';
+    // Cap inputs enabled only while scheduled (before game starts)
+    const hardEl = document.getElementById('hardCapDuration');
+    const softEl = document.getElementById('softCapDuration');
+    const halfEl = document.getElementById('halfCapDuration');
+    if (hardEl) hardEl.disabled = gameStatus !== 'scheduled';
+    if (softEl) softEl.disabled = gameStatus !== 'scheduled';
+    if (halfEl) halfEl.disabled = gameStatus !== 'scheduled';
 
     if (isGameStarted) {
         disableSettings();
@@ -284,6 +538,13 @@ function disableSettings() {
     gameToInput.disabled = true;
     startOnInputs.forEach(input => input.disabled = true);
     opponentNameInput.disabled = true;
+    // Disable cap duration inputs as part of settings
+    const hardEl = document.getElementById('hardCapDuration');
+    const softEl = document.getElementById('softCapDuration');
+    const halfEl = document.getElementById('halfCapDuration');
+    if (hardEl) hardEl.disabled = true;
+    if (softEl) softEl.disabled = true;
+    if (halfEl) halfEl.disabled = true;
 }
 
 
@@ -309,6 +570,8 @@ function attachEventListeners() {
     const startGameButton = document.getElementById('startGame');
     const toggleSettingsButton = document.getElementById('toggleSettingsButton');
     const settingsContent = document.getElementById('settingsContent');
+    const toggleStatusButton = document.getElementById('toggleStatusButton');
+    const gameStatusContent = document.getElementById('gameStatusContent');
 
     homePlusButton.addEventListener('click', () => handleScore('home'));
     awayPlusButton.addEventListener('click', () => handleScore('away'));
@@ -355,7 +618,19 @@ function attachEventListeners() {
 
     if (startGameButton) {
         startGameButton.addEventListener('click', () => {
-            if (confirm("Are you sure you want to start the game? Settings will be locked. (Halftime target can be changed later)")) {
+            // Warn if scheduled time is in the future
+            const now = new Date();
+            const sched = scheduledStartTime ? new Date(scheduledStartTime) : null;
+            let proceed = true;
+            if (sched && sched > now) {
+                proceed = confirm("Scheduled start time is in the future. Start now anyway?");
+            }
+            if (!sched) {
+                // If none set, default to now as scheduled
+                scheduledStartTime = now.toISOString();
+                if (scheduledStartTimeInput) scheduledStartTimeInput.value = formatInputTime(now);
+            }
+            if (proceed && confirm("Start the game? Settings will lock (except halftime target).")) {
                 startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
             }
         });
@@ -364,7 +639,14 @@ function attachEventListeners() {
     if (toggleSettingsButton) {
         toggleSettingsButton.addEventListener('click', () => {
             const isCollapsed = settingsContent.classList.toggle('collapsed');
-            toggleSettingsButton.textContent = isCollapsed ? '▶' : '▼';
+            toggleSettingsButton.textContent = isCollapsed ? 'v' : '>';
+        });
+    }
+
+    if (toggleStatusButton) {
+        toggleStatusButton.addEventListener('click', () => {
+            const isCollapsed = gameStatusContent.classList.toggle('collapsed');
+            toggleStatusButton.textContent = isCollapsed ? 'v' : '>';
         });
     }
 
@@ -408,6 +690,117 @@ function attachEventListeners() {
     if (closeHalftimeModalBtn) {
         closeHalftimeModalBtn.addEventListener('click', () => halftimeModal.style.display = 'none');
     }
+
+    // Cap configuration inputs
+    const capDurationInputs = [
+        'hardCapDuration',
+        'softCapDuration',
+        'halfCapDuration'
+    ];
+    
+    capDurationInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('change', () => {
+                // Map input IDs to caps keys: hard, soft, half
+                let capKey = null;
+                if (inputId.startsWith('hardCap')) capKey = 'hard';
+                else if (inputId.startsWith('softCap')) capKey = 'soft';
+                else if (inputId.startsWith('halfCap')) capKey = 'half';
+
+                const duration = parseInt(input.value) || 0;
+
+                if (capKey && caps[capKey]) {
+                    caps[capKey].duration = duration;
+
+                    // Recalculate the cap time based on current scheduled/game start
+                    if (gameStartTime && duration > 0) {
+                        caps[capKey].time = new Date(gameStartTime.getTime() + duration * 60000);
+                        caps[capKey].reached = false;
+
+                        // Reset notification states
+                        if (notifications[capKey]) {
+                            notifications[capKey].fiveMinWarning = false;
+                            notifications[capKey].capReached = false;
+                        }
+
+                        // Ensure cap timers are running
+                        if (!window['capInterval']) {
+                            setupCapTimers();
+                        }
+                    } else {
+                        caps[capKey].time = null;
+                        caps[capKey].reached = false;
+                    }
+
+                    // Update the UI
+                    updateCapStatusUI();
+                }
+            });
+        }
+    });
+
+    // Scheduled start time input
+    const recomputeCapsAfterScheduleChange = () => {
+        // Recompute cap times based on new schedule
+        Object.keys(caps).forEach(capType => {
+            const d = caps[capType].duration || 0;
+            caps[capType].time = (d > 0 && gameStartTime) ? new Date(gameStartTime.getTime() + d * 60000) : null;
+            caps[capType].reached = false;
+            if (notifications[capType]) {
+                notifications[capType].fiveMinWarning = false;
+                notifications[capType].capReached = false;
+            }
+        });
+        if (Object.values(caps).some(c => c.duration > 0)) setupCapTimers();
+        updateUI();
+    };
+
+    const getSelectedDateParts = () => {
+        // Returns {year, monthIndex, day} from date input or today if missing
+        if (scheduledStartDateInput && scheduledStartDateInput.value) {
+            const [y, m, d] = scheduledStartDateInput.value.split('-').map(v => parseInt(v));
+            return { year: y, monthIndex: m - 1, day: d };
+        }
+        const today = new Date();
+        return { year: today.getFullYear(), monthIndex: today.getMonth(), day: today.getDate() };
+    };
+
+    const updateScheduledStartFromInputs = () => {
+        if (gameStatus !== 'scheduled') return;
+        const timeVal = scheduledStartTimeInput ? scheduledStartTimeInput.value : '';
+        if (!timeVal) {
+            scheduledStartTime = null;
+            gameStartTime = null;
+            recomputeCapsAfterScheduleChange();
+            return;
+        }
+        const [hh, mm] = timeVal.split(':').map(n => parseInt(n));
+        const { year, monthIndex, day } = getSelectedDateParts();
+        // Enforce bounds if date input has min/max
+        if (scheduledStartDateInput && scheduledStartDateInput.value) {
+            const picked = scheduledStartDateInput.value;
+            const min = scheduledStartDateInput.min || null;
+            const max = scheduledStartDateInput.max || null;
+            if ((min && picked < min) || (max && picked > max)) {
+                alert('Selected date is outside tournament dates. Adjusting to allowed range.');
+                if (min && picked < min) scheduledStartDateInput.value = min;
+                if (max && picked > max) scheduledStartDateInput.value = max;
+            }
+        }
+        const adj = getSelectedDateParts();
+        const sched = new Date(year, monthIndex, day, hh, mm, 0, 0);
+        scheduledStartTime = sched.toISOString();
+        gameStartTime = new Date(sched);
+        recomputeCapsAfterScheduleChange();
+    };
+
+    if (scheduledStartTimeInput) {
+        scheduledStartTimeInput.addEventListener('change', updateScheduledStartFromInputs);
+    }
+    if (scheduledStartDateInput) {
+        scheduledStartDateInput.addEventListener('change', updateScheduledStartFromInputs);
+    }
 }
 
 /**
@@ -417,69 +810,42 @@ function attachEventListeners() {
  * @param {HTMLElement} toggleSettingsButton - The toggle settings button element.
  * @param {HTMLElement} settingsContent - The settings content div element.
  */
-function startGameSetup(startGameButton, toggleSettingsButton, settingsContent) {
-    isGameStarted = true;
+async function startGameSetup(startGameButton, toggleSettingsButton, settingsContent) {
+    console.log('startGameSetup called');
+    // Disable settings
     disableSettings();
-    if (startGameButton) startGameButton.style.display = 'none';
-    if (toggleSettingsButton) toggleSettingsButton.style.display = 'inline-block';
-    if (settingsContent) settingsContent.classList.add('collapsed'); // Collapse settings
-    if (toggleSettingsButton) toggleSettingsButton.textContent = '▶'; // Set to expand icon
 
-
+    // Show game sections
     document.getElementById('gameStatusPanel').style.display = 'block';
-    document.querySelector('main').style.display = 'flex'; // Or 'block' depending on your main layout
+    document.querySelector('main').style.display = 'block';
     document.getElementById('eventsSection').style.display = 'block';
-    updateAllCalculatedStatus(); // Ensure ratio/possession is correct based on locked settings
-    // Trigger initial save for brand new games (where currentGameId was initially null)
-    if (!currentGameId) triggerInitialSave();
     
-}
-
-/**
- * Triggers an initial minimal save when starting a new game to establish a game ID and an autosave point.
- */
-async function triggerInitialSave() {
-    if (currentGameId) return; // Only trigger if there is no currentGameId yet
-
-    // Create a minimal game data object with settings only
-    const initialGameData = {
-        opponentName,
-        gameTo,
-        startingRatio,
-        startOn,
-        homeScore: 0,
-        awayScore: 0,
-        events: [],
-        lineOCount: 0,
-        lineDCount: 0,
-        lineXCount: 0,
-        lineKCount: 0,
-        effectiveHalftimePoint: null,
-        timestamp: new Date().toISOString(),
-    };
-
-    const success = await saveGame(tournamentId, initialGameData);
-
-    if (success && initialGameData.id) { // Ensure an ID was assigned by saveGame
-        // If the initial save was successful, update currentGameId and create the temp autosave.
-        // Since saveGame might modify the data (e.g. assigning an ID), we get the latest data.
-        const savedGame = getGameById(tournamentId, initialGameData.id); // Use the potential ID.
-        if (savedGame) {
-            currentGameId = savedGame.id;
-            console.log(`New game started with ID: ${currentGameId}. Initial save complete.`);
-            // Update URL to include the new gameId for refresh/autosave robustness
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('gameId', currentGameId);
-            history.replaceState(null, '', currentUrl.toString());
-            console.log(`URL updated to: ${currentUrl.toString()}`);
-            // Now, immediately create a temporary autosave reflecting this initial state:
-            triggerAutosave();
-        }
-    } else {
-        alert("Error during initial game setup/save. Game might not be properly saved.");
+    // Mark game as started and set status/times
+    isGameStarted = true;
+    gameStatus = 'inProgress';
+    const now = new Date();
+    if (!scheduledStartTime) {
+        scheduledStartTime = now.toISOString();
     }
+    if (!actualStartTime) {
+        actualStartTime = now.toISOString();
+    }
+    // Cap timers base from scheduled start
+    gameStartTime = new Date(scheduledStartTime);
+    
+    // Request notification permission when game starts
+    if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+    }
+    
+    // Set up cap timers if any caps are enabled
+    if (Object.values(caps).some(cap => cap.duration > 0)) {
+        setupCapTimers();
+    }
+    // Ensure ratio/possession are initialized for in-progress state
+    updateAllCalculatedStatus();
+    updateUI();
 }
-
 
 /**
  * Calculates and updates the current and next gender ratios based on the total points scored and starting ratio.
@@ -724,6 +1090,16 @@ function handleSaveGame() {
     }
 
 
+    // Prepare cap timers data for saving
+    const capsToSave = {};
+    Object.keys(caps).forEach(capType => {
+        // Only save duration and reached status, not the actual timers
+        capsToSave[capType] = {
+            duration: caps[capType].duration,
+            reached: caps[capType].reached || false
+        };
+    });
+
     const gameData = {
         id: currentGameId, // Will be null for a new game, data-manager will assign one
         opponentName,
@@ -739,6 +1115,20 @@ function handleSaveGame() {
         startOn,
         timestamp: new Date().toISOString(), // last modified timestamp
         effectiveHalftimePoint: effectiveHalftimePoint,
+        
+        // Cap-related state
+        // Keep legacy field for backward compat
+        gameStartTime: gameStartTime ? gameStartTime.toISOString() : (scheduledStartTime || null),
+        caps: capsToSave, // Only save necessary cap data
+        notifications: JSON.parse(JSON.stringify(notifications)), // Save notification state
+        
+        // Game state flags
+        isGameStarted: isGameStarted,
+        // New status/time fields
+        gameStatus: gameStatus,
+        scheduledStartTime: scheduledStartTime,
+        actualStartTime: actualStartTime,
+        
         // hasHalftimeBeenReachedAndAlerted is a UI state, not typically saved with game core data
     };
 
@@ -759,6 +1149,7 @@ function handleSaveGame() {
  * Handles the "Back" button click, prompting the user before leaving.
  */
 function handleBack() {
+    console.log('handleBack called');
     if (!isGameStarted && events.length === 0 && homeScore === 0 && awayScore === 0) {
         if (currentGameId) localStorage.removeItem(`autosave_game_${currentGameId}`); // Clean up if navigating back from a new game setup
         window.location.href = `games-list.html?tournamentId=${tournamentId}`;
@@ -836,6 +1227,9 @@ function triggerAutosave() {
             gameTo,        // Game setting
             startOn,       // Game setting
             effectiveHalftimePoint,
+            gameStatus,
+            scheduledStartTime,
+            actualStartTime,
             // Note: hasHalftimeBeenReachedAndAlerted is UI state, not part of core game data for autosave
             // currentPointPlayers and lineForCurrentPoint are transient for point setup, not part of game state to save
             lastAutosaveTimestamp: new Date().toISOString() // For potential future comparison
@@ -848,6 +1242,224 @@ function triggerAutosave() {
             // Potentially alert user if localStorage is full
         }
     }, 1500); // Autosave 1.5 seconds after the last relevant action
+}
+
+
+// // Initialize cap timer DOM elements
+// document.addEventListener('DOMContentLoaded', () => {
+    
+    
+//     attachEventListeners();
+// });
+
+// function attachEventListeners() {
+//     // Existing event listeners...
+    
+    
+// }
+
+
+/**
+ * Sets up the cap timers when the game starts
+ */
+function setupCapTimers() {
+    if (!gameStartTime) {
+        gameStartTime = new Date();
+    }
+    
+    // Clear any existing intervals to prevent duplicates
+    if (window['capInterval']) {
+        clearInterval(window.capInterval);
+    }
+    
+    // Set up the interval to update cap timers every second
+    window['capInterval'] = setInterval(updateCapTimers, 1000);
+    
+    // Initial update
+    updateCapTimers();
+}
+
+/**
+ * Updates the cap timers
+ */
+function updateCapTimers() {
+    if (!gameStartTime) return;
+    
+    Object.keys(caps).forEach(capType => {
+        const cap = caps[capType];
+        const capTime = cap.time;
+        const capElement = document.getElementById(`${capType}CapTimer`);
+        
+        if (!capTime || cap.reached) {
+            // capTimeElements[capType].textContent = '--:--';
+            capStatusElements[capType].textContent = cap.reached ? 'Reached' : 'Not Set';
+            if (capElement) {
+                capElement.classList.toggle('reached', cap.reached);
+            }
+            return;
+        }
+        
+        const now = new Date();
+        const timeUntilCap = capTime - now;
+        const fiveMinutesInMs = 5 * 60 * 1000;
+        
+        // Update timer display
+        if (timeUntilCap > 0) {
+            const minutes = Math.floor(timeUntilCap / (60 * 1000));
+            const seconds = Math.floor((timeUntilCap % (60 * 1000)) / 1000);
+            capTimeElements[capType].textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Check for 5-minute warning
+            if (timeUntilCap <= fiveMinutesInMs && !notifications[capType].fiveMinWarning) {
+                showCapWarning(capType);
+
+            }
+            
+            // Update UI classes
+            if (capElement) {
+                capElement.classList.toggle('warning', timeUntilCap <= fiveMinutesInMs);
+                capElement.classList.remove('reached');
+            }
+            
+            // Update status text
+            if (timeUntilCap <= fiveMinutesInMs) {
+                capStatusElements[capType].textContent = 'Ending Soon';
+            } else {
+                capStatusElements[capType].textContent = 'In Progress';
+            }
+        } else {
+            // Cap has been reached
+            capTimeElements[capType].textContent = '00:00';
+            capStatusElements[capType].textContent = 'Reached';
+            cap.reached = true;
+            
+            if (capElement) {
+                capElement.classList.add('reached');
+                capElement.classList.remove('warning');
+            }
+            
+            // Show notification if not already done
+            if (!notifications[capType].capReached) {
+                handleCapReached(capType);
+            }
+        }
+        });
+    }
+
+
+/**
+ * Shows a warning notification before a cap is reached
+ * @param {string} capType - The type of cap ('hard', 'soft', or 'half')
+ */
+function showCapWarning(capType) {
+    if (notifications[capType]?.fiveMinWarning) return; // Already shown
+    notifications[capType].fiveMinWarning = true;
+    const capName = capType.charAt(0).toUpperCase() + capType.slice(1) + ' Cap';
+    const notificationMessage = `${capName} will be reached in 5 minutes!`;
+    
+    // Show browser notification if enabled
+    if (Notification.permission === 'granted') {
+        new Notification(`${capName} Warning`, {
+            body: notificationMessage,
+            icon: 'favicon.ico',
+            requireInteraction: true
+        });
+    }
+    
+    // Show in-app notification with sound
+    showNotification(notificationMessage, 'warning');
+    // playSound('warning');
+
+    // Flash the cap timer
+    // const capElement = document.getElementById(`${capType}CapTimer`);
+    // if (capElement) {
+    //     capElement.classList.add('flash-warning');
+    // }
+}
+
+/**
+ * Handles when a cap is reached
+ * @param {string} capType - The type of cap ('hard', 'soft', or 'half')
+ */
+function handleCapReached(capType) {
+    if (notifications[capType]?.capReached) return; // Already handled
+    notifications[capType].capReached = true;
+    const capName = capType.charAt(0).toUpperCase() + capType.slice(1) + ' Cap';
+    const notificationMessage = `${capName} has been reached!`;
+    
+    // Show browser notification if enabled
+    if (Notification.permission === 'granted') {
+        new Notification(`${capName} Reached`, {
+            body: notificationMessage,
+            icon: 'favicon.ico',
+            requireInteraction: true
+        });
+    }
+    
+    // Show in-app notification with sound
+    showNotification(notificationMessage, 'error');
+    // playSound('alert');
+    
+    // Remove flash alert if still present
+    // capElement.classList.remove('flash-alert');
+    
+    // TODO Handle different cap types
+    switch (capType) {
+        case 'hard':
+            // Game ends at the end of the current point, unless there is a tie
+            showNotification('Game will end after this point!', 'error');
+            break;
+        case 'soft':
+            // Finish the current point, then add one more point to the higher score and update the gameTo
+            showNotification('Soft cap in effect - finish current point, then play one more point', 'warning');
+            break;
+        case 'half':
+            // Finish the current point, then add one more point to the higher score and update the halftimeTarget
+            showNotification('Half time!', 'info');
+            // You might want to add logic to handle halftime here
+            break;
+    }
+}
+
+/**
+ * Shows a notification to the user
+ * @param {string} message - The message to display
+ * @param {string} type - The type of notification ('info', 'warning', 'error')
+ */
+function showNotification(message, type = 'info') {
+    // Check if notifications are supported
+    if (!('Notification' in window)) {
+        // Fallback to alert if notifications aren't supported
+        alert(message);
+        return;
+    }
+    
+    // Request permission if needed
+    if (Notification.permission === 'granted') {
+        new Notification(message);
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification(message);
+            } else {
+                alert(message); // Fallback to alert if permission denied
+            }
+        });
+    } else {
+        alert(message); // Fallback to alert if permission denied
+    }
+    
+    // Also update the UI with the notification
+    updateCapStatusUI();
+}
+
+/**
+ * Updates the UI to reflect the current cap status
+ */
+function updateCapStatusUI() {
+    // This will be implemented when we add the UI elements
+    // For now, we'll just log to console
+    console.log('Cap status updated:', { caps, notifications });
 }
 
 // --- Player Selection Logic ---
@@ -879,7 +1491,11 @@ function closePlayerSelectionModal() {
         playerListContainerElement.scrollTop = 0;
     }
     if (playerSelectionModal) {
-        playerSelectionModal.style.display = 'none';
+        // Remove show class to trigger fade-out, then hide after transition
+        playerSelectionModal.classList.remove('show');
+        setTimeout(() => {
+            playerSelectionModal.style.display = 'none';
+        }, 300); // match CSS transition duration
     }
     
 }
@@ -932,7 +1548,10 @@ function openPlayerSelectionPopup() {
             }
         }
     }
+    // Show modal with transition similar to tournament modal
     playerSelectionModal.style.display = 'block';
+    void playerSelectionModal.offsetWidth; // force reflow
+    playerSelectionModal.classList.add('show');
 }
 
 /**
@@ -947,7 +1566,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     playerListContainerElement.innerHTML = '';
     const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
 
-    const allPlayers = getPlayers(); // From data-manager.js
+    const allPlayers = getAllTournamentPlayers(); // From data-manager.js
     if (!allPlayers || allPlayers.length === 0) {
         playerListContainerElement.innerHTML = "<p>No players available in the team roster.</p>";
         return;
@@ -1007,6 +1626,13 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     if (lineSpecificPlayersUl.children.length === 0) lineSpecificPlayersUl.innerHTML = "<li>No players specifically designated for this line.</li>";
     if (otherPlayersUl.children.length === 0) otherPlayersUl.innerHTML = "<li>No other players available.</li>";
     updateModalPlayerCounts(); // Update counts after populating/checking
+}
+
+function getAllTournamentPlayers() {
+    const allPlayers = getPlayers(); // From data-manager.js
+    const currentTournament = getTournamentById(tournamentId);
+    const tournamentPlayers = currentTournament.players || allPlayers;
+    return tournamentPlayers;
 }
 
 /**

@@ -50,13 +50,13 @@ p {
 }
 
 #gameStatusPanel {
-  width: 100%;
   background-color: #111;
   border-bottom: 2px solid #f4a7a7;
   border-top: 2px solid #f4a7a7;
   padding-bottom: 10px;
+  padding: 0px 10px 0px 10px;
 }
-#gameStatusPanel div {
+#gameStatusContent div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,13 +67,13 @@ p {
     display: block !important;
 }
 
-#gameStatusPanel h1 {
+#gameStatusContent h1 {
   padding: 0px;
 }
-#gameStatusPanel h2 {
+#gameStatusContent h2 {
   padding: 0px;
 }
-#gameStatusPanel button {
+#selectLinePlayersBtn {
   width: 90%;
   margin: 10px ;
 }
@@ -82,46 +82,6 @@ main {
   margin: 10px;
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-.modal h3,h4 {
-  margin: 15px 0px 8px 0px;
-}
-.modal-content {
-  background-color: #222;
-  margin: 10% auto;
-  padding: 10px;
-  border: 1px solid #f4a7a7;
-  width: 90%;
-  max-width: 600px;
-  color: #fff;
-  border-radius: 5px;
-}
-.modal-content h2,
-.modal-content p {
-  color: #fff;
-}
-.close-button {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-.close-button:hover,
-.close-button:focus {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
 #playerListContainer {
   margin-bottom: 15px;
   text-align: left;
@@ -136,15 +96,11 @@ main {
 #settingsContent {
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
-  max-height: 500px;
   opacity: 1;
   padding-top: 5px;
 }
-#settingsContent.collapsed {
-  max-height: 0;
-  opacity: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+.collapsed {
+  display: none;
 }
 #settingsContent > div {
   margin-bottom: 10px;
@@ -155,7 +111,8 @@ main {
 
 .toggle-button {
   background: none;
-  border: none;
+  border: 1px solid #f4a7a7;
+  border-radius: 50%;
   color: #f4a7a7;
   font-size: 1.2em;
   cursor: pointer;
@@ -165,13 +122,16 @@ main {
 .toggle-button:hover {
   color: #fff;
 }
-#settings h3 {
+.settings-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-/* .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; color: black; } */
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 #settings {
   margin-top: 5px; /* Reduce top margin for mobile */
@@ -185,6 +145,7 @@ main {
 #settings label {
   /* display: block; Ensure labels are block-level for proper left alignment */
   margin-bottom: 5px;
+  display: inline;
 }
 
 #settings input[type="radio"],
@@ -248,6 +209,120 @@ label {
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Cap Timers Section */
+#capTimers {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid #3d5166;
+    transition: all 0.3s ease;
+    flex-direction: column;
+}
+
+#capTimers h3 {
+    margin-top: 0;
+    color: #ecf0f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #3d5166;
+    margin-bottom: 15px;
+}
+
+.cap-timer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    width: 300px;
+}
+
+.cap-timer:last-child {
+    margin-bottom: 0;
+}
+
+.cap-timer .cap-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.cap-timer .cap-name {
+    font-weight: bold;
+    color: #ecf0f1;
+    margin-bottom: 4px;
+}
+
+.cap-timer .cap-status {
+    font-size: 0.9em;
+    color: #bdc3c7;
+}
+
+.cap-timer .cap-time {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-width: 70px;
+    text-align: center;
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Cap Timer States */
+.cap-timer.warning {
+    background-color: rgba(241, 196, 15, 0.15);
+    border-left-color: #f1c40f;
+}
+
+.cap-timer.warning .cap-time {
+    color: #f1c40f;
+    animation: pulse 2s infinite;
+}
+
+.cap-timer.reached {
+    background-color: rgba(231, 76, 60, 0.15);
+    border-left-color: #e74c3c;
+}
+
+.cap-timer.reached .cap-time {
+    color: #e74c3c;
+    animation: pulse 1s infinite;
+}
+
+/* Flash Animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.flash-warning {
+    animation: flashWarning 1s 5;
+}
+
+@keyframes flashWarning {
+    0%, 100% { background-color: rgba(241, 196, 15, 0.15); }
+    50% { background-color: rgba(241, 196, 15, 0.4); }
+}
+
+.flash-alert {
+    animation: flashAlert 0.5s 5;
+}
+
+@keyframes flashAlert {
+    0%, 100% { background-color: rgba(231, 76, 60, 0.15); }
+    50% { background-color: rgba(231, 76, 60, 0.4); }
 }
 
 /* Score Buttons */
@@ -316,9 +391,6 @@ label {
   margin-bottom: 10px;
 }
 
-#eventsContainer {
-  /* Optional: Add some padding or border to the container */
-}
 
 .event-row {
   display: flex;
@@ -351,6 +423,44 @@ label {
 }
 
 /* Settings Section */
+.section-divider {
+    font-weight: bold;
+    margin: 15px 0 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #444;
+    color: #f4a7a7;
+}
+
+.cap-settings {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    flex-direction: column;
+}
+
+.cap-settings .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cap-settings label {
+    width: 150px;
+    margin-right: 10px;
+}
+
+.cap-settings .time-input {
+    width: 70px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.cap-description {
+    font-size: 0.8em;
+    color: #aaa;
+    font-style: italic;
+}
 
 input[type="number"] {
   padding: 5px;
@@ -629,4 +739,476 @@ select {
 }
 #playerSelectionModal label {
   margin: 0px;
+}
+
+/* Tournament Modal Styles (consolidated under unified modal rules below) */
+
+/* Button Styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 100px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #f4a7a7;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #e69696;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+    border: 1px solid #4a4a4a;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #444;
+    border-color: #555;
+}
+
+/* Form hints - unused? */
+.form-hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #999;
+    font-style: italic;
+}
+
+/* Required field indicator - unused? */
+.required:after {
+    content: " *";
+    color: #ff6b6b;
+}
+
+/* Tournament List Styles */
+.tournament-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.tournament-list .gameItem {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tournament-list .gameItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tournament-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.tournament-header h3 {
+    margin: 0;
+    color: #f4a7a7;
+    font-size: 1.2em;
+}
+
+.edit-tournament {
+    background: none;
+    border: 1px solid #555;
+    color: #ddd;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+
+.edit-tournament:hover {
+    background-color: #333;
+    border-color: #f4a7a7;
+    color: #f4a7a7;
+}
+
+.tournament-dates {
+    color: #aaa;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.tournament-location {
+    color: #aaa;
+    font-style: italic;
+    margin: 5px 0;
+}
+
+.tournament-settings {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+.tournament-settings span {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    color: #bbb;
+}
+
+.tournament-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.tournament-actions .btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 5px;
+    font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tournament-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .tournament-actions {
+        flex-direction: column;
+    }
+    
+    .tournament-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1100; /* Higher than other elements */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+.modal.show {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    opacity: 1;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: 2% auto;
+    border: 1px solid #444;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    color: #e0e0e0;
+    
+}
+
+.tournament-modal-content {
+    position: relative;
+    overflow: hidden;
+    transform: translateY(-30px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+    transition-delay: 0.1s;
+}
+
+/* Ensure the modal is always on top */
+.modal * {
+    z-index: 1101;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #333;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #f4a7a7;
+    font-size: 1.5em;
+}
+
+.close, .close-button {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover,
+.close:focus,
+.close-button:hover,
+.close-button:focus {
+    color: #f4a7a7;
+    text-decoration: none;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.tournament-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 20px;
+    background-color: #2a2a2a;
+    border-top: 1px solid #333;
+    gap: 10px;
+}
+
+/* Form Styles */
+.form-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #333;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-section h3 {
+    margin-top: 0;
+    color: #f4a7a7;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    color: #f0f0f0;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+select:hover,
+textarea:hover {
+    border-color: #555;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #f4a7a7;
+    box-shadow: 0 0 0 3px rgba(244, 167, 167, 0.15);
+    outline: none;
+    background-color: #2e2e2e;
+}
+
+/* Style number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Style select dropdown arrow */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23aaa'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 35px;
+}
+
+/* Style date input picker */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-group input[type="checkbox"] {
+  height: 20px;
+  width: 20px;
+  background-color: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-group:hover input[type="checkbox"] {
+    border-color: #666;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    accent-color: #f4a7a7;
+}
+
+.checkbox-group label {
+    margin: 0;
+    padding: 0px 5px;
+    cursor: pointer;
+    color: #e0e0e0;
+    line-height: 1.4;
+} 
+
+/* Responsive adjustments for modal */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        margin: 5px 0;
+    }
 }

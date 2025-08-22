@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournaments - Starfire Ultimate</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
+
 <body>
     <header>
         <h1>Tournaments</h1>
@@ -20,7 +22,97 @@
             <!-- Tournaments will be listed here by tournaments.js -->
         </div>
     </main>
+
+    <!-- Tournament Settings Modal -->
+    <div id="tournamentModal" class="modal">
+        <div class="modal-content tournament-modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Tournament</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body tournament-modal-body">
+                <form id="tournamentForm">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-group">
+                            <label for="tournamentName">Tournament Name *</label>
+                            <input type="text" id="tournamentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Game Defaults</h3>
+                        <div class="form-group">
+                            <label for="defaultPointCap">Default Point Cap</label>
+                            <input type="number" id="defaultPointCap" min="1" value="13">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Cap Timers (in minutes, 0 to disable)</h3>
+                        <div class="form-group">
+                            <label for="hardCap">Hard Cap</label>
+                            <input type="number" id="hardCap" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="softCap">Soft Cap</label>
+                            <input type="number" id="softCap" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="halfCap">Half Cap</label>
+                            <input type="number" id="halfCap" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Settings</h3>
+                        <div class="form-group">
+                            <label for="timeoutsPerHalf">Timeouts per Half</label>
+                            <input type="number" id="timeoutsPerHalf" min="0" value="1">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="floaterTimeout">
+                            <label for="floaterTimeout">Floater Timeout</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="lineRotation">Line Rotation</label>
+                            <select id="lineRotation">
+                                <option value="none">No Rotation</option>
+                                <option value="od">O/D</option>
+                                <option value="odx">O/D/X</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Tournament Players</h3>
+                        <ul id="tournamentPlayersList">
+                        </ul>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                <button id="saveBtn" class="btn btn-primary">Save Tournament</button>
+            </div>
+        </div>
+    </div>
+
     <script src="scripts/data-manager.js"></script>
+    <script src="scripts/tournament-modal.js"></script>
     <script src="scripts/tournaments.js"></script>
 </body>
+
 </html>

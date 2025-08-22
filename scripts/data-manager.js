@@ -76,7 +76,7 @@ function getPlayerById(playerId) {
 
 function getTournamentById(tournamentId) {
     // Assuming tournamentId is the index for now
-    return appData?.tournaments?.[tournamentId];
+    return appData?.tournaments.find((t) => t.id === tournamentId);
 }
 
 function getPlayers() {
@@ -198,7 +198,7 @@ function getGameById(tournamentId, gameId) {
 }
 
 function saveGame(tournamentId, gameData) {
-    if (!appData || !appData.tournaments || !appData.tournaments[tournamentId]) {
+    if (!appData || !appData.tournaments || !getTournamentById(tournamentId)) {
         console.error("Tournament not found or data not loaded. Cannot save game.");
         return false;
     }
@@ -207,7 +207,7 @@ function saveGame(tournamentId, gameData) {
         gameData.id = generateUUID(); // Assign a new ID if it's a new game
     }
 
-    const tournament = appData.tournaments[tournamentId];
+    const tournament = getTournamentById(tournamentId);
     const gameIndex = tournament.games.findIndex(g => g.id === gameData.id);
 
     if (gameIndex > -1) {
