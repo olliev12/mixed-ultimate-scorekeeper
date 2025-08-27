@@ -37,32 +37,30 @@ const game = {
       hard: {
         duration: 0,
         time: null,
-        reached: false
+        reached: false,
+        notifications: {
+          fiveMinWarning: false,  // Track if 5-min warning was shown
+          capReached: false  // Track if cap notification was shown
+        }
       },
       soft: {
         duration: 0,
         time: null,
-        reached: false
+        reached: false,
+        notifications: {
+          fiveMinWarning: false,  // Track if 5-min warning was shown
+          capReached: false  // Track if cap notification was shown
+        }
       },
       half: {
         duration: 0,
         time: null,
-        reached: false
-      }
-    }         // Tracks if cap has been reached
-    notifications: {
-        hard: {
-          fiveMinWarning: false,  // Track if 5-min warning was shown
-          capReached: false  // Track if cap notification was shown
-        },    
-        soft: {
-          fiveMinWarning: false,  // Track if 5-min warning was shown
-          capReached: false  // Track if cap notification was shown
-        },    
-        half: {
+        reached: false,
+        notifications: {
           fiveMinWarning: false,  // Track if 5-min warning was shown
           capReached: false  // Track if cap notification was shown
         }
+      }
     }
 };
 ```

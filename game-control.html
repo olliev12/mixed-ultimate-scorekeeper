@@ -79,6 +79,18 @@
                     <span class="cap-description">(0 to disable)</span>
                 </div>
             </div>
+
+            <div class="section-divider">Timeouts</div>
+            <div class="cap-settings">
+                <div class="form-group">
+                    <label for="timeoutsPerHalf">Timeouts per Half</label>
+                    <input type="number" id="timeoutsPerHalf" min="0" value="1">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="floaterTimeout">
+                    <label for="floaterTimeout">Floater Timeout</label>
+                </div>
+            </div>
         </div>
         <button id="startGame">Start Game</button>
     </section>
@@ -104,8 +116,7 @@
                 <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
                 <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
             </div>
-    
-            <!-- Cap Timers Section -->
+
             <div id="capTimers">
                 <h3>Cap Timers</h3>
                 <div class="cap-timer" id="hardCapTimer">
@@ -127,6 +138,17 @@
         </div>
 
         <button id="selectLinePlayersBtn" class="select-line-attention">Edit Line & Players</button>
+
+        <div id="timeouts">
+            <div class="timeout-status">
+                <button id="takeTimeout">Timeout 
+                    <strong> (<span id="remainingTimeouts">1</span>)</strong>
+                </button>
+                <button id="takeFloaterTimeout">Floater Timeout 
+                    <strong> (<span id="remainingFloaterTimeouts">1</span>)</strong>
+                </button>
+            </div>
+        </div>
     </section>
 
     <main>
