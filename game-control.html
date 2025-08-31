@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Control - Mixed Ultimate Scorekeeper</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1 id="gameTitle">Starfire vs Opponent</h1>
+        <nav>
+            <button id="backButton">Back</button>
+            <button id="saveGameButton">Save Game</button>
+        </nav>
+    </header>
+
+    <section id="settings">
+        <h3>Game Settings <button id="toggleSettingsButton" class="toggle-button">▼</button></h3>
+        <div id="settingsContent">
+            <div>
+                <label for="opponentName">Opponent Name:</label>
+                <input type="text" id="opponentName" value="Away Team">
+            </div>
+            <div>
+                <label for="gameTo">Game To:</label>
+                <input type="number" id="gameTo" value="13">
+            </div>
+            <div>
+                <label for="halfTimeAt">Halftime at: <span id="halfTimeAt">7</span></label>
+                <button id="updateHalftimeTargetBtn">Update Halftime Target</button>
+            </div>
+            <div>
+                <label>Starting Ratio:</label>
+                <div class="radio-container">
+                    <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
+                    <label for="ratioM">M</label>
+                    <input type="radio" id="ratioW" name="startingRatio" value="W">
+                    <label for="ratioW">W</label>
+                </div>
+            </div>
+            <div>
+                <label>We Start On: &nbsp;</label>
+                <div class="radio-container">
+                    <input type="radio" id="startO" name="startOn" value="O" checked>
+                    <label for="startO">O</label>
+                    <input type="radio" id="startD" name="startOn" value="D">
+                    <label for="startD">D</label>
+                </div>
+            </div>
+        </div>
+        <button id="startGame">Start Game</button>
+    </section>
+
+    <section id="gameStatusPanel">
+        <div>
+            <h2 class="inline-header" id="currentRatio">Current Ratio: M</h2>
+            <h3 class="inline-header" id="nextRatio">Next Ratio: W</h3>
+        </div>
+        <div>
+            <h2 class="inline-header" id="currentPossession">We Are On: O</h2>
+            <h3>Selected Line: <span id="displaySelectedLineForPoint">None</span></h3>
+        </div>
+
+
+        <!-- <div id="selectedPlayersDisplayContainer">
+            <h3>Current Line Players:</h3>
+            <div id="selectedPlayersList"></div>
+        </div> -->
+        <button id="selectLinePlayersBtn" class="select-line-attention">Edit Line & Players</button>
+    </section>
+
+    <main>
+        <div class="team home-team">
+            <h2>Starfire</h2>
+            <p id="homeScore">0</p>
+            <button class="scoreButton" id="homePlus">+</button>
+        </div>
+        <div class="team away-team">
+            <h2 id="awayTeamName">Away Team</h2>
+            <p id="awayScore">0</p>
+            <button class="scoreButton" id="awayPlus">+</button>
+        </div>
+    </main>
+
+    <section id="eventsSection">
+        <div>
+            <h2 class="inline-header">Events</h2>
+            <button id="undoLast">Undo Last Event</button>
+        </div>
+
+        <div id="eventsContainer">
+            <!-- Header Row -->
+            <div class="event-row event-header">
+                <div class="event-col">Point</div>
+                <div class="event-col">Line</div>
+                <div class="event-col">Ratio</div>
+                <div class="event-col">Start</div>
+                <div class="event-col">Score</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Player Selection Modal -->
+    <div id="playerSelectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closePlayerModalBtn">&times;</span>
+            <div id="modalLineSelectionContainer">
+                <h3>Select Line:</h3>
+                <!-- @todo - make the names dynamic -->
+                <div id="lineSelectors">
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineO" name="modalCurrentLine" value="O"> <label
+                            for="modalLineO"><span class="line-label-full">O</span> (<span
+                                id="lineOCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineX" name="modalCurrentLine" value="X"> <label
+                            for="modalLineX"><span class="line-label-full">X</span> (<span
+                                id="lineXCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineD" name="modalCurrentLine" value="D"> <label
+                            for="modalLineD"><span class="line-label-full">D</span> (<span
+                                id="lineDCount">0</span>)</label>
+                    </div>
+                    <div class="lineSelector">
+                        <input type="radio" id="modalLineK" name="modalCurrentLine" value="K"> <label
+                            for="modalLineK"><span class="line-label-full">K</span> (<span
+                                id="lineKCount">0</span>)</label>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div id="modalPlayerSelectionArea" style="display: none;"> <!-- Initially hidden -->
+                <h3>Select Players for Line: <span id="modalSelectedLineDisplay"></span></h3>
+                <div id="modalPlayerSelectionInfoContainer">
+                    <div>
+                        <p>Current Ratio: </p>
+                        <p><span id="modalRequiredRatioInfo"></span></p>
+                    </div>
+                    <div>
+                        <p>Currently Selected: </p>
+                        <p>
+                            <span id="modalPlayerCount">0</span>/7 players (M: <span
+                            id="modalSelectedMCount">0</span>, W: <span id="modalSelectedWCount">0</span>)
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div id="modalSelectedPlayersListContainer">
+                    <h4>Selected for this Point:</h4>
+                    <div id="modalSelectedPlayers"></div>
+                </div>
+                <hr>
+                <div id="playerListContainer">
+                    <!-- This will now hold sub-sections for Line Players and Other Players -->
+                </div>
+            </div>
+            <button id="resetModalSelectionsBtn">Reset Selections</button>
+            <button id="confirmPlayersBtn">Confirm Players</button>
+        </div>
+    </div>
+
+    <!-- Halftime Modal -->
+    <div id="halftimeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeHalftimeModalBtn">&times;</span>
+            <h2>Halftime!</h2>
+            <p>Possession for the next point will be adjusted accordingly.</p>
+        </div>
+    </div>
+
+    <script src="scripts/data-manager.js"></script>
+    <script src="scripts/game-control.js"></script>
+</body>
+
+</html>
