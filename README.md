@@ -1,12 +1,25 @@
 # mixed-ultimate-scorekeeper
 
-Next Steps:
-- convert all functionality to using the events tracked
-    - no need to have in localStorage scoreLines, scoreEvents, lineOCount, etc
-    - all that can be derived from the events array
-- stats
-    - points played based on ratio & possession
-    - points scored based on ratio & possession
-- Edit game 
-    - load & don't pop, or
-    - load, pop, save & re-insert in original position
+TODO:
+
+- more game settings
+  - add caps
+  - alert warnings when approaching caps
+  - track timeouts
+- lines
+  - suggested line based on rotation
+    - future feature to have different rotation types
+- games
+  - green/red for win/loss?
+- "game over" state for complete games
+  - when gameTo score is reached
+  - when we save the game (early end)
+- add some manual overrides (specifically O/D) for safety
+- add support for subs
+- expand events functionality
+  - view/edit events
+    - editing score will affect next point's possession start
+  - undo/redo functionality?
+    - undo last event should repopulate the line
+    - probably don't need redo if editing events is allowed
+  - timeout/halftime events

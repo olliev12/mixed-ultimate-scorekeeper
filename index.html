@@ -3,113 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mixed Ultimate Scorekeeper</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Starfire Ultimate Home</title>
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
     <header>
-        <!-- <button id="hamburgerButton">☰</button> -->
-        <button id="newGameButton">Start New Game</button>
-        <!-- <button id="loadGame">Load Game</button> -->
-        <input type="file" id="importGames" style="display:none;">
-        <label for="importGames" class="upload-label">Import Games</label>
+        <h1>Welcome to Starfire!</h1>
+        <nav>
+            <a href="tournaments.html"><button>Tournaments</button></a>
+            <a href="manage-team.html"><button>Manage Team</button></a>
+        </nav>
     </header>
-    <div id="settings" class="visible">
-        <!-- <h3>Settings</h3> -->
-        <div>
-            <label>Starting Ratio:</label>
-            <input type="radio" id="ratioM" name="startingRatio" value="M" checked>
-            <label for="ratioM">M</label>
-            <input type="radio" id="ratioW" name="startingRatio" value="W">
-            <label for="ratioW">W</label>
-        </div>
-        <div>
-            <label for="gameTo">Game To:</label>
-            <input type="number" id="gameTo" value="15">
-        </div>
-        <div>
-            <label>We Start On:</label>
-            <input type="radio" id="startO" name="startOn" value="O" checked>
-            <label for="startO">O</label>
-            <input type="radio" id="startD" name="startOn" value="D">
-            <label for="startD">D</label>
-        </div>
-        <div>
-            <label for="opponentName">Opponent Name:</label>
-            <input type="text" id="opponentName">
-        </div>
-        <button id="undoLast">Undo Last</button>
-    </div>
-    <footer>
-        <h2 id="currentRatio">Current Ratio: W</h2>
-        <h2 id="nextRatio">Next Ratio: W</h2>
-        <div id="currentLineContainer">
-            <label>Current Line:</label>
-            <input type="radio" id="lineO" name="currentLine" value="O">
-            <label for="lineO">O</label>
-            <input type="radio" id="lineD" name="currentLine" value="D">
-            <label for="lineD">D</label>
-            <input type="radio" id="lineX" name="currentLine" value="X">
-            <label for="lineX">X</label>
-            <input type="radio" id="lineK" name="currentLine" value="K">
-            <label for="lineK">K</label>
-        </div>
-        <div class="lineCounters">
-            <p>O: <span id="lineOCount">0</span></p>
-            <p>D: <span id="lineDCount">0</span></p>
-            <p>X: <span id="lineXCount">0</span></p>
-            <p>K: <span id="lineKCount">0</span></p>
-        </div>
-        <h2 id="currentPossession">We Are On: O</h2>
-        <div id="currentLineContainer">
-            <label>Current Possession:</label>
-            <input type="radio" id="possessionO" name="currentPossession" value="O">
-            <label for="possessionO">O</label>
-            <input type="radio" id="possessionD" name="currentPossession" value="D">
-            <label for="possessionD">D</label>
-        </div>        
-    </footer>
     <main>
-        <div class="team">
-            <h2>Starfire</h2>
-            <p id="homeScore">0</p>
-            <button class="scoreButton" id="homePlus">+</button>
-            <!-- <button class="scoreButton" id="homeMinus">-</button> -->
+        <div class="importExport">
+            <input type="file" id="importData" style="display:none;">
+            <label for="importData" class="upload-label">Import All Data</label>
+            <button id="exportData" class="upload-label">Export All Data</button>
+            <button id="deleteLocalDataBtn" class="upload-label">Delete Local Data</button>
         </div>
-        <div class="team">
-            <h2 id="awayTeamName">Away</h2>
-            <p id="awayScore">0</p>
-            <button class="scoreButton" id="awayPlus">+</button>
-            <!-- <button class="scoreButton" id="awayMinus">-</button> -->
-        </div>
+        
     </main>
-    
-    <section id="gamesSection">
-        <h2 id="currentPossession">Events</h2>
-        <div class="gameItem">
-            <div class="eventTrackers">
-                <p>Point</p>
-                <p>Line</p>
-                <p>Ratio</p>
-                <p>Start</p>
-                <p>Score</p>
-            </div>
-            <div class="eventTrackers">
-                <p id="lastEventPoint"></p>
-                <p id="lastEventLine"></p>
-                <p id="lastEventRatio"></p>
-                <p id="lastEventPossession"></p>
-                <p id="lastEventScore"></p>
-            </div>
-        </div>
-        <button id="saveGame" style="float: right;">Save Game</button>
-        <h2>Games</h2>
-        <div>
-            <button id="exportGames">Export Games</button>
-        </div>
-        <div id="gamesList"></div>
-        <!-- <div id="gamesJson"></div> -->
-    </section>
-    <script src="script.js"></script>
+    <script src="scripts/data-manager.js"></script>
+    <script src="scripts/home.js"></script>
 </body>
 </html>
