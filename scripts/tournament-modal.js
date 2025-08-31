@@ -435,35 +435,7 @@ function addTournament(tournamentData) {
     return tournamentData.id;
 }
 
-/**
- * Shows a notification to the user
- * @param {string} message - The message to display
- * @param {string} type - The type of notification ('info', 'warning', 'error')
- */
-function showNotification(message, type = 'info') {
-    // Check if notifications are supported
-    if (!('Notification' in window)) {
-        // Fallback to alert if notifications aren't supported
-        alert(message);
-        return;
-    }
-    
-    // Request permission if needed
-    if (Notification.permission === 'granted') {
-        new Notification(message);
-    } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification(message);
-            } else {
-                alert(message); // Fallback to alert if permission denied
-            }
-        });
-    } else {
-        alert(message); // Fallback to alert if permission denied
-    }
-    
-}
+// showNotification is provided by scripts/notifications.js
 
 // Export the init function to be called from tournaments.js
 window.initTournamentModal = initTournamentModal;

@@ -17,30 +17,6 @@ let currentHalfNumber = 1; // 1 or 2
 let homeTimeoutsUsedThisHalf = 0;
 let homeFloaterUsed = false;
 
-/**
- * Formats an ISO string or Date to HH:MM for display
- */
-function formatTimeForDisplay(value) {
-    if (!value) return '--:--';
-    const d = (value instanceof Date) ? value : new Date(value);
-    if (isNaN(d.getTime())) return '--:--';
-    const hh = String(d.getHours()).padStart(2, '0');
-    const mm = String(d.getMinutes()).padStart(2, '0');
-    return `${hh}:${mm}`;
-}
-
-/**
- * Formats a Date into value acceptable by <input type="time"> (HH:MM)
- */
-function formatInputTime(date) {
-    const d = (date instanceof Date) ? date : new Date(date);
-    if (isNaN(d.getTime())) return '';
-    const hh = String(d.getHours()).padStart(2, '0');
-    const mm = String(d.getMinutes()).padStart(2, '0');
-    return `${hh}:${mm}`;
-}
-
-
 let homeScore = 0;
 let awayScore = 0;
 let startingRatio = 'M';
@@ -234,7 +210,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'tournaments.html';
         return;
     }
-    tournamentId = tournamentId;
 
     await loadStarfireData(); // From data-manager.js
     // Try to load current tournament to apply defaults and bounds
@@ -866,7 +841,6 @@ function attachEventListeners() {
                 if (max && picked > max) scheduledStartDateInput.value = max;
             }
         }
-        const adj = getSelectedDateParts();
         const sched = new Date(year, monthIndex, day, hh, mm, 0, 0);
         scheduledStartTime = sched.toISOString();
         gameStartTime = new Date(sched);
@@ -981,13 +955,9 @@ function updateCurrentPossession() {
     let nextPossessionCalc = startOn; // Default to initial setting
 
     let lastEventBeforeThisPoint = events.length > 0 ? events[events.length - 1] : null;
-    let scoreBeforeThisPoint = { home: homeScore, away: awayScore };
 
     // events.length > 0
     if (lastEventBeforeThisPoint) {
-        if (lastEventBeforeThisPoint.score === 'home') scoreBeforeThisPoint.home--;
-        else scoreBeforeThisPoint.away--;
-
         const halftimeNow = checkForHalftime();
 
         nextPossessionCalc = halftimeNow
@@ -1550,38 +1520,6 @@ function handleCapReached(capType) {
             // You might want to add logic to handle halftime here
             break;
     }
-}
-
-/**
- * Shows a notification to the user
- * @param {string} message - The message to display
- * @param {string} type - The type of notification ('info', 'warning', 'error')
- */
-function showNotification(message, type = 'info') {
-    // Check if notifications are supported
-    if (!('Notification' in window)) {
-        // Fallback to alert if notifications aren't supported
-        alert(message);
-        return;
-    }
-
-    // Request permission if needed
-    if (Notification.permission === 'granted') {
-        new Notification(message);
-    } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification(message);
-            } else {
-                alert(message); // Fallback to alert if permission denied
-            }
-        });
-    } else {
-        alert(message); // Fallback to alert if permission denied
-    }
-
-    // Also update the UI with the notification
-    updateCapStatusUI();
 }
 
 /**
