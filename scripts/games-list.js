@@ -1,4 +1,8 @@
 // scripts/games-list.js
+
+let selectedTournamentPlayerIds = new Set();
+let tournament;
+
 document.addEventListener('DOMContentLoaded', async () => {
     await loadStarfireData(); // From data-manager.js
 
@@ -11,7 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const tournament = getTournamentById(parseInt(tournamentId)); // Assuming ID is index
+    tournament = getTournamentById(tournamentId); // Assuming ID is index
+    const playerIds = new Set(tournament?.players?.map(player => player.id) || getPlayers().map(player => player.id));
+    selectedTournamentPlayerIds = playerIds;
 
     if (!tournament) {
         alert("Tournament not found. Redirecting to tournaments page.");
@@ -23,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderGamesList(tournamentId, tournament.games);
     renderTournamentPlayerStats(tournament.games);
+    renderTournamentPlayersChecklist(getPlayers(), playerIds);
 
     const addNewGameBtn = document.getElementById('addNewGameBtn');
     if (addNewGameBtn) {
@@ -66,8 +73,8 @@ function renderGamesList(tournamentId, games) {
  * @param {Array<object>} games - An array of game objects for the current tournament.
  */
 function renderTournamentPlayerStats(games) {
-    const playerPointsMap = new Map();
-    const allPlayers = getPlayers(); // Fetch all player details once
+    const allPlayers = tournament.players || getPlayers(); // Fetch all player details once
+    const playerPointsMap = new Map(allPlayers.map(({ id }) => [id, 0]));
 
     games.forEach(game => {
         if (game.events && Array.isArray(game.events)) {
@@ -100,4 +107,87 @@ function renderTournamentPlayerStats(games) {
         listItem.innerHTML = `${stat.player.nickname || (stat.player.firstName + ' ' + stat.player.lastName)}: <span>${stat.points} points</span>`;
         statsListElement.appendChild(listItem);
     });
+}
+
+/**
+ * Render the tournament players checklist with all players checked by default
+ * or respecting a provided preselected set.
+ * @param {Array} allPlayers - Array of player objects from getPlayers()
+ * @param {Set<string>} preselectedIds - Set of player IDs that should be checked
+ */
+function renderTournamentPlayersChecklist(allPlayers = [], preselectedIds = new Set()) {
+    const listEl = document.getElementById('tournamentPlayersList');
+    if (!listEl) return;
+
+    listEl.innerHTML = '';
+
+    if (!allPlayers || allPlayers.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = 'No players available.';
+        listEl.appendChild(li);
+        return;
+    }
+
+    const toggleSettingsButton = document.getElementById('toggleSettingsButton');
+    const tournamentPlayersContainer = document.getElementById('tournamentPlayersContainer');
+    if (toggleSettingsButton) {
+        toggleSettingsButton.addEventListener('click', () => {
+            const isCollapsed = tournamentPlayersContainer.classList.toggle('collapsed');
+            toggleSettingsButton.textContent = isCollapsed ? 'v' : '^';
+        });
+    }
+
+    allPlayers.forEach(player => {
+        const item = document.createElement('li');
+        item.className = 'form-group checkbox-group';
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.id = `tourn_player_${player.id}`;
+        input.checked = preselectedIds.has(player.id);
+        input.dataset.playerId = player.id;
+
+        const label = document.createElement('label');
+        label.htmlFor = input.id;
+        const nickname = player.nickname || player.id;
+        label.textContent = `${nickname}`;
+
+        input.addEventListener('change', (e) => {
+            const pid = e.target.dataset.playerId;
+            if (e.target.checked) {
+                selectedTournamentPlayerIds.add(pid);
+            } else {
+                selectedTournamentPlayerIds.delete(pid);
+            }
+            const players = getPlayers().filter(p => selectedTournamentPlayerIds.has(p.id));
+            updateTournamentPlayers(tournament.id, players);
+        });
+
+        item.appendChild(input);
+        item.appendChild(label);
+        listEl.appendChild(item);
+    });
+}
+
+/**
+ * Update an existing tournament
+ * @param {string} tournamentId - ID of the tournament to update
+ * @param {Object} updatedData - New tournament data
+ */
+function updateTournamentPlayers(tournamentId, players) {
+    if (!appData || !appData.tournaments) {
+        console.error('No tournaments data found');
+        return false;
+    }
+
+    const index = appData.tournaments.findIndex(t => t.id === tournamentId);
+    if (index !== -1) {
+        appData.tournaments[index].players = players;
+        saveStarfireData();
+        renderTournamentPlayerStats(tournament.games);
+        return true;
+    }
+
+    console.error(`Tournament with ID ${tournamentId} not found`);
+    return false;
 }

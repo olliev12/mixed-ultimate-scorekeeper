@@ -10,20 +10,28 @@ body {
 
 /* Header */
 header {
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Stack children (h1, nav) vertically */
-  align-items: center; /* Center children horizontally */
-  gap: 5px; /* Optional: adds a little space between h1 and nav */
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack children (h1, nav) vertically */
+  align-items: center;
+  /* Center children horizontally */
+  gap: 5px;
+  /* Optional: adds a little space between h1 and nav */
   width: 100%;
   background-color: #111;
   border-bottom: 2px solid #f4a7a7;
   border-top: 2px solid #f4a7a7;
 }
+
 header nav {
   width: 100%;
-  display: flex; /* Lay out buttons in a row */
-  justify-content: space-between; /* Space buttons evenly */
-  align-items: center; /* Center buttons within the nav */
+  display: flex;
+  /* Lay out buttons in a row */
+  justify-content: space-between;
+  /* Space buttons evenly */
+  align-items: center;
+  /* Center buttons within the nav */
 }
 
 header nav button {
@@ -45,8 +53,8 @@ p {
 }
 
 .importExport {
-    top: 300px;
-    position: relative;
+  top: 300px;
+  position: relative;
 }
 
 #gameStatusPanel {
@@ -56,6 +64,7 @@ p {
   border-top: 2px solid #f4a7a7;
   padding-bottom: 10px;
 }
+
 #gameStatusPanel div {
   display: flex;
   justify-content: space-between;
@@ -64,18 +73,20 @@ p {
 }
 
 #selectedPlayersDisplayContainer {
-    display: block !important;
+  display: block !important;
 }
 
 #gameStatusPanel h1 {
   padding: 0px;
 }
+
 #gameStatusPanel h2 {
   padding: 0px;
 }
+
 #gameStatusPanel button {
   width: 90%;
-  margin: 10px ;
+  margin: 10px;
 }
 
 main {
@@ -93,9 +104,12 @@ main {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.6);
 }
-.modal h3,h4 {
+
+.modal h3,
+h4 {
   margin: 15px 0px 8px 0px;
 }
+
 .modal-content {
   background-color: #222;
   margin: 10% auto;
@@ -106,33 +120,40 @@ main {
   color: #fff;
   border-radius: 5px;
 }
+
 .modal-content h2,
 .modal-content p {
   color: #fff;
 }
+
 .close-button {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
+
 .close-button:hover,
 .close-button:focus {
   color: #fff;
   text-decoration: none;
   cursor: pointer;
 }
+
 #playerListContainer {
   margin-bottom: 15px;
   text-align: left;
 }
+
 #playerListContainer label {
   display: block;
   margin-bottom: 5px;
 }
+
 .other-players-section {
   margin-bottom: 15px;
 }
+
 #settingsContent {
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
   overflow: hidden;
@@ -140,13 +161,15 @@ main {
   opacity: 1;
   padding-top: 5px;
 }
+
 #settingsContent.collapsed {
   max-height: 0;
   opacity: 0;
   padding-top: 0;
   padding-bottom: 0;
 }
-#settingsContent > div {
+
+#settingsContent>div {
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
@@ -162,9 +185,11 @@ main {
   padding: 0 5px;
   margin: 0;
 }
+
 .toggle-button:hover {
-  color: #fff;
+  background: none;
 }
+
 #settings h3 {
   display: flex;
   justify-content: space-between;
@@ -174,8 +199,10 @@ main {
 /* .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; color: black; } */
 
 #settings {
-  margin-top: 5px; /* Reduce top margin for mobile */
-  padding: 0px 10px 0px 10px; /* Adjust padding for smaller screens */
+  margin-top: 5px;
+  /* Reduce top margin for mobile */
+  padding: 0px 10px 0px 10px;
+  /* Adjust padding for smaller screens */
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -199,24 +226,30 @@ main {
 }
 
 /* Style for disabled radio buttons to make the selection more visible */
-#settings input[type="radio"]:disabled + label {
-  color: #aaa; /* Dim the label text for disabled items */
+#settings input[type="radio"]:disabled+label {
+  color: #aaa;
+  /* Dim the label text for disabled items */
   cursor: not-allowed;
 }
 
-#settings input[type="radio"]:checked:disabled + label {
-  color: #f4a7a7; /* Highlight the label of the checked and disabled radio */
-  font-weight: bold; /* Make it stand out a bit more */
+#settings input[type="radio"]:checked:disabled+label {
+  color: #f4a7a7;
+  /* Highlight the label of the checked and disabled radio */
+  font-weight: bold;
+  /* Make it stand out a bit more */
 }
 
 #settings input[type="radio"]:disabled {
-  opacity: 0.7; /* Slightly dim the radio button itself */
+  opacity: 0.7;
+  /* Slightly dim the radio button itself */
 }
 
 /* Buttons */
 button {
-  padding: 8px 10px; /* Adjust button padding for better mobile fit */
-  font-size: 14px; /* Slightly reduce font size for mobile */
+  padding: 8px 10px;
+  /* Adjust button padding for better mobile fit */
+  font-size: 14px;
+  /* Slightly reduce font size for mobile */
   background-color: #f4a7a7;
   color: #000;
   border: none;
@@ -242,7 +275,8 @@ label {
 }
 
 #undoLast {
-  align-self: flex-end; /* Right-align the "Undo Last" button */
+  align-self: flex-end;
+  /* Right-align the "Undo Last" button */
   /* background-color: #ff7b7b; */
   margin-top: 10px;
   padding: 10px;
@@ -259,10 +293,11 @@ label {
 }
 
 .home-team {
-    background-color: #457a5b;
+  background-color: #457a5b;
 }
+
 .away-team {
-    background-color: #943f3f;
+  background-color: #943f3f;
 }
 
 /* Scoreboard Layout */
@@ -309,7 +344,8 @@ label {
   border-top: 2px solid #f4a7a7;
 }
 
-#eventsSection > div:first-child { /* Container for "Events" title and "Undo Last" button */
+#eventsSection>div:first-child {
+  /* Container for "Events" title and "Undo Last" button */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -322,32 +358,39 @@ label {
 
 .event-row {
   display: flex;
-  justify-content: space-between; /* Distribute columns evenly */
+  justify-content: space-between;
+  /* Distribute columns evenly */
   padding: 8px 5px;
-  border-bottom: 1px solid #333; /* Separator between rows */
+  border-bottom: 1px solid #333;
+  /* Separator between rows */
 }
 
 .event-row:last-child {
-  border-bottom: none; /* No border on the last row */
+  border-bottom: none;
+  /* No border on the last row */
 }
 
 .event-header {
   font-weight: bold;
-  border-bottom: 2px solid #f4a7a7; /* Thicker border for header */
+  border-bottom: 2px solid #f4a7a7;
+  /* Thicker border for header */
   margin-bottom: 5px;
 }
 
 /* Event Row Backgrounds based on Score */
 .event-row.home-score {
-  background-color: #457a5b; /* Semi-transparent home team color */
+  background-color: #457a5b;
+  /* Semi-transparent home team color */
 }
 
 .event-row.away-score {
-  background-color: #943f3f; /* Semi-transparent away team color */
+  background-color: #943f3f;
+  /* Semi-transparent away team color */
 }
 
 .event-col {
-  flex: 1; /* Allow columns to grow and shrink */
+  flex: 1;
+  /* Allow columns to grow and shrink */
 }
 
 /* Settings Section */
@@ -389,6 +432,7 @@ input[type="text"] {
   border: 1px solid #f4a7a7;
   cursor: pointer;
 }
+
 .gameItemSelected {
   background-color: #f4a7a7;
 }
@@ -415,34 +459,41 @@ input[type="text"] {
   font-size: 14px;
 }
 
-#modalOtherPlayers, #modalLineSpecificPlayers, #modalSelectedPlayers {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+#modalOtherPlayers,
+#modalLineSpecificPlayers,
+#modalSelectedPlayers {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
-#modalPlayerSelectionInfoContainer > div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
+
+#modalPlayerSelectionInfoContainer>div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
+
 #modalRequiredRatioInfo {
   font-weight: bold;
 }
 
 /* Styling for custom checkbox items within player selection modals */
 .player-item-container {
-  margin: 0px 1px 5px 1px; /* Space between items */
+  margin: 0px 1px 5px 1px;
+  /* Space between items */
   border-radius: 4px;
   /* Default state for the container div */
-  border: 2px solid #444; /* Default border for the div */
-  background-color: #282828; /* Default background for the div */
+  border: 2px solid #444;
+  /* Default border for the div */
+  background-color: #282828;
+  /* Default background for the div */
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
 /* Hide the actual checkbox input securely */
-.player-item-container > input[type="checkbox"] {
+.player-item-container>input[type="checkbox"] {
   /* Hide the default checkbox */
   appearance: none;
   -webkit-appearance: none;
@@ -456,7 +507,7 @@ input[type="text"] {
 }
 
 /* Style the label to be the clickable area and to contain the custom checkbox + text */
-.player-item-container > label {
+.player-item-container>label {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -467,7 +518,7 @@ input[type="text"] {
 }
 
 /* Custom checkbox visual (using label::before) */
-.player-item-container > label::before {
+.player-item-container>label::before {
   width: 18px;
   height: 18px;
   border: 2px solid #777;
@@ -475,38 +526,81 @@ input[type="text"] {
   margin-right: 10px;
   background-color: #333;
   transition: background-color 0.2s, border-color 0.2s;
-  flex-shrink: 0; /* Prevent shrinking if label text is long */
+  flex-shrink: 0;
+  /* Prevent shrinking if label text is long */
 }
 
 /* --- Styles for the CHECKED state --- */
 
 /* Style the surrounding div (.player-item-container) when its checkbox is checked */
 .player-item-container-hide:has(> input[type="checkbox"]:checked) {
-  display: none;      
+  display: none;
 }
 
-.player-item-container:has(> input[type="checkbox"][data-gender="M"])  {
+.player-item-container:has(> input[type="checkbox"][data-gender="M"]) {
   background-color: #457a5b;
-}  
-.player-item-container:has(> input[type="checkbox"][data-gender="W"])  {
+}
+
+.player-item-container:has(> input[type="checkbox"][data-gender="W"]) {
   background-color: #6e4772;
-}  
+}
+
 /* Players */
 ul {
   list-style-type: none;
   padding-inline-start: 5px;
 }
-.player-item-container input[type="checkbox"]:checked + label::before {
-  background-color: #000; /* Checkbox fill color when checked */
-  border-color: #000;    /* Checkbox border color when checked */
-  color: #f4a7a7;        /* Checkmark color */
+
+.player-item-container input[type="checkbox"]:checked+label::before {
+  background-color: #000;
+  /* Checkbox fill color when checked */
+  border-color: #000;
+  /* Checkbox border color when checked */
+  color: #f4a7a7;
+  /* Checkmark color */
   font-size: 14px;
   text-align: center;
-  line-height: 18px;     /* Vertically center checkmark */
+  line-height: 18px;
+  /* Vertically center checkmark */
   font-weight: bold;
 }
 
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  cursor: pointer;
+  user-select: none;
+}
 
+.checkbox-group input[type="checkbox"] {
+  height: 20px;
+  width: 20px;
+  background-color: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-group:hover input[type="checkbox"] {
+  border-color: #666;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  accent-color: #f4a7a7;
+}
+
+.checkbox-group label {
+  margin: 0;
+  padding: 0px 5px;
+  cursor: pointer;
+  color: #e0e0e0;
+  line-height: 1.4;
+}
+
+#tournamentPlayersContainer.collapsed {
+  display: none;
+}
 
 /* Responsive Styles for Mobile */
 @media (max-width: 600px) {
@@ -518,13 +612,16 @@ ul {
   }
 
   .main-content {
-    flex-direction: column; /* Stack team sections vertically on mobile */
+    flex-direction: column;
+    /* Stack team sections vertically on mobile */
     gap: 15px;
   }
 
   .team {
-    width: 100%; /* Make team sections full-width */
-    max-width: 100%; /* Remove max-width to fill screen */
+    width: 100%;
+    /* Make team sections full-width */
+    max-width: 100%;
+    /* Remove max-width to fill screen */
   }
 }
 
@@ -541,10 +638,13 @@ ul {
 }
 
 @keyframes pulse-attention {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
   }
+
   50% {
     transform: scale(1.03);
     box-shadow: 0 0 35px rgba(255, 193, 7, 0.8);
@@ -555,25 +655,30 @@ ul {
 .form-row {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Vertically align items in the middle */
-  margin-bottom: 15px; /* Space between form rows */
+  align-items: center;
+  /* Vertically align items in the middle */
+  margin-bottom: 15px;
+  /* Space between form rows */
 }
 
 select {
-  width: 100px; /* Set the desired width */
+  width: 100px;
+  /* Set the desired width */
   padding: 5px;
   border: 1px solid #f4a7a7;
   border-radius: 5px;
   background-color: #111;
   color: #fff;
-  box-sizing: border-box; /* Ensures padding and border are included in the width */
-  margin-left: 5px; /* Optional: add some space if next to a label */
+  box-sizing: border-box;
+  /* Ensures padding and border are included in the width */
+  margin-left: 5px;
+  /* Optional: add some space if next to a label */
 }
 
-#playerList > li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+#playerList>li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .edit-button {
@@ -581,8 +686,8 @@ select {
 }
 
 #gamesListSection {
-    border-bottom: 2px solid #f4a7a7;
-    padding: 15px 0px;
+  border-bottom: 2px solid #f4a7a7;
+  padding: 15px 0px;
 }
 
 #tournamentPlayerStatsSection {
@@ -594,14 +699,17 @@ select {
   left: 25%;
   position: relative;
 }
-#tournamentPlayerStatsList > li {
+
+#tournamentPlayerStatsList>li {
   display: flex;
   justify-content: space-between;
 }
+
 #lineSelectors {
   display: flex;
   justify-content: space-between;
 }
+
 .lineSelector input[type="radio"] {
   /* Hide the default checkbox */
   appearance: none;
@@ -620,13 +728,16 @@ select {
   padding: 5px;
   border-radius: 5px;
 }
-.lineSelector:has(> input[type="radio"]:checked)  {
+
+.lineSelector:has(> input[type="radio"]:checked) {
   background-color: #f4a7a7;
-}  
+}
 
 .line-label-full {
-  display: inline-block; /* Allows setting width/margin if needed */
+  display: inline-block;
+  /* Allows setting width/margin if needed */
 }
+
 #playerSelectionModal label {
   margin: 0px;
 }

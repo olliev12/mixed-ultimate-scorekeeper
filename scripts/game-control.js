@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 gameTitleElement.textContent = `Starfire vs ${opponentName || 'Opponent'}`;
                 startGameSetup(startGameButton, toggleSettingsButton, settingsContent);
                 // Create an initial temporary autosave from this loaded main data
-                triggerAutosave(); 
+                triggerAutosave();
                 gameLoadedSuccessfully = true;
             } else {
                 alert(`Game with ID ${currentGameId} not found. Setting up for a new game.`);
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     }
-    
+
     if (!gameLoadedSuccessfully) { // Handles both no currentGameId from URL and failed load by ID
         // New game
         setupNewGameDefaults();
@@ -328,7 +328,7 @@ function attachEventListeners() {
         // Debounce the updateAllCalculatedStatus call for gameTo input
         clearTimeout(gameToDebounceTimeout);
         gameToDebounceTimeout = setTimeout(() => {
-            updateAllCalculatedStatus(); 
+            updateAllCalculatedStatus();
             // No need to call triggerAutosave here as settings changes aren't autosaved until game starts
             // and initial save captures these.
         }, 500); // 500ms debounce
@@ -432,7 +432,7 @@ function startGameSetup(startGameButton, toggleSettingsButton, settingsContent) 
     updateAllCalculatedStatus(); // Ensure ratio/possession is correct based on locked settings
     // Trigger initial save for brand new games (where currentGameId was initially null)
     if (!currentGameId) triggerInitialSave();
-    
+
 }
 
 /**
@@ -516,7 +516,7 @@ function updateCurrentPossession() {
 
         const halftimeNow = checkForHalftime();
 
-        nextPossessionCalc = halftimeNow 
+        nextPossessionCalc = halftimeNow
             ? startOn === POSSESSION_TYPES.OFFENSE ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE
             : lastEventBeforeThisPoint.score === 'home' ? POSSESSION_TYPES.DEFENSE : POSSESSION_TYPES.OFFENSE;
     }
@@ -621,7 +621,7 @@ function checkForHalftime() {
 
     const justReachedHalftimeHome = (homeScore === actualHalftimeTriggerPoint) && (awayScore < actualHalftimeTriggerPoint) && (lastEventScore === 'home');
     const justReachedHalftimeAway = (awayScore === actualHalftimeTriggerPoint) && (homeScore < actualHalftimeTriggerPoint) && (lastEventScore === 'away');
-    
+
 
     if ((justReachedHalftimeHome || justReachedHalftimeAway) && !hasHalftimeBeenReachedAndAlerted) {
         halftimeModal.style.display = 'block';
@@ -687,7 +687,7 @@ function updateEventsDisplay() {
 
     // Iterate through events and create a row for each
     // Iterate backwards to display newest events at the top
-    for (let i = events.length - 1; i >= 0; i--) { 
+    for (let i = events.length - 1; i >= 0; i--) {
         const event = events[i];
         const eventRow = document.createElement('div');
         eventRow.classList.add('event-row');
@@ -792,7 +792,7 @@ function handleUpdateHalftimeTarget() {
         `Enter new halftime target point (must be between ${minHalftime} and ${defaultHalftime}).\n` +
         "Caution: This should only be done for time-capped games where halftime occurs earlier than normal."
     );
-    
+
 
     if (newTargetStr !== null) { // User didn't cancel
         const newTarget = parseInt(newTargetStr);
@@ -815,7 +815,7 @@ function handleUpdateHalftimeTarget() {
 function triggerAutosave() {
     if (!isGameStarted || !currentGameId) {
         // console.log("Autosave skipped: Game not started or no currentGameId.");
-        return; 
+        return;
     }
 
     if (autosaveTimeoutId) {
@@ -881,7 +881,7 @@ function closePlayerSelectionModal() {
     if (playerSelectionModal) {
         playerSelectionModal.style.display = 'none';
     }
-    
+
 }
 
 /**
@@ -947,7 +947,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     playerListContainerElement.innerHTML = '';
     const gamePlayerPoints = calculatePlayerPointsInCurrentGame();
 
-    const allPlayers = getPlayers(); // From data-manager.js
+    const allPlayers = getAllTournamentPlayers(); // From data-manager.js
     if (!allPlayers || allPlayers.length === 0) {
         playerListContainerElement.innerHTML = "<p>No players available in the team roster.</p>";
         return;
@@ -972,7 +972,7 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     playerListContainerElement.appendChild(otherPlayersSection);
     const otherPlayersUl = document.getElementById('modalOtherPlayers');
 
-    
+
     sortedPlayers.forEach(player => {
         const div = document.createElement('div');
         div.classList.add('player-item-container'); // Add a class for styling
@@ -1007,6 +1007,13 @@ function populatePlayerCheckboxes(lineSelectedInModal) {
     if (lineSpecificPlayersUl.children.length === 0) lineSpecificPlayersUl.innerHTML = "<li>No players specifically designated for this line.</li>";
     if (otherPlayersUl.children.length === 0) otherPlayersUl.innerHTML = "<li>No other players available.</li>";
     updateModalPlayerCounts(); // Update counts after populating/checking
+}
+
+function getAllTournamentPlayers() {
+    const allPlayers = getPlayers(); // From data-manager.js
+    const currentTournament = getTournamentById(tournamentId);
+    const tournamentPlayers = currentTournament.players || allPlayers;
+    return tournamentPlayers;
 }
 
 /**
@@ -1119,13 +1126,13 @@ function updateModalPlayerCounts(triggeringCheckbox = null) {
             confirmPlayersBtn.focus({ preventScroll: true }); // Focus for accessibility without a second scroll
         }
     }
- }
+}
 
- /**
-  * when a selected player is unselected within modalSelectedPlayersElement, 
-  * this unchecks the related checkbox from the other sections and triggers updateModalPlayerCounts
-  */
- function unselectPlayer() {
+/**
+ * when a selected player is unselected within modalSelectedPlayersElement, 
+ * this unchecks the related checkbox from the other sections and triggers updateModalPlayerCounts
+ */
+function unselectPlayer() {
     const id = this.value;
     const checkbox = document.getElementById(`player-${id}`);
     // should always be true
