@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games List - Starfire Ultimate</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
+
 <body>
     <header>
         <h1 id="tournamentNameHeader">Tournament Games</h1>
@@ -20,11 +22,45 @@
         </section>
 
         <section id="tournamentPlayerStatsSection">
+            <h2>Tournament Line Stats (Points Played)</h2>
+            <div id="lineSelectors">
+                <div class="lineSelector">
+                    <label for="modalLineO"><span class="line-label-full">O</span> (<span
+                            id="lineOCount">0</span>)</label>
+                </div>
+                <div class="lineSelector">
+                    <label for="modalLineD"><span class="line-label-full">D</span> (<span
+                            id="lineDCount">0</span>)</label>
+                </div>
+                <div class="lineSelector">
+                    <label for="modalLineX"><span class="line-label-full">X</span> (<span
+                            id="lineXCount">0</span>)</label>
+                </div>
+                <div class="lineSelector">
+                    <label for="modalLineK"><span class="line-label-full">K</span> (<span
+                            id="lineKCount">0</span>)</label>
+                </div>
+            </div>
+            <hr>
             <h2>Tournament Player Stats (Points Played)</h2>
-            <ul id="tournamentPlayerStatsList"></ul>
+            <ul id="tournamentPlayerStatsList" class="tournamentPlayerStats"></ul>
+            <hr class="tournamentPlayerStatsHr">
+            <div class="tournamentPlayerStats">
+                <span class="tournamentPlayerStatsItem">Average: <span id="averagePlayerCount">0</span></span>
+                <span class="tournamentPlayerStatsItem">Median: <span id="medianPlayerCount">0</span></span>
+            </div>
+        </section>
+
+        <section id="tournamentPlayersSection">
+            <h3>Tournament Players <button id="toggleSettingsButton" class="toggle-button">^</button></h3>
+            <div id="tournamentPlayersContainer">
+                <ul id="tournamentPlayersList">
+                </ul>
+            </div>
         </section>
     </main>
     <script src="scripts/data-manager.js"></script>
     <script src="scripts/games-list.js"></script>
 </body>
+
 </html>
