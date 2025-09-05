@@ -75,6 +75,7 @@ function renderGamesList(tournamentId, games) {
 function renderTournamentPlayerStats(games) {
     const allPlayers = tournament.players || getPlayers(); // Fetch all player details once
     const playerPointsMap = new Map(allPlayers.map(({ id }) => [id, 0]));
+    const linePointsMap = new Map([['O', 0], ['D', 0], ['X', 0], ['K', 0]]);
 
     games.forEach(game => {
         if (game.events && Array.isArray(game.events)) {
@@ -84,9 +85,17 @@ function renderTournamentPlayerStats(games) {
                         playerPointsMap.set(playerId, (playerPointsMap.get(playerId) || 0) + 1);
                     });
                 }
+                if (event.line) {
+                    linePointsMap.set(event.line, (linePointsMap.get(event.line) || 0) + 1);
+                }
             });
         }
     });
+
+    document.getElementById('lineOCount').textContent = linePointsMap.get('O');
+    document.getElementById('lineDCount').textContent = linePointsMap.get('D');
+    document.getElementById('lineXCount').textContent = linePointsMap.get('X');
+    document.getElementById('lineKCount').textContent = linePointsMap.get('K');
 
     const statsListElement = document.getElementById('tournamentPlayerStatsList');
     statsListElement.innerHTML = ''; // Clear existing stats
@@ -107,6 +116,14 @@ function renderTournamentPlayerStats(games) {
         listItem.innerHTML = `${stat.player.nickname || (stat.player.firstName + ' ' + stat.player.lastName)}: <span>${stat.points} points</span>`;
         statsListElement.appendChild(listItem);
     });
+
+    const averagePlayerCount = Math.round(sortedStats.map(stat => stat.points)
+        .reduce((a, b) => a + b, 0) / sortedStats.length);
+    const medianPlayerCount = Math.round(sortedStats.map(stat => stat.points)
+        .sort((a, b) => a - b)[Math.floor(sortedStats.length / 2)]);
+
+    document.getElementById('averagePlayerCount').textContent = averagePlayerCount;
+    document.getElementById('medianPlayerCount').textContent = medianPlayerCount;
 }
 
 /**

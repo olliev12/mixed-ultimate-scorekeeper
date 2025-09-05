@@ -187,7 +187,7 @@
             "nickname": "Henry",
             "genderMatch": "M",
             "position": "F",
-            "line": "D",
+            "line": "O",
             "id": "henry"
         },
         {
@@ -5132,7 +5132,7 @@
                     "nickname": "Henry",
                     "genderMatch": "M",
                     "position": "F",
-                    "line": "D",
+                    "line": "O",
                     "id": "henry"
                 },
                 {
@@ -5170,15 +5170,6 @@
                     "position": "C",
                     "line": "X",
                     "id": "maggie"
-                },
-                {
-                    "firstName": "Roy",
-                    "genderMatch": "M",
-                    "id": "roy",
-                    "lastName": "Park",
-                    "line": "O",
-                    "nickname": "Roy",
-                    "position": "C"
                 },
                 {
                     "firstName": "Victoria",

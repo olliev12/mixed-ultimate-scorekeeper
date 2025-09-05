@@ -694,15 +694,21 @@ select {
   padding-bottom: 10px;
 }
 
-#tournamentPlayerStatsList {
+.tournamentPlayerStats {
   width: 50%;
   left: 25%;
   position: relative;
+  padding-inline-start: 0px;
 }
 
-#tournamentPlayerStatsList>li {
+.tournamentPlayerStats>li,
+.tournamentPlayerStatsItem {
   display: flex;
   justify-content: space-between;
+}
+
+.tournamentPlayerStatsHr {
+  width: 50%;
 }
 
 #lineSelectors {
