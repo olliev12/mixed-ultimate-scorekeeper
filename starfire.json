@@ -61,7 +61,7 @@
             "nickname": "Sean",
             "genderMatch": "M",
             "position": "F",
-            "line": "D",
+            "line": "O",
             "id": "sean"
         },
         {
@@ -79,7 +79,7 @@
             "nickname": "Al",
             "genderMatch": "M",
             "position": "C",
-            "line": "O",
+            "line": "D",
             "id": "al"
         },
         {
@@ -147,12 +147,12 @@
         },
         {
             "firstName": "Ethan",
-            "genderMatch": "M",
-            "id": "ethan_c",
             "lastName": "Chi",
-            "line": "O",
             "nickname": "Ethan C",
-            "position": "H"
+            "genderMatch": "M",
+            "position": "H",
+            "line": "X",
+            "id": "ethan_c"
         },
         {
             "firstName": "Ethan",
@@ -250,7 +250,7 @@
             "nickname": "Maggie",
             "genderMatch": "W",
             "position": "C",
-            "line": "X",
+            "line": "D",
             "id": "maggie"
         },
         {
@@ -304,7 +304,7 @@
             "nickname": "Harry",
             "genderMatch": "M",
             "position": "F",
-            "line": "O",
+            "line": "X",
             "id": "harry"
         },
         {
@@ -4988,7 +4988,7 @@
         {
             "name": "Sectionals",
             "location": "",
-            "id": "c032f704-848c-4475-8b9a-b661118478c1",
+            "id": "966849b7-2726-45d5-b56f-69daa2ffebf0",
             "games": [],
             "players": [
                 {
@@ -5051,7 +5051,7 @@
                     "nickname": "Sean",
                     "genderMatch": "M",
                     "position": "F",
-                    "line": "D",
+                    "line": "O",
                     "id": "sean"
                 },
                 {
@@ -5060,7 +5060,7 @@
                     "nickname": "Al",
                     "genderMatch": "M",
                     "position": "C",
-                    "line": "O",
+                    "line": "D",
                     "id": "al"
                 },
                 {
@@ -5082,15 +5082,6 @@
                     "position": "C"
                 },
                 {
-                    "firstName": "Connor",
-                    "genderMatch": "M",
-                    "id": "cojo",
-                    "lastName": "Joseph",
-                    "line": "X",
-                    "nickname": "Cojo",
-                    "position": "C"
-                },
-                {
                     "firstName": "Daisy",
                     "lastName": "Delgado",
                     "nickname": "Daisy",
@@ -5098,15 +5089,6 @@
                     "position": "C",
                     "line": "O",
                     "id": "daisy"
-                },
-                {
-                    "firstName": "Ethan",
-                    "genderMatch": "M",
-                    "id": "ethan_c",
-                    "lastName": "Chi",
-                    "line": "O",
-                    "nickname": "Ethan C",
-                    "position": "H"
                 },
                 {
                     "firstName": "Ethan",
@@ -5168,7 +5150,7 @@
                     "nickname": "Maggie",
                     "genderMatch": "W",
                     "position": "C",
-                    "line": "X",
+                    "line": "D",
                     "id": "maggie"
                 },
                 {
@@ -5181,12 +5163,21 @@
                     "position": "H"
                 },
                 {
+                    "firstName": "Wes",
+                    "lastName": "Collins",
+                    "nickname": "Wes",
+                    "genderMatch": "M",
+                    "position": "H",
+                    "line": "O",
+                    "id": "wes"
+                },
+                {
                     "firstName": "Harry",
                     "lastName": "Xie",
                     "nickname": "Harry",
                     "genderMatch": "M",
                     "position": "F",
-                    "line": "O",
+                    "line": "X",
                     "id": "harry"
                 },
                 {
